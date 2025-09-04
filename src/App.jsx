@@ -6,11 +6,11 @@ import Login from "./pages/Login/login";
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col">
       {/* Header */}
       <Header />
 
-      <main className="flex-grow p-4">
+      <main>
         <Login />
       </main>
 

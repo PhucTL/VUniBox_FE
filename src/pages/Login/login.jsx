@@ -4,7 +4,7 @@ export default function Login() {
   const [tab, setTab] = useState("login");
 
   return (
-    <div className="flex flex-col min-h-screen relative bg-gray-100">
+    <div className="relative bg-gray-100" style={{ minHeight: '150vh' }}>
       {/* Background */}
       <div className="w-full h-full fixed inset-0 z-0">
         <img
@@ -15,7 +15,7 @@ export default function Login() {
       </div>
 
       {/* Nội dung chính */}
-      <main className="flex-grow flex items-center justify-center relative z-1">
+      <div className="flex items-center justify-center relative z-1 py-20">
         <div className="w-full max-w-md mx-auto bg-gradient-to-b from-blue-400 to-blue-200 rounded-[48px] shadow-xl p-8 flex flex-col items-center relative">
           {/* Close Button */}
           <button
@@ -98,7 +98,7 @@ export default function Login() {
             Đăng nhập với Google
           </button>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
