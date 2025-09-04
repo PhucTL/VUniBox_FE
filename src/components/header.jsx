@@ -2,17 +2,17 @@ import React from "react";
 
 export default function Header() {
   return (
-    <header className="w-full h-[90px] flex items-center justify-between px-8 bg-gradient-to-r from-white to-[#f5f7fa] shadow-sm relative">
-      {/* Left: Logo */}
+    <header className="z-10 fixed w-full top-0 right-0 left-0 h-[90px] flex items-center justify-between px-8 bg-gradient-to-r from-white to-[#f5f7fa] shadow-sm ">
+      {/* Logo */}
       <div className="flex items-center">
         <img src="/vite.svg" alt="Logo" className="w-20 h-20" />
       </div>
 
-      {/* Center: Menu */}
-      <nav className="absolute left-1/2 -translate-x-1/2">
+      {/* Menu */}
+      <nav className="absolute ml-90 -translate-x-1/2">
         <ul className="flex gap-10 bg-white border border-blue-400 rounded-full py-4 px-12 shadow-md">
           <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-            Get Started
+            Home
           </li>
           <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
             About Us
@@ -20,13 +20,10 @@ export default function Header() {
           <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
             Help Center
           </li>
-          <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-            Setting
-          </li>
         </ul>
       </nav>
 
-      {/* Right: Account Button */}
+      {/* Account Button */}
       <div className="flex items-center">
         <button className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold px-6 py-2 rounded-full shadow-md hover:scale-105 transition-transform">
           <svg
