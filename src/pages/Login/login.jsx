@@ -15,7 +15,7 @@ export default function Login() {
       </div>
 
       {/* Nội dung chính */}
-      <main className="flex-grow flex items-center justify-center relative z-10">
+      <main className="flex-grow flex items-center justify-center relative z-1">
         <div className="w-full max-w-md mx-auto bg-gradient-to-b from-blue-400 to-blue-200 rounded-[48px] shadow-xl p-8 flex flex-col items-center relative">
           {/* Close Button */}
           <button
@@ -48,7 +48,7 @@ export default function Login() {
           {/* Form */}
           <form className="w-full flex flex-col gap-4">
             {tab === "register" && (
-              <div>
+              <div className="justify-items-start">
                 <label className="block text-blue-900 font-semibold mb-1 ">
                   Tên*
                 </label>
@@ -59,7 +59,7 @@ export default function Login() {
                 />
               </div>
             )}
-            <div>
+            <div className="justify-items-start">
               <label className="block text-blue-900 font-semibold mb-1">
                 Email*
               </label>
@@ -69,7 +69,7 @@ export default function Login() {
                 placeholder="Nhập email"
               />
             </div>
-            <div>
+            <div className="justify-items-start">
               <label className="block text-blue-900 font-semibold mb-1">
                 Mật Khẩu*
               </label>
