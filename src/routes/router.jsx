@@ -1,17 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Login/login";
-import Register from "../pages/Login/register";
-
-// Import your page components
+import Account from "../pages/account/account";
+import App from "../App";
+import Home from "../pages/home/home";
 
 const AppRouter = () => (
-  <Router>
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-    </Routes>
-  </Router>
+  <Routes>
+    <Route path="/" element={<App />}>
+      {/* Trang mặc định là Login */}
+      <Route index element={<Home />} />
+      <Route path="login" element={<Login />} />
+      <Route path="account" element={<Account />} />
+    </Route>
+  </Routes>
 );
 
 export default AppRouter;
