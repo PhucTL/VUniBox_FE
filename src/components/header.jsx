@@ -17,12 +17,21 @@ export default function Header() {
               Home
             </li>
           </Link>
-          <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-            About Us
-          </li>
-          <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-            Help Center
-          </li>
+          <Link to="aboutUs">
+            <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
+              About Us
+            </li>
+          </Link>
+          <Link to="help">
+            <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
+              Help Center
+            </li>
+          </Link>
+          <Link to="policy">
+            <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
+              Policy
+            </li>
+          </Link>
         </ul>
       </nav>
 
