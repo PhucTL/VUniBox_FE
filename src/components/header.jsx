@@ -32,6 +32,11 @@ export default function Header() {
               Policy
             </li>
           </Link>
+          <Link to="createproject">
+            <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
+              Project
+            </li>
+          </Link>
         </ul>
       </nav>
 
