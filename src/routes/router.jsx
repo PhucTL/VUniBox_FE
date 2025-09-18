@@ -1,7 +1,9 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Login/login";
+import Register from "../pages/Login/register";
 import Account from "../pages/account/account";
+import Settings from "../pages/settings";
 import App from "../App";
 import Home from "../pages/home/home";
 import PrivacyPolicy from "../pages/policy";
@@ -17,7 +19,9 @@ const AppRouter = () => (
       {/* Trang mặc định là Login */}
       <Route index element={<Home />} />
       <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
       <Route path="account" element={<Account />} />
+      <Route path="settings" element={<Settings />} />
       <Route path="policy" element={<PrivacyPolicy />} />
       <Route path="help" element={<HelpCenter />} />
       <Route path="aboutUs" element={<AboutUs />} />
