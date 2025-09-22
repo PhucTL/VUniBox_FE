@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaSearch,
   FaChevronLeft,
@@ -8,105 +8,39 @@ import {
 } from "react-icons/fa";
 import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
-
 import { useParams } from "react-router-dom";
+import documentService from "../../redux/services/document/documentService";
 
 export default function LibItem() {
   const { folderName } = useParams();
-  // Mock data based on folder type
-  const getItemsByFolder = (folder) => {
-    // Base item structure
-    const baseItems = [
-      {
-        fileName: "PDF.finale_Q1_2025.pdf",
-        title: "TITLE'S NAME",
-        author: "Author's Name",
-        publicYear: "2025",
-        created: "01/07/2025",
-        citationStyle: "APA",
-      },
-      {
-        fileName: "PDF.finale_Q1_2025.pdf",
-        title: "TITLE'S NAME",
-        author: "Author's Name",
-        publicYear: "2025",
-        created: "01/07/2025",
-        citationStyle: "MLA",
-      },
-      {
-        fileName: "PDF.finale_Q1_2025.pdf",
-        title: "TITLE'S NAME",
-        author: "Author's Name",
-        publicYear: "2025",
-        created: "01/07/2025",
-        citationStyle: "Harvard",
-      },
-      {
-        fileName: "PDF.finale_Q1_2025.pdf",
-        title: "TITLE'S NAME",
-        author: "Author's Name",
-        publicYear: "2025",
-        created: "01/07/2025",
-        citationStyle: "APA",
-      },
-      {
-        fileName: "PDF.finale_Q1_2025.pdf",
-        title: "TITLE'S NAME",
-        author: "Author's Name",
-        publicYear: "2025",
-        created: "01/07/2025",
-        citationStyle: "MLA",
-      },
-      {
-        fileName: "PDF.finale_Q1_2025.pdf",
-        title: "TITLE'S NAME",
-        author: "Author's Name",
-        publicYear: "2025",
-        created: "01/07/2025",
-        citationStyle: "Chicago",
-      },
-    ];
-
-    // Customize file extension based on folder type
-    switch (folder) {
-      case "Book":
-        return baseItems.map((item) => ({
-          ...item,
-          fileName: item.fileName.replace(".pdf", ".epub"),
-        }));
-      case "Word":
-        return baseItems.map((item) => ({
-          ...item,
-          fileName: item.fileName.replace(".pdf", ".docx"),
-        }));
-      case "Newspaper":
-        return baseItems.map((item) => ({
-          ...item,
-          fileName: item.fileName.replace(".pdf", ".news"),
-        }));
-      case "Article":
-        return baseItems.map((item) => ({
-          ...item,
-          fileName: item.fileName.replace(".pdf", ".article"),
-        }));
-      case "Research":
-        return baseItems.map((item) => ({
-          ...item,
-          fileName: item.fileName.replace(".pdf", ".research"),
-        }));
-      default:
-        return baseItems;
-    }
-  };
+  const userId = localStorage.getItem("userId") || 1;
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const items = getItemsByFolder(folderName);
-  const totalPages = Math.ceil(items.length / itemsPerPage);
-  const currentItems = items.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const [items, setItems] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const result = await documentService.getDocByUserIdAndType(
+          userId,
+          folderName,
+          currentPage,
+          itemsPerPage
+        );
+        setItems(result.items || []);
+        setTotalPages(result.totalPages || 1);
+      } catch (error) {
+        setItems([]);
+        setTotalPages(1);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, [userId, folderName, currentPage, itemsPerPage]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col mt-20 w-full">
@@ -165,24 +99,38 @@ export default function LibItem() {
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-blue-50">
-                    <td className="px-6 py-5 flex items-center gap-3">
-                      <FaFileAlt className="text-blue-500 text-2xl" />
-                      <span className="text-base">{item.fileName}</span>
-                    </td>
-                    <td className="px-6 py-5 text-base">{item.title}</td>
-                    <td className="px-6 py-5 text-base">{item.author}</td>
-                    <td className="px-6 py-5 text-base">{item.publicYear}</td>
-                    <td className="px-6 py-5 text-base">{item.created}</td>
-                    <td className="px-6 py-5 text-base font-semibold text-blue-600">
-                      {item.citationStyle}
-                    </td>
-                    <td className="px-6 py-5 text-right">
-                      <FaEllipsisH className="inline-block text-gray-400 text-xl hover:text-blue-600 cursor-pointer" />
+                {loading ? (
+                  <tr>
+                    <td colSpan={7} className="text-center py-8">
+                      Đang tải...
                     </td>
                   </tr>
-                ))}
+                ) : items.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="text-center py-8">
+                      Không có dữ liệu
+                    </td>
+                  </tr>
+                ) : (
+                  items.map((item, idx) => (
+                    <tr key={idx} className="hover:bg-blue-50">
+                      <td className="px-6 py-5 flex items-center gap-3">
+                        <FaFileAlt className="text-blue-500 text-2xl" />
+                        <span className="text-base">{item.fileName}</span>
+                      </td>
+                      <td className="px-6 py-5 text-base">{item.title}</td>
+                      <td className="px-6 py-5 text-base">{item.author}</td>
+                      <td className="px-6 py-5 text-base">{item.publicYear}</td>
+                      <td className="px-6 py-5 text-base">{item.created}</td>
+                      <td className="px-6 py-5 text-base font-semibold text-blue-600">
+                        {item.citationStyle}
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <FaEllipsisH className="inline-block text-gray-400 text-xl hover:text-blue-600 cursor-pointer" />
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
