@@ -5,31 +5,46 @@ const authService = {
   // Login API call
   login: async (credentials) => {
     try {
-      const response = await axios.post('/authentication/login', {
-        username: credentials.email, // API expects username field
+      const response = await axios.post('/api/authentication/login', {
+        email: credentials.email,
+        username: credentials.email, // Send both email and username to be safe
         password: credentials.password
       });
       
-      // API returns data in response.result format
-      const { result } = response;
+      // Backend response structure: { code, message, result }
+      // Axios interceptor returns response.data, so response here is actually response.data
+      const responseData = response;
       
-      // Store token in localStorage
-      if (result.token) {
-        localStorage.setItem('accessToken', result.token);
+      // Check if backend indicates success
+      if (responseData.code === 200 && responseData.result) {
+        const { result } = responseData;
+        
+        // Store token in localStorage
+        if (result.token) {
+          localStorage.setItem('accessToken', result.token);
+        }
+        
+        // Return formatted data for Redux
+        return {
+          access_token: result.token,
+          user: {
+            id: result.userId,
+            email: result.email,
+            fullName: result.fullName,
+            role: result.role
+          },
+          tokenExpiresAt: result.tokenExpiresAt
+        };
+      } else {
+        // Backend returned error in response body
+        throw new Error(responseData.message || 'Login failed');
+      }
+    } catch (error) {
+      // If backend returns structured error
+      if (error.response?.data?.message) {
+        throw error.response.data.message;
       }
       
-      // Return formatted data for Redux
-      return {
-        access_token: result.token,
-        user: {
-          id: result.userId,
-          email: result.email,
-          fullName: result.fullName,
-          role: result.role
-        },
-        tokenExpiresAt: result.tokenExpiresAt
-      };
-    } catch (error) {
       throw error.response?.data || error.message;
     }
   },
@@ -37,7 +52,7 @@ const authService = {
   // Register API call (assuming similar endpoint exists)
   register: async (userData) => {
     try {
-      const response = await axios.post('/authentication/register', {
+      const response = await axios.post('/api/authentication/register', {
         username: userData.email,
         password: userData.password,
         name: userData.name

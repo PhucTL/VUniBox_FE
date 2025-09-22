@@ -7,7 +7,7 @@ import axios from "axios";
 // NProgress.configure({ showSpinner: false, trickleSpeed: 100 });
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BE_API_URL || "/api", // Use proxy path
+  baseURL: import.meta.env.VITE_BE_API_URL ||  "http://103.253.146.132:5000", // Use proxy path
   headers: {
     "Content-Type": "application/json",
   },
@@ -17,12 +17,6 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     // NProgress.start(); // Commented out temporarily
-
-    // Debug log for API calls
-    console.log(
-      `🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`,
-      config
-    );
 
     // Tự động thêm token vào header nếu có
     const token = localStorage.getItem("accessToken"); // Sửa từ 'token' thành 'accessToken'
@@ -42,29 +36,10 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     // NProgress.done(); // Commented out temporarily
-    console.log(
-      `✅ API Success: ${response.config.method?.toUpperCase()} ${
-        response.config.url
-      }`,
-      response
-    );
     return response.data;
   },
   (error) => {
     // NProgress.done(); // Commented out temporarily
-
-    // Debug log for API errors
-    console.error(
-      `❌ API Error: ${error.config?.method?.toUpperCase()} ${
-        error.config?.url
-      }`,
-      {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        error: error.message,
-      }
-    );
 
     // Xử lý lỗi 405 (Method Not Allowed)
     if (error.response?.status === 405) {
