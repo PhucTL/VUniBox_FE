@@ -11,7 +11,10 @@ import HelpCenter from "../pages/help";
 import AboutUs from "../pages/aboutUs";
 import CreateProject from "../pages/Main/createProject";
 import Library from "../pages/Main/library";
-import LibItem from "../pages/Main/libitem";
+import LibItem from "../pages/Main/libItem";
+import TrashDoc from "../pages/Main/trashDoc";
+import SavedDoc from "../pages/Main/savedDoc";
+import AllDoc from "../pages/Main/allDoc";
 
 const AppRouter = () => (
   <Routes>
@@ -28,6 +31,9 @@ const AppRouter = () => (
       <Route path="createproject" element={<CreateProject />} />
       <Route path="library" element={<Library />} />
       <Route path="libitem/:folderName" element={<LibItem />} />
+      <Route path="trashdoc" element={<TrashDoc/>} />
+      <Route path="saveddoc" element={<SavedDoc/>} />
+      <Route path="alldoc" element={<AllDoc/>} />
     </Route>
   </Routes>
 );

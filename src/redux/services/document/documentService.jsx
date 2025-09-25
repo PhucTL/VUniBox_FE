@@ -4,8 +4,8 @@ import axios from "../../utils/axiosCustomize";
 const documentService = {
   trashDocument: async (Doc) => {
     try {
-      const response = await axios.post("/document/trash",{Doc});
-      return response.data;
+      const response = await axios.post("/api/document/trash", Doc);
+      return response; // axios instance returns response.data already
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -13,26 +13,27 @@ const documentService = {
 
   restoreDocument: async (Doc) => {
     try {
-      const response = await axios.post("/document/restore",{Doc});
-      return response.data;
+      const response = await axios.post("/api/document/restore", Doc);
+      return response; // return top-level payload { code, message, result }
     } catch (error) {
       throw error.response?.data || error.message;
     }
   },
 
-  getDocByUserIdAndType: async (userId, folderType) => {
-    try {
-      const response = await axios.get(`/document/folder/${userId}/${folderType}`);
-      return response.result;
-    } catch (error) {
-      throw error.response?.data || error.message;
-    }
-  },
 
-  getDocByUserId: async (userId) => {
+    getDocByUserIdAndType: async (userId, folderType, page = 1, pageSize = 6) => {
+      try {
+        const response = await axios.get(`/api/document/folder/${userId}/${folderType}?page=${page}&pageSize=${pageSize}`);
+        return response?.result;
+      } catch (error) {
+        throw error.response?.data || error.message;
+      }
+    },
+
+   getDocByUserId: async (userId) => {
     try {
-      const response = await axios.get(`/document/folders/${userId}`);
-      return response.result;
+      const response = await axios.get(`/api/document/folders/${userId}`);
+      return response.data?.result;
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -40,17 +41,21 @@ const documentService = {
 
   getDocSavedByUserId: async (userId) => {
     try {
-      const response = await axios.get(`/document/saved/${userId}`);
-      return response.result;
+      const response = await axios.get(`/api/document/saved/${userId}`);
+      return response?.result;
     } catch (error) {
       throw error.response?.data || error.message;
     }
   },
 
-  getDocAllByUserId: async (userId) => {
+  getDocAllByUserId: async (userId, status = "", type = "") => {
     try {
-      const response = await axios.get(`/document/all/${userId}`);
-      return response.result;
+      const query = [];
+      if (status) query.push(`status=${encodeURIComponent(status)}`);
+      if (type) query.push(`type=${encodeURIComponent(type)}`);
+      const queryString = query.length ? `?${query.join("&")}` : "";
+      const response = await axios.get(`/api/document/all/${userId}${queryString}`);
+      return response?.result;
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -58,17 +63,20 @@ const documentService = {
 
   getDocTrashByUserId: async (userId) => {
     try {
-      const response = await axios.get(`/document/trash/${userId}`);
-      return response.result;
+      const response = await axios.get(`/api/document/trash/${userId}`);
+      return response?.result ;
     } catch (error) {
       throw error.response?.data || error.message;
     }
   },
 
-  deleteDocpermanent: async () => {
+  // Xóa tài liệu vĩnh viễn từ thùng rác
+  deleteDocPermanent: async (documentId, userId) => {
     try {
-      const response = await axios.delete(`/document/permanent`);
-      return response.result;
+      const response = await axios.delete(`/api/document/permanent`, {
+        data: { documentId, userId }
+      });
+      return response?.result;
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -76,8 +84,8 @@ const documentService = {
 
   uploadFile: async (file) => {
     try {
-      const response = await axios.post("/documentClassification/upload-file",{file});
-      return response.data;
+      const response = await axios.post("/api/documentClassification/upload-file",{file});
+      return response;
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -85,8 +93,8 @@ const documentService = {
 
   uploadUrl: async (url) => {
     try {
-      const response = await axios.post("/documentClassification/process-url",{url});
-      return response.data;
+      const response = await axios.post("/api/documentClassification/process-url",{url});
+      return response;
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -94,17 +102,17 @@ const documentService = {
   
   cleanTemp: async (temp) => {
     try {
-      const response = await axios.post("/documentClassification/cleanup-temp",{temp});
-      return response.data;
+      const response = await axios.post("/api/documentClassification/cleanup-temp",{temp});
+      return response;
     } catch (error) {
       throw error.response?.data || error.message;
     }
   },
 
-  cleanTemp: async (data) => {
+  extractAndSave: async (data) => {
     try {
-      const response = await axios.post("/documentMetadata/extract-and-save",{data});
-      return response.data;
+      const response = await axios.post("/api/documentMetadata/extract-and-save",{data});
+      return response;
     } catch (error) {
       throw error.response?.data || error.message;
     }

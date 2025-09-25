@@ -1,11 +1,13 @@
 // Sidebar.jsx
 import { CiFolderOn, CiStar } from "react-icons/ci";
-import { FaQuestionCircle, FaCog } from "react-icons/fa";
+import { GoQuestion } from "react-icons/go";
+import { HiOutlineCog6Tooth } from "react-icons/hi2";
 import {
-  IoDocumentTextOutline,
   IoHomeOutline,
   IoLayersOutline,
+  IoTrashOutline,
 } from "react-icons/io5";
+import { TfiSave } from "react-icons/tfi";
 import { Link } from "react-router-dom";
 
 export default function Sidebar() {
@@ -47,19 +49,25 @@ export default function Sidebar() {
           <Link to="/createproject" className="flex items-center gap-2">
             <IoLayersOutline size={30} /> Dự Án mới
           </Link>
-          <a href="#" className="flex items-center gap-2">
-            <IoDocumentTextOutline size={30} /> Tài Liệu
-          </a>
+          <Link to="/trashdoc" className="flex items-center gap-2">
+            <IoTrashOutline  size={30} /> Thùng Rác
+          </Link>
+          <Link to="/alldoc" className="flex items-center gap-2">
+            <CiFolderOn  size={30} /> Tất cả
+          </Link>
+          <Link to="/saveddoc" className="flex items-center gap-2">
+            <TfiSave  size={25} /> Đã save
+          </Link>
         </nav>
       </div>
 
       {/* Bottom */}
       <div className="border-t border-gray-400 pt-4 flex flex-col gap-3">
         <a href="#" className="flex items-center gap-2">
-          <FaQuestionCircle size={30} /> Hỗ Trợ
+          <GoQuestion  size={30} /> Hỗ Trợ
         </a>
         <a href="#" className="flex items-center gap-2">
-          <FaCog size={30} /> Cài Đặt
+          <HiOutlineCog6Tooth  size={30} /> Cài Đặt
         </a>
       </div>
     </div>

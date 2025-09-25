@@ -1,6 +1,7 @@
 // Library.jsx
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   FaFolder,
   FaSearch,
@@ -9,54 +10,44 @@ import {
   FaRegFolderOpen,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import documentService from "../../redux/services/document/documentService";
 import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
 
 export default function Library() {
   const navigate = useNavigate();
+  const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
+  const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
+  const [folderCounts, setFolderCounts] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const run = async () => {
+      setLoading(true);
+      try {
+        const result = await documentService.getDocByUserId(userId);
+        setFolderCounts(result?.folderCounts || {});
+      } catch (e) {
+        setFolderCounts({});
+      }
+      setLoading(false);
+    };
+    if (userId) {
+      run();
+    } else {
+      setFolderCounts({});
+    }
+  }, [userId]);
+
+  console.log("Folder Counts:", folderCounts);
+
   const allFolders = [
-    {
-      name: "Book",
-      created: "01/07/2025",
-      modified: "02/07/2025",
-      size: "818 KB",
-    },
-    {
-      name: "Word",
-      created: "01/07/2025",
-      modified: "02/07/2025",
-      size: "818 KB",
-    },
-    {
-      name: "Newspaper",
-      created: "01/07/2025",
-      modified: "02/07/2025",
-      size: "818 KB",
-    },
-    {
-      name: "PDF",
-      created: "01/07/2025",
-      modified: "02/07/2025",
-      size: "818 KB",
-    },
-    {
-      name: "Article",
-      created: "01/07/2025",
-      modified: "02/07/2025",
-      size: "818 KB",
-    },
-    {
-      name: "Research",
-      created: "01/07/2025",
-      modified: "02/07/2025",
-      size: "818 KB",
-    },
-    {
-      name: "Others",
-      created: "01/07/2025",
-      modified: "02/07/2025",
-      size: "818 KB",
-    },
+    { name: "Book" },
+    { name: "Word" },
+    { name: "Newspaper" },
+    { name: "PDF" },
+    { name: "Research" },
+    { name: "Others" },
   ];
 
   const itemsPerPage = 5;
@@ -98,10 +89,8 @@ export default function Library() {
             <table className="w-full text-left border-collapse">
               <thead className="bg-blue-50">
                 <tr>
-                  <th className="p-4 border-b border-blue-200">Files</th>
-                  <th className="p-4 border-b border-blue-200">Created</th>
-                  <th className="p-4 border-b border-blue-200">Modified ↓</th>
-                  <th className="p-4 border-b border-blue-200">Size</th>
+                  <th className="p-4 border-b border-blue-200">Folder</th>
+                  <th className="p-4 border-b border-blue-200">Count</th>
                   <th className="p-4 border-b border-blue-200"></th>
                 </tr>
               </thead>
@@ -115,9 +104,7 @@ export default function Library() {
                     <td className="p-4 flex items-center gap-2">
                       <FaRegFolderOpen size={45} /> {folder.name}
                     </td>
-                    <td className="p-4">{folder.created}</td>
-                    <td className="p-4">{folder.modified}</td>
-                    <td className="p-4">{folder.size}</td>
+                    <td className="p-4">{loading ? "..." : (folderCounts[folder.name] || 0)}</td>
                     <td className="p-4 text-right">...</td>
                   </tr>
                 ))}
