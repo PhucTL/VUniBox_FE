@@ -13,17 +13,26 @@ const initialState = {
   isLoginLoading: false,
   isRegisterLoading: false,
   isGoogleLoginLoading: false,
+  isForgotPasswordVerifyLoading: false,
+  isForgotPasswordResetLoading: false,
   
   // Error states
   error: null,
   loginError: null,
   registerError: null,
   googleLoginError: null,
+  forgotPasswordVerifyError: null,
+  forgotPasswordResetError: null,
   
   // Success states
   loginSuccess: false,
   registerSuccess: false,
-  googleLoginSuccess: false
+  googleLoginSuccess: false,
+  forgotPasswordVerifySuccess: false,
+  forgotPasswordResetSuccess: false,
+  
+  // Forgot password data
+  isVerified: false
 };
 
 const authReducer = (state = initialState, action) => {
@@ -128,6 +137,64 @@ const authReducer = (state = initialState, action) => {
         googleLoginError: action.payload,
         googleLoginSuccess: false,
         error: action.payload
+      };
+
+    // Forgot Password Verify cases
+    case AUTH_ACTION_TYPES.FORGOT_PASSWORD_VERIFY_REQUEST:
+      return {
+        ...state,
+        isForgotPasswordVerifyLoading: true,
+        isLoading: true,
+        forgotPasswordVerifyError: null,
+        forgotPasswordVerifySuccess: false
+      };
+      
+    case AUTH_ACTION_TYPES.FORGOT_PASSWORD_VERIFY_SUCCESS:
+      return {
+        ...state,
+        isForgotPasswordVerifyLoading: false,
+        isLoading: false,
+        forgotPasswordVerifyError: null,
+        forgotPasswordVerifySuccess: true,
+        isVerified: true
+      };
+      
+    case AUTH_ACTION_TYPES.FORGOT_PASSWORD_VERIFY_FAILURE:
+      return {
+        ...state,
+        isForgotPasswordVerifyLoading: false,
+        isLoading: false,
+        forgotPasswordVerifyError: action.payload,
+        forgotPasswordVerifySuccess: false,
+        isVerified: false
+      };
+
+    // Forgot Password Reset cases
+    case AUTH_ACTION_TYPES.FORGOT_PASSWORD_RESET_REQUEST:
+      return {
+        ...state,
+        isForgotPasswordResetLoading: true,
+        isLoading: true,
+        forgotPasswordResetError: null,
+        forgotPasswordResetSuccess: false
+      };
+      
+    case AUTH_ACTION_TYPES.FORGOT_PASSWORD_RESET_SUCCESS:
+      return {
+        ...state,
+        isForgotPasswordResetLoading: false,
+        isLoading: false,
+        forgotPasswordResetError: null,
+        forgotPasswordResetSuccess: true
+      };
+      
+    case AUTH_ACTION_TYPES.FORGOT_PASSWORD_RESET_FAILURE:
+      return {
+        ...state,
+        isForgotPasswordResetLoading: false,
+        isLoading: false,
+        forgotPasswordResetError: action.payload,
+        forgotPasswordResetSuccess: false
       };
 
     // Logout case

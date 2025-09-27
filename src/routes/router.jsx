@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Login/login";
 import Register from "../pages/Login/register";
+import ForgotPassword from "../pages/Login/forgotPassword";
 import Account from "../pages/account/account";
 import Settings from "../pages/settings";
 import App from "../App";
@@ -20,6 +21,7 @@ const AppRouter = () => (
       <Route index element={<Home />} />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
+      <Route path="forgot-password" element={<ForgotPassword />} />
       <Route path="account" element={<Account />} />
       <Route path="settings" element={<Settings />} />
       <Route path="policy" element={<PrivacyPolicy />} />

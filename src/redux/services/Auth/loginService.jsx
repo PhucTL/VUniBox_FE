@@ -49,17 +49,148 @@ const authService = {
     }
   },
 
-  // Register API call (assuming similar endpoint exists)
+  // Register API call
   register: async (userData) => {
     try {
+      console.log('Register API - Sending data:', userData);
+      
       const response = await axios.post('/api/authentication/register', {
-        username: userData.email,
+        email: userData.email,
+        fullName: userData.fullName,
+        phoneNumber: userData.phoneNumber,
         password: userData.password,
-        name: userData.name
+        confirmPassword: userData.confirmPassword
       });
       
-      return response.data;
+      console.log('Register API - Full response:', response);
+      console.log('Register API - Response data:', response.data);
+      
+      // Backend response structure: { code, message, result }
+      // Sometimes axios puts the actual response in response directly, not response.data
+      const responseData = response.data || response;
+      
+      // Check if backend indicates success
+      if (responseData.code === 200 || responseData.code === 201) {
+        return {
+          success: true,
+          message: responseData.message || 'Đăng ký thành công',
+          data: responseData.result
+        };
+      } else {
+        throw new Error(responseData.message || 'Register failed');
+      }
     } catch (error) {
+      console.log('Register API - Error occurred:', error);
+      console.log('Register API - Error response:', error.response);
+      console.log('Register API - Error response data:', error.response?.data);
+      
+      // If backend returns structured error
+      if (error.response?.data?.message) {
+        throw error.response.data.message;
+      }
+      
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Forgot Password - Step 1: Verify email and phone
+  forgotPasswordVerify: async (verifyData) => {
+    try {
+      console.log('Verify API - Sending data:', verifyData);
+      
+      const response = await axios.post('/api/authentication/forgot-password/verify', {
+        email: verifyData.email,
+        phoneNumber: verifyData.phoneNumber
+      });
+      
+      console.log('Verify API - Full response:', response);
+      console.log('Verify API - Response headers:', response.headers);
+      console.log('Verify API - Response cookies:', document.cookie);
+      const responseData = response.data || response;
+      console.log('Verify API - Response data:', responseData);
+      
+      if (responseData.code === 200) {
+        // Store verification success with timestamp for backend validation
+        const sessionData = {
+          verified: true,
+          verifyTimestamp: Date.now(),
+          email: verifyData.email,
+          phoneNumber: verifyData.phoneNumber
+        };
+        localStorage.setItem('forgotPasswordSession', JSON.stringify(sessionData));
+        console.log('Verify API - Saved session data:', sessionData);
+        
+        return {
+          success: true,
+          message: responseData.message || 'Xác thực thành công',
+          data: responseData.result
+        };
+      } else {
+        throw new Error(responseData.message || 'Xác thực thất bại');
+      }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        throw error.response.data.message;
+      }
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Forgot Password - Step 2: Reset password  
+  forgotPasswordReset: async (resetData) => {
+    try {
+      console.log('Reset Password - Starting reset API call');
+      console.log('Reset Password - Data:', resetData);
+      
+      // Get verified email and phone from localStorage session
+      const sessionData = localStorage.getItem('forgotPasswordSession');
+      let requestBody = {
+        newPassword: resetData.newPassword,
+        confirmPassword: resetData.confirmPassword
+      };
+      
+      // Add verified email and phone to reset request
+      if (sessionData) {
+        try {
+          const parsedSession = JSON.parse(sessionData);
+          if (parsedSession.email && parsedSession.phoneNumber) {
+            requestBody.email = parsedSession.email;
+            requestBody.phoneNumber = parsedSession.phoneNumber;
+            // Try without timestamp first
+          }
+        } catch (parseError) {
+          console.log('Session parse error:', parseError);
+        }
+      }
+      
+      console.log('Reset Password - Final request body:', requestBody);
+      
+      // Reset API with verified email + phone + new passwords
+      const response = await axios.post('/api/authentication/forgot-password/reset', requestBody);
+      
+      console.log('Reset Password - Success response:', response);
+      
+      const responseData = response.data || response;
+      
+      if (responseData.code === 200) {
+        // Clear session data after successful reset
+        localStorage.removeItem('forgotPasswordSession');
+        
+        return {
+          success: true,
+          message: responseData.message || 'Đặt lại mật khẩu thành công',
+          data: responseData.result
+        };
+      } else {
+        throw new Error(responseData.message || 'Đặt lại mật khẩu thất bại');
+      }
+    } catch (error) {
+      console.log('Reset Password - Error:', error);
+      console.log('Reset Password - Error response:', error.response?.data);
+      
+      if (error.response?.data?.message) {
+        throw error.response.data.message;  
+      }
       throw error.response?.data || error.message;
     }
   },

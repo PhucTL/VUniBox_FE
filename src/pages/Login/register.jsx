@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { registerThunk } from "../../redux/thunks/auth";
+import { toast } from "react-toastify";
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
-    password: ""
+    phoneNumber: "",
+    password: "",
+    confirmPassword: ""
   });
 
   const dispatch = useDispatch();
@@ -34,14 +37,27 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Validate password confirmation
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Mật khẩu xác nhận không khớp!");
+      return;
+    }
+
+    // Validate password length
+    if (formData.password.length < 6) {
+      toast.error("Mật khẩu phải có ít nhất 6 ký tự!");
+      return;
+    }
+    
     const result = await dispatch(registerThunk({
-      name: formData.name,
+      fullName: formData.fullName,
       email: formData.email,
-      password: formData.password
+      phoneNumber: formData.phoneNumber,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword
     }));
     
     if (result.success) {
-      // Delay navigation to show toast
       setTimeout(() => {
         navigate("/login");
       }, 1500);
@@ -93,15 +109,15 @@ export default function Register() {
           <form className="w-[400px] flex flex-col gap-6" onSubmit={handleSubmit}>
             <div className="justify-items-start">
               <label className="block text-blue-900 font-semibold mb-2 text-lg">
-                Tên*
+                Họ và Tên*
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="fullName"
+                value={formData.fullName}
                 onChange={handleInputChange}
                 className="w-full px-6 py-3 rounded-full text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Nhập tên"
+                placeholder="Nhập họ và tên"
                 required
               />
             </div>
@@ -120,6 +136,21 @@ export default function Register() {
                 required
               />
             </div>
+
+            <div className="justify-items-start">
+              <label className="block text-blue-900 font-semibold mb-2 text-lg">
+                Số Điện Thoại*
+              </label>
+              <input
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                className="w-full px-6 py-3 rounded-full text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Nhập số điện thoại"
+                required
+              />
+            </div>
             
             <div className="justify-items-start">
               <label className="block text-blue-900 font-semibold mb-2 text-lg">
@@ -131,7 +162,24 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleInputChange}
                 className="w-full px-6 py-3 rounded-full text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Nhập mật khẩu"
+                placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
+                minLength="6"
+                required
+              />
+            </div>
+
+            <div className="justify-items-start">
+              <label className="block text-blue-900 font-semibold mb-2 text-lg">
+                Xác Nhận Mật Khẩu*
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                className="w-full px-6 py-3 rounded-full text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Nhập lại mật khẩu"
+                minLength="6"
                 required
               />
             </div>
