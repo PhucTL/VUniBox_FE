@@ -57,6 +57,16 @@ const planService = {
       throw error.response?.data || error.message;
     }
   },
+
+  // Lấy thông tin subscription với ngày hết hạn
+  getUserSubscription: async (userId) => {
+    try {
+      const response = await axios.get(`/api/subscription/user/${userId}/current`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
 };
 
 export default planService;

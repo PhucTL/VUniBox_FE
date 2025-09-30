@@ -105,3 +105,26 @@ export const getCurrentPlanThunk = (userId) => async (dispatch) => {
     return { success: false, error: error.message || 'Lấy thông tin gói hiện tại thất bại!' };
   }
 };
+
+// Lấy thông tin subscription với ngày hết hạn
+export const getUserSubscriptionThunk = (userId) => async (dispatch) => {
+  try {
+    const result = await planService.getUserSubscription(userId);
+    
+    if (result.success) {
+      // Update store với subscription info
+      dispatch(getCurrentPlanSuccess({
+        ...result,
+        currentPlan: result.currentPlan,
+        expiryDate: result.expiryDate,
+        isActive: result.isActive,
+        daysRemaining: result.daysRemaining
+      }));
+      return { success: true, data: result };
+    } else {
+      return { success: false, error: result.message };
+    }
+  } catch (error) {
+    return { success: false, error: error.message || 'Lấy thông tin subscription thất bại!' };
+  }
+};

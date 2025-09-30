@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getUserProfileThunk, getUserStorageThunk, uploadAvatarThunk, updateProfileThunk } from "../../redux/thunks/user/userThunks";
+import { getUserSubscriptionThunk } from "../../redux/thunks/plan/planThunks";
 import StatsCard from "../../components/StatsCard";
+import SubscriptionCard from "../../components/SubscriptionCard";
 import { FaHdd, FaFileAlt, FaQuoteLeft, FaRobot } from "react-icons/fa";
 
 export default function Account() {
@@ -29,11 +31,15 @@ export default function Account() {
     isUpdateProfileLoading
   } = useSelector(state => state.user);
 
+  // Get subscription info from Redux store
+  const { currentPlan: subscriptionData } = useSelector(state => state.plan);
+
   // Load user data when component mounts
   useEffect(() => {
     if (userId) {
       dispatch(getUserProfileThunk(userId));
       dispatch(getUserStorageThunk(userId));
+      dispatch(getUserSubscriptionThunk(userId)); // Load subscription info
     }
   }, [dispatch, userId]);
 
@@ -187,6 +193,13 @@ export default function Account() {
           icon={<FaRobot />}
         />
       </div>
+
+      {/* Subscription Card */}
+      {subscriptionData && (
+        <div className="mb-8">
+          <SubscriptionCard subscriptionData={subscriptionData} />
+        </div>
+      )}
 
       {/* Account Details */}
       <div className="bg-white rounded-3xl shadow-lg p-8">
