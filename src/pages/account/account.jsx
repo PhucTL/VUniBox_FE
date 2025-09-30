@@ -197,6 +197,13 @@ export default function Account() {
       {/* Subscription Card */}
       {subscriptionData && (
         <div className="mb-8">
+          {/* Debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mb-4 p-4 bg-gray-100 rounded-lg text-xs">
+              <p><strong>Debug Subscription:</strong></p>
+              <pre>{JSON.stringify(subscriptionData, null, 2)}</pre>
+            </div>
+          )}
           <SubscriptionCard subscriptionData={subscriptionData} />
         </div>
       )}

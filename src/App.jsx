@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import CitationChatbot from "./components/CitationChatbot";
+import SimpleChatbot from "./components/SimpleChatbot";
 import React from "react";
 
 function App() {
@@ -17,10 +17,8 @@ function App() {
       {/* Footer */}
       <Footer />
       
-      {/* Citation Chatbot - Available on all pages */}
-      <React.Suspense fallback={null}>
-        <CitationChatbot />
-      </React.Suspense>
+      {/* Simple Chatbot - Test version */}
+      <SimpleChatbot />
     </div>
   );
 }
