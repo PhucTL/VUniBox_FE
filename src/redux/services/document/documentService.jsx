@@ -5,7 +5,7 @@ const documentService = {
   trashDocument: async (Doc) => {
     try {
       const response = await axios.post("/api/document/trash", Doc);
-      return response; // axios instance returns response.data already
+      return response; 
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -14,7 +14,7 @@ const documentService = {
   restoreDocument: async (Doc) => {
     try {
       const response = await axios.post("/api/document/restore", Doc);
-      return response; // return top-level payload { code, message, result }
+      return response; 
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -33,7 +33,7 @@ const documentService = {
    getDocByUserId: async (userId) => {
     try {
       const response = await axios.get(`/api/document/folders/${userId}`);
-      return response.data?.result;
+      return response?.result;
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -84,7 +84,16 @@ const documentService = {
 
   uploadFile: async (file) => {
     try {
-      const response = await axios.post("/api/documentClassification/upload-file",{file});
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post(
+        "/api/documentClassification/upload-file",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return response;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -93,7 +102,10 @@ const documentService = {
 
   uploadUrl: async (url) => {
     try {
-      const response = await axios.post("/api/documentClassification/process-url",{url});
+      const response = await axios.post(
+        "/api/documentClassification/process-url",
+        { url }
+      );
       return response;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -102,7 +114,7 @@ const documentService = {
   
   cleanTemp: async (temp) => {
     try {
-      const response = await axios.post("/api/documentClassification/cleanup-temp",{temp});
+      const response = await axios.post("/api/documentClassification/cleanup-temp",temp);
       return response;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -111,7 +123,7 @@ const documentService = {
 
   extractAndSave: async (data) => {
     try {
-      const response = await axios.post("/api/documentMetadata/extract-and-save",{data});
+      const response = await axios.post("/api/documentMetadata/extract-and-save",data);
       return response;
     } catch (error) {
       throw error.response?.data || error.message;

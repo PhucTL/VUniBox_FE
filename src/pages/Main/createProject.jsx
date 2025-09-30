@@ -1,24 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { FaSearch, FaUpload, FaLink, FaTrash, FaFilter } from "react-icons/fa";
 import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
+import documentService from "../../redux/services/document/documentService";
+import citationService from "../../redux/services/citation/citationService";
 
 export default function CreateProject() {
+  const [infoModal, setInfoModal] = useState(false);
+  const [extractLoading, setExtractLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalType, setModalType] = useState(null); // 'file' or 'url'
+  const [modalType, setModalType] = useState(null); 
   const [citationModal, setCitationModal] = useState(false);
   const [selectedCitation, setSelectedCitation] = useState("APA");
+  const [citationStyles, setCitationStyles] = useState([]);
+  const [loadingCitations, setLoadingCitations] = useState(false);
+  const [documentId, setDocumentId] = useState(null);
+  const [generatingCitation, setGeneratingCitation] = useState(false);
+  const [citationResult, setCitationResult] = useState(null);
+  const [citationResultModal, setCitationResultModal] = useState(false);
 
-  const citationTypes = [
-    {
-      id: "APA",
-      name: "APA",
-      description: "American Psychological Association",
-    },
-    { id: "MLA", name: "MLA", description: "Modern Language Association" },
-    { id: "Harvard", name: "Harvard", description: "Harvard Referencing" },
-    { id: "Chicago", name: "Chicago", description: "Chicago Manual of Style" },
-  ];
+  // Fetch citation styles when opening the citation modal for the first time
+  useEffect(() => {
+    const fetchStyles = async () => {
+      if (!citationModal || citationStyles.length) return;
+      setLoadingCitations(true);
+      try {
+        const styles = await citationService.getCitationStyle();
+        setCitationStyles(styles || []);
+        // If current selection not in new list, default to first style
+        if (styles && styles.length) {
+          const hasSelected = styles.some((s) => (s.style || s.id) === selectedCitation);
+          if (!hasSelected) {
+            setSelectedCitation(styles[0].style || styles[0].id);
+          }
+        }
+      } catch (e) {
+        // Keep fallback list silently; optionally log
+        console.error("Failed to load citation styles", e);
+      }
+      setLoadingCitations(false);
+    };
+    fetchStyles();
+  }, [citationModal]);
+
+  // State lưu thông tin sau khi upload
+  const [uploadInfo, setUploadInfo] = useState({});
+  const [fileInput, setFileInput] = useState(null);
+  const [urlInput, setUrlInput] = useState("");
+  const [loadingUpload, setLoadingUpload] = useState(false);
+
+  // Lấy user từ Redux hoặc localStorage
+  const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
+  const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
+
   const items = [
     {
       id: 4,
@@ -134,63 +169,90 @@ export default function CreateProject() {
                 {modalType === "file" ? (
                   <div className="space-y-6">
                     <div className="text-center">
-                      <h3 className="text-2xl font-bold text-blue-600 mb-2">
-                        Tải File Lên
-                      </h3>
-                      <p className="text-gray-500">
-                        Chọn file từ thiết bị của bạn
-                      </p>
+                      <h3 className="text-2xl font-bold text-blue-600 mb-2">Tải File Lên</h3>
+                      <p className="text-gray-500">Chọn file từ thiết bị của bạn</p>
                     </div>
                     <div className="border-2 border-dashed border-blue-200 rounded-2xl p-8 text-center hover:border-blue-400 transition-colors duration-200">
                       <FaUpload className="mx-auto text-4xl text-blue-500 mb-4" />
-                      <input type="file" className="hidden" id="fileInput" />
+                      <input type="file" className="hidden" id="fileInput" onChange={e => setFileInput(e.target.files[0])} />
                       <label htmlFor="fileInput" className="cursor-pointer">
-                        <span className="text-blue-600 hover:text-blue-700">
-                          Chọn file
-                        </span>
-                        <span className="text-gray-500">
-                          {" "}
-                          hoặc kéo thả file vào đây
-                        </span>
+                        <span className="text-blue-600 hover:text-blue-700">Chọn file</span>
+                        <span className="text-gray-500"> hoặc kéo thả file vào đây</span>
                       </label>
+                      {fileInput && <div className="mt-2 text-blue-600">{fileInput.name}</div>}
                     </div>
                     <button
-                      className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full 
-                    hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
-                      onClick={() => {
-                        setCitationModal(true);
-                        setModalOpen(false);
+                      className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
+                      disabled={loadingUpload || !fileInput}
+                      onClick={async () => {
+                        if (!fileInput) return;
+                        setLoadingUpload(true);
+                        try {
+                          const res = await documentService.uploadFile(fileInput);
+                          const result = res?.result;
+                          setUploadInfo({
+                            documentType: result?.detectedType,
+                            tempId: result?.tempId,
+                            filePath: result?.filePath,
+                            fileName: fileInput.name,
+                            typeName: result?.typeName,
+                            confirmationMessage: result?.confirmationMessage,
+                            question: result?.question,
+                            subtitle: result?.subtitle,
+                          });
+                          setModalOpen(false);
+                          setInfoModal(true);
+                        } catch (err) {
+                          alert(err.message || 'Upload thất bại');
+                        }
+                        setLoadingUpload(false);
                       }}
                     >
-                      Tải lên
+                      {loadingUpload ? 'Đang tải...' : 'Tải lên'}
                     </button>
                   </div>
                 ) : (
                   <div className="space-y-6">
                     <div className="text-center">
-                      <h3 className="text-2xl font-bold text-blue-600 mb-2">
-                        Nhập URL
-                      </h3>
-                      <p className="text-gray-500">
-                        Dán link từ nguồn trực tuyến
-                      </p>
+                      <h3 className="text-2xl font-bold text-blue-600 mb-2">Nhập URL</h3>
+                      <p className="text-gray-500">Dán link từ nguồn trực tuyến</p>
                     </div>
                     <div className="space-y-4">
                       <input
                         type="text"
+                        value={urlInput}
+                        onChange={e => setUrlInput(e.target.value)}
                         placeholder="https://..."
-                        className="w-full px-6 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-400 
-                        focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200"
+                        className="w-full px-6 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200"
                       />
                       <button
-                        className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full 
-                      hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
-                        onClick={() => {
-                          setCitationModal(true);
-                          setModalOpen(false);
+                        className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
+                        disabled={loadingUpload || !urlInput}
+                        onClick={async () => {
+                          if (!urlInput) return;
+                          setLoadingUpload(true);
+                          try {
+                            console.log("Uploading URL:", urlInput);
+                            const res = await documentService.uploadUrl(urlInput);
+                            const result = res?.result;
+                            setUploadInfo({
+                              documentType: result?.detectedType,
+                              tempId: result?.tempId,
+                              url: result?.url,
+                              typeName: result?.typeName,
+                              confirmationMessage: result?.confirmationMessage,
+                              question: result?.question,
+                              subtitle: result?.subtitle,
+                            });
+                            setModalOpen(false);
+                            setInfoModal(true);
+                          } catch (err) {
+                            alert(err.message || 'Upload thất bại');
+                          }
+                          setLoadingUpload(false);
                         }}
                       >
-                        Lưu URL
+                        {loadingUpload ? 'Đang tải...' : 'Lưu URL'}
                       </button>
                     </div>
                   </div>
@@ -199,7 +261,71 @@ export default function CreateProject() {
             </div>
           )}
 
-          {/* Citation Style Modal */}
+          {/* Info Modal sau khi upload file/url */}
+          {infoModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
+              <div className="bg-white rounded-3xl shadow-2xl p-8 w-[500px] border border-blue-100 relative animate-fadeIn">
+                <button
+                  className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full border border-blue-200 flex items-center justify-center text-blue-600 hover:text-blue-800 hover:border-blue-400 transition-colors duration-200"
+                  onClick={() => setInfoModal(false)}
+                  aria-label="Đóng"
+                >
+                  ×
+                </button>
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold text-blue-600">Thông tin nhận diện tài liệu</h3>
+                  <div className="text-gray-700">
+                    <div className="mb-2"><span className="font-semibold">Loại tài liệu:</span> {uploadInfo.typeName}</div>
+                    <div className="mb-2"><span className="font-semibold">Mã loại:</span> {uploadInfo.documentType}</div>
+                    {uploadInfo.url && <div className="mb-2"><span className="font-semibold">URL:</span> {uploadInfo.url}</div>}
+                    {uploadInfo.filePath && <div className="mb-2"><span className="font-semibold">File Path:</span> {uploadInfo.filePath}</div>}
+                    {uploadInfo.fileName && <div className="mb-2"><span className="font-semibold">File Name:</span> {uploadInfo.fileName}</div>}
+                  </div>
+                  <div className="text-blue-600 font-semibold mb-2">{uploadInfo.confirmationMessage}</div>
+                  <div className="text-gray-500 mb-2">{uploadInfo.subtitle}</div>
+                  <div className="text-gray-700 mb-2">{uploadInfo.question}</div>
+                  <button
+                    className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 font-semibold"
+                    disabled={extractLoading}
+                    onClick={async () => {
+                      setExtractLoading(true);
+                      try {
+                        let payload = {
+                          userId,
+                          filePath: "",
+                          fileName: "",
+                          url: "",
+                          documentType: uploadInfo.documentType,
+                          saveToFolder: true,
+                          tempId: uploadInfo.tempId,
+                        };
+                        if (uploadInfo.url) {
+                          payload.url = uploadInfo.url;
+                        } else if (uploadInfo.filePath || uploadInfo.fileName) {
+                          payload.filePath = uploadInfo.filePath || "";
+                          payload.fileName = uploadInfo.fileName || "";
+                        }
+                        console.log("extractAndSave payload:", payload);
+                        const res = await documentService.extractAndSave(payload);
+                        const newDocId = res?.result?.documentId || res?.result?.id || res?.documentId;
+                        if (newDocId) {
+                          setDocumentId(newDocId);
+                        }
+                        alert(res?.message || "Lưu thành công!");
+                        setInfoModal(false);
+                        setCitationModal(true);
+                      } catch (err) {
+                        alert(err.message || "Lưu thất bại!");
+                      }
+                      setExtractLoading(false);
+                    }}
+                  >
+                    {extractLoading ? "Đang lưu..." : "Lưu tài liệu"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {citationModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
               <div
@@ -224,19 +350,27 @@ export default function CreateProject() {
                     </p>
                   </div>
 
+                  {loadingCitations && (
+                    <div className="text-center text-gray-500">Đang tải kiểu trích dẫn...</div>
+                  )}
+
+                  {!citationStyles.length && !loadingCitations && (
+                    <div className="text-center text-gray-500">Không có kiểu trích dẫn để hiển thị</div>
+                  )}
+
                   <div className="grid grid-cols-2 gap-4">
-                    {citationTypes.map((type) => (
+                    {citationStyles.map((type) => (
                       <div
-                        key={type.id}
+                        key={type.style || type.id}
                         className={`p-4 border-2 rounded-2xl cursor-pointer transition-all duration-200 ${
-                          selectedCitation === type.id
+                          selectedCitation === (type.style || type.id)
                             ? "border-blue-500 bg-blue-50"
                             : "border-gray-200 hover:border-blue-300"
                         }`}
-                        onClick={() => setSelectedCitation(type.id)}
+                        onClick={() => setSelectedCitation(type.style || type.id)}
                       >
                         <h4 className="font-bold text-lg text-blue-600">
-                          {type.name}
+                          {type.style}
                         </h4>
                         <p className="text-sm text-gray-500">
                           {type.description}
@@ -247,20 +381,70 @@ export default function CreateProject() {
 
                   <div className="flex gap-4 pt-4">
                     <button
-                      onClick={() => {
-                        setCitationModal(false);
+                      onClick={async () => {
+                        if (!documentId) {
+                          alert("Không tìm thấy documentId. Vui lòng lưu tài liệu trước.");
+                          return;
+                        }
+                        try {
+                          setGeneratingCitation(true);
+                          const genRes = await citationService.generateCitaion({
+                            userId,
+                            documentId,
+                            citationStyle: selectedCitation,
+                          });
+                          if (genRes?.result) {
+                            setCitationResult(genRes.result);
+                            setCitationResultModal(true);
+                            setCitationModal(false);
+                          }
+                        } catch (e) {
+                          console.error("Generate citation failed", e);
+                          alert(e?.message || "Tạo trích dẫn thất bại");
+                        } finally {
+                          setGeneratingCitation(false);
+                        }
                       }}
                       className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full 
                       hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
                     >
-                      Lưu và tiếp tục
+                      {generatingCitation ? "Đang trích dẫn..." : "Trích dẫn"}
                     </button>
                     <button
                       onClick={() => setCitationModal(false)}
                       className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-600 rounded-full
                       hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                     >
-                      Không lưu
+                      Không trích dẫn
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {citationResultModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
+              <div className="bg-white rounded-3xl shadow-2xl p-8 w-[600px] border border-blue-100 relative animate-fadeIn">
+                <button
+                  className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full border border-blue-200 flex items-center justify-center text-blue-600 hover:text-blue-800 hover:border-blue-400 transition-colors duration-200"
+                  onClick={() => setCitationResultModal(false)}
+                  aria-label="Đóng"
+                >
+                  ×
+                </button>
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold text-blue-600">Kết quả trích dẫn</h3>
+                  <div className="text-gray-700">
+                    <div className="mb-2"><span className="font-semibold">Style:</span> {citationResult?.style}</div>
+                    <div className="mb-2"><span className="font-semibold">Formatted:</span> {citationResult?.formattedCitation}</div>
+                    <div className="mb-2"><span className="font-semibold">In-text:</span> {citationResult?.inTextCitation}</div>
+                  </div>
+                  <div className="flex gap-4 pt-2">
+                    <button
+                      onClick={() => setCitationResultModal(false)}
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 font-semibold"
+                    >
+                      Đóng
                     </button>
                   </div>
                 </div>
