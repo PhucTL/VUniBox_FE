@@ -18,21 +18,21 @@ const SubscriptionCard = ({ subscriptionData }) => {
 
   // Determine status color and icon
   const getStatusColor = () => {
-    if (!isActive) return 'text-red-500';
+    // Use daysRemaining as primary indicator
+    if (daysRemaining <= 0) return 'text-red-500';
     if (daysRemaining <= 7) return 'text-orange-500';
     if (daysRemaining <= 30) return 'text-yellow-500';
     return 'text-green-500';
   };
 
   const getStatusIcon = () => {
-    if (!isActive) return <FaExclamationTriangle className="text-red-500" />;
+    if (daysRemaining <= 0) return <FaExclamationTriangle className="text-red-500" />;
     if (daysRemaining <= 7) return <FaExclamationTriangle className="text-orange-500" />;
     return <FaCheckCircle className="text-green-500" />;
   };
 
   const getStatusText = () => {
-    if (!isActive) return 'Đã hết hạn';
-    if (daysRemaining <= 0) return 'Hết hạn hôm nay';
+    if (daysRemaining <= 0) return 'Đã hết hạn';
     if (daysRemaining === 1) return 'Còn 1 ngày';
     return `Còn ${daysRemaining} ngày`;
   };
@@ -106,7 +106,7 @@ const SubscriptionCard = ({ subscriptionData }) => {
         )}
 
         {/* Warning for expiring soon */}
-        {isActive && daysRemaining <= 7 && (
+        {daysRemaining > 0 && daysRemaining <= 7 && (
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
             <div className="flex items-center space-x-2">
               <FaExclamationTriangle className="text-orange-500" />
@@ -118,7 +118,7 @@ const SubscriptionCard = ({ subscriptionData }) => {
         )}
 
         {/* Expired message */}
-        {!isActive && (
+        {daysRemaining <= 0 && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3">
             <div className="flex items-center space-x-2">
               <FaExclamationTriangle className="text-red-500" />

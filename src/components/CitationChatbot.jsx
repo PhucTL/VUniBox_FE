@@ -13,8 +13,12 @@ const CitationChatbot = () => {
   const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
   const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
   
-  // Get chatbot state
-  const { messages, isLoading, isSending, messageCount } = useSelector(state => state.chatbot);
+  // Get chatbot state - with fallback
+  const chatbotState = useSelector(state => state.chatbot) || {};
+  const { messages = [], isLoading = false, isSending = false, messageCount = 0 } = chatbotState;
+
+  // Debug logging
+  console.log('ChatBot Debug:', { userId, chatbotState });
 
   // Auto scroll to bottom
   const scrollToBottom = () => {

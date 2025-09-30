@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import CitationChatbot from "./components/CitationChatbot";
+import React from "react";
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
       <Footer />
       
       {/* Citation Chatbot - Available on all pages */}
-      <CitationChatbot />
+      <React.Suspense fallback={null}>
+        <CitationChatbot />
+      </React.Suspense>
     </div>
   );
 }
