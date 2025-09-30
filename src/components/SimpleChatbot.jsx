@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { FaRobot, FaTimes, FaPaperPlane, FaUser, FaSpinner, FaTrash, FaQuoteLeft } from 'react-icons/fa';
 import chatbotService from '../redux/services/chatbot/chatbotService';
 import { toast } from 'react-toastify';
@@ -11,9 +12,21 @@ const SimpleChatbot = () => {
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Get user ID
-  const authUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+  // Get user ID from multiple sources
+  const authUserRedux = useSelector((state) => state.auth?.user);
+  const authUserLocal = JSON.parse(localStorage.getItem("currentUser") || "null");
+  const authUser = authUserRedux || authUserLocal;
   const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
+
+  // Debug logging
+  console.log('Chatbot Debug:', {
+    authUserRedux,
+    authUserLocal,
+    authUser,
+    userId,
+    localStorage_currentUser: localStorage.getItem("currentUser"),
+    localStorage_userId: localStorage.getItem("userId")
+  });
 
   // Auto scroll to bottom
   const scrollToBottom = () => {
@@ -291,6 +304,15 @@ const SimpleChatbot = () => {
             <FaPaperPlane className="text-sm" />
           </button>
         </div>
+        
+        {/* Debug info */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
+            <p><strong>Debug:</strong> UserId = {userId || 'null'}</p>
+            <p>AuthUser: {authUser ? JSON.stringify(authUser) : 'null'}</p>
+          </div>
+        )}
+        
         {!userId && (
           <p className="text-xs text-red-500 mt-2">Vui lòng đăng nhập để sử dụng chatbot</p>
         )}
