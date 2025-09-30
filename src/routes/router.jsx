@@ -15,6 +15,9 @@ import LibItem from "../pages/Main/libItem";
 import TrashDoc from "../pages/Main/trashDoc";
 import SavedDoc from "../pages/Main/savedDoc";
 import AllDoc from "../pages/Main/allDoc";
+import Plans from "../pages/plans/plans";
+import PaymentSuccess from "../pages/payment/PaymentSuccess";
+import PaymentCancel from "../pages/payment/PaymentCancel";
 
 const AppRouter = () => (
   <Routes>
@@ -24,6 +27,9 @@ const AppRouter = () => (
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="account" element={<Account />} />
+      <Route path="plans" element={<Plans />} />
+      <Route path="payment/success" element={<PaymentSuccess />} />
+      <Route path="payment/cancel" element={<PaymentCancel />} />
       <Route path="settings" element={<Settings />} />
       <Route path="policy" element={<PrivacyPolicy />} />
       <Route path="help" element={<HelpCenter />} />
