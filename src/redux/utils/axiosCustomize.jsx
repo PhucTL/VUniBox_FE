@@ -7,11 +7,11 @@ import axios from "axios";
 // NProgress.configure({ showSpinner: false, trickleSpeed: 100 });
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BE_API_URL ||  "https://103.253.146.132:5000", // Use proxy path
+  baseURL: import.meta.env.VITE_BE_API_URL ||  "http://103.253.146.132:5000",
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: false, // Tắt credentials để tránh CORS issue
+  withCredentials: true, // Enable credentials for session support
 });
 
 instance.interceptors.request.use(

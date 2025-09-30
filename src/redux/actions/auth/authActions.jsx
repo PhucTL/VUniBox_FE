@@ -45,6 +45,36 @@ export const googleLoginFailure = (error) => ({
   payload: error
 });
 
+// Forgot Password Verify Actions
+export const forgotPasswordVerifyRequest = () => ({
+  type: AUTH_ACTION_TYPES.FORGOT_PASSWORD_VERIFY_REQUEST
+});
+
+export const forgotPasswordVerifySuccess = (data) => ({
+  type: AUTH_ACTION_TYPES.FORGOT_PASSWORD_VERIFY_SUCCESS,
+  payload: data
+});
+
+export const forgotPasswordVerifyFailure = (error) => ({
+  type: AUTH_ACTION_TYPES.FORGOT_PASSWORD_VERIFY_FAILURE,
+  payload: error
+});
+
+// Forgot Password Reset Actions
+export const forgotPasswordResetRequest = () => ({
+  type: AUTH_ACTION_TYPES.FORGOT_PASSWORD_RESET_REQUEST
+});
+
+export const forgotPasswordResetSuccess = (data) => ({
+  type: AUTH_ACTION_TYPES.FORGOT_PASSWORD_RESET_SUCCESS,
+  payload: data
+});
+
+export const forgotPasswordResetFailure = (error) => ({
+  type: AUTH_ACTION_TYPES.FORGOT_PASSWORD_RESET_FAILURE,
+  payload: error
+});
+
 // Logout Action Creator
 export const logout = () => ({
   type: AUTH_ACTION_TYPES.LOGOUT

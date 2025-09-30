@@ -1,5 +1,6 @@
 import authService from '../../services/Auth/loginService';
 import googleAuthService from '../../services/Auth/googleAuthService';
+import forgotPasswordService from '../../services/Auth/forgotPasswordService';
 import { toast } from 'react-toastify';
 import {
   loginRequest,
@@ -11,6 +12,12 @@ import {
   googleLoginRequest,
   googleLoginSuccess,
   googleLoginFailure,
+  forgotPasswordVerifyRequest,
+  forgotPasswordVerifySuccess,
+  forgotPasswordVerifyFailure,
+  forgotPasswordResetRequest,
+  forgotPasswordResetSuccess,
+  forgotPasswordResetFailure,
   logout as logoutAction,
   setAuthToken,
   clearAuthToken,
@@ -148,6 +155,66 @@ export const checkAuthThunk = () => {
       dispatch(clearAuthToken());
       dispatch(clearUser());
       return { success: false, error: error.message };
+    }
+  };
+};
+
+// Forgot Password Verify Thunk
+export const forgotPasswordVerifyThunk = (verifyData) => {
+  return async (dispatch) => {
+    try {
+      dispatch(forgotPasswordVerifyRequest());
+      const response = await authService.forgotPasswordVerify(verifyData);
+      
+      dispatch(forgotPasswordVerifySuccess(response.data));
+      toast.success('Xác thực thành công! Bạn có thể đặt lại mật khẩu mới.');
+      return { success: true, data: response };
+    } catch (error) {
+      dispatch(forgotPasswordVerifyFailure(error.message || 'Xác thực thất bại'));
+      toast.error(error.message || 'Xác thực thất bại. Vui lòng kiểm tra email và số điện thoại.');
+      return { success: false, error: error.message || 'Xác thực thất bại' };
+    }
+  };
+};
+
+// Forgot Password Reset Thunk
+export const forgotPasswordResetThunk = (resetData) => {
+  return async (dispatch) => {
+    try {
+      dispatch(forgotPasswordResetRequest());
+      const response = await authService.forgotPasswordReset(resetData);
+      
+      dispatch(forgotPasswordResetSuccess(response.data));
+      toast.success('Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.');
+      return { success: true, data: response };
+    } catch (error) {
+      dispatch(forgotPasswordResetFailure(error.message || 'Đặt lại mật khẩu thất bại'));
+      toast.error(error.message || 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.');
+      return { success: false, error: error.message || 'Đặt lại mật khẩu thất bại' };
+    }
+  };
+};
+
+// Combined Forgot Password Thunk (Verify + Reset in one flow)
+export const forgotPasswordCombinedThunk = (verifyData, resetData) => {
+  return async (dispatch) => {
+    try {
+      dispatch(forgotPasswordVerifyRequest()); // Start with verify loading
+      
+      const response = await forgotPasswordService.verifyAndReset(verifyData, resetData);
+      
+      dispatch(forgotPasswordResetSuccess(response.data));
+      toast.success('Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.');
+      return { success: true, data: response };
+    } catch (error) {
+      // Check if error is from verify step or reset step
+      if (error.message?.includes('xác thực')) {
+        dispatch(forgotPasswordVerifyFailure(error.message || 'Xác thực thất bại'));
+      } else {
+        dispatch(forgotPasswordResetFailure(error.message || 'Đặt lại mật khẩu thất bại'));
+      }
+      toast.error(error.message || 'Quá trình đặt lại mật khẩu thất bại. Vui lòng thử lại.');
+      return { success: false, error: error.message || 'Đặt lại mật khẩu thất bại' };
     }
   };
 };
