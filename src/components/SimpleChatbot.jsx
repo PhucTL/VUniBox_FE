@@ -18,16 +18,6 @@ const SimpleChatbot = () => {
   const authUser = authUserRedux || authUserLocal;
   const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
 
-  // Debug logging
-  console.log('Chatbot Debug:', {
-    authUserRedux,
-    authUserLocal,
-    authUser,
-    userId,
-    localStorage_currentUser: localStorage.getItem("currentUser"),
-    localStorage_userId: localStorage.getItem("userId")
-  });
-
   // Auto scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -140,9 +130,59 @@ const SimpleChatbot = () => {
     }
   };
 
+  // Format bot response for better display
+  const formatBotResponse = (text) => {
+    if (!text) return text;
+    
+    // Split by line breaks and format
+    const lines = text.split(/\n/).filter(line => line.trim());
+    
+    return lines.map((line, index) => {
+      const trimmedLine = line.trim();
+      
+      // Handle numbered lists (1. 2. 3.)
+      if (/^\d+\./.test(trimmedLine)) {
+        const [, number, content] = trimmedLine.match(/^(\d+\.\s*)(.*)/) || [];
+        return (
+          <div key={index} className="flex mb-2">
+            <span className="text-blue-600 font-semibold mr-2 min-w-[1.5rem]">{number}</span>
+            <span className="flex-1">{content}</span>
+          </div>
+        );
+      }
+      
+      // Handle bullet points (-, *, •)
+      if (/^[-•*]/.test(trimmedLine)) {
+        const content = trimmedLine.replace(/^[-•*]\s*/, '');
+        return (
+          <div key={index} className="flex mb-2">
+            <span className="text-blue-500 mr-2 mt-1">•</span>
+            <span className="flex-1">{content}</span>
+          </div>
+        );
+      }
+      
+      // Handle bold text (**text**)
+      if (/\*\*(.*?)\*\*/.test(trimmedLine)) {
+        return (
+          <div key={index} className="mb-2">
+            {trimmedLine.split(/(\*\*.*?\*\*)/).map((part, i) => 
+              /\*\*(.*?)\*\*/.test(part) ? 
+                <strong key={i} className="font-semibold text-gray-900">{part.replace(/\*\*/g, '')}</strong> : 
+                part
+            )}
+          </div>
+        );
+      }
+      
+      // Regular paragraph
+      return <div key={index} className="mb-2">{trimmedLine}</div>;
+    });
+  };
+
   const contextPrompts = [
     "Làm sao để trích dẫn đúng cách?",
-    "Phân biệt đạo văn và trích dẫn",
+    "Phân biệt đạo văn và trích dẫn", 
     "Định dạng trích dẫn APA",
     "Kiểm tra đạo văn như thế nào?",
     "Các loại trích dẫn phổ biến"
@@ -205,29 +245,43 @@ const SimpleChatbot = () => {
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center space-y-4">
-            <div className="bg-blue-50 p-4 rounded-xl">
-              <FaQuoteLeft className="text-blue-500 text-2xl mx-auto mb-2" />
-              <p className="text-gray-700 text-sm">
-                Xin chào! Tôi là trợ lý Citation AI. Tôi có thể giúp bạn:
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-100">
+              <FaQuoteLeft className="text-blue-500 text-2xl mx-auto mb-3" />
+              <h4 className="font-semibold text-blue-900 mb-2">Chào mừng đến với Citation AI!</h4>
+              <p className="text-gray-700 text-sm mb-3">
+                Tôi có thể giúp bạn:
               </p>
-              <ul className="text-xs text-gray-600 mt-2 space-y-1">
-                <li>• Hướng dẫn cách trích dẫn đúng</li>
-                <li>• Phân biệt đạo văn và trích dẫn</li>
-                <li>• Định dạng citation chuẩn</li>
-                <li>• Kiểm tra tính nguyên bản</li>
-              </ul>
+              <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                <div className="flex items-center">
+                  <span className="text-blue-500 mr-1">✓</span>
+                  Hướng dẫn trích dẫn
+                </div>
+                <div className="flex items-center">
+                  <span className="text-blue-500 mr-1">✓</span>
+                  Kiểm tra đạo văn
+                </div>
+                <div className="flex items-center">
+                  <span className="text-blue-500 mr-1">✓</span>
+                  Định dạng APA/MLA
+                </div>
+                <div className="flex items-center">
+                  <span className="text-blue-500 mr-1">✓</span>
+                  Tính nguyên bản
+                </div>
+              </div>
             </div>
             
             {/* Context Prompts */}
             <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-600">Câu hỏi gợi ý:</p>
+              <p className="text-xs font-medium text-gray-600">💡 Bắt đầu với câu hỏi:</p>
               {contextPrompts.map((prompt, index) => (
                 <button
                   key={index}
                   onClick={() => handleContextPrompt(prompt)}
-                  className="w-full text-left p-2 text-xs bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="w-full text-left p-2 text-xs bg-gray-50 hover:bg-blue-50 hover:border-blue-200 border border-gray-200 rounded-lg transition-all duration-200"
                   disabled={isSending}
                 >
+                  <span className="text-blue-600 mr-1">💬</span>
                   {prompt}
                 </button>
               ))}
@@ -240,22 +294,24 @@ const SimpleChatbot = () => {
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] p-3 rounded-2xl ${
+                className={`max-w-[85%] p-3 rounded-2xl ${
                   message.type === 'user'
-                    ? 'bg-blue-500 text-white rounded-br-md'
-                    : 'bg-gray-100 text-gray-800 rounded-bl-md'
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-br-md shadow-md'
+                    : 'bg-gray-50 text-gray-800 rounded-bl-md border border-gray-200'
                 }`}
               >
                 <div className="flex items-start space-x-2">
                   {message.type === 'bot' && (
                     <FaRobot className="text-blue-500 mt-1 flex-shrink-0" />
                   )}
-                  {message.type === 'user' && (
-                    <FaUser className="text-white mt-1 flex-shrink-0" />
-                  )}
                   <div className="flex-1">
-                    <p className="text-sm leading-relaxed">{message.content}</p>
-                    <p className={`text-xs mt-1 opacity-70 ${
+                    <div className="text-sm leading-relaxed">
+                      {message.type === 'bot' ? 
+                        formatBotResponse(message.content) : 
+                        message.content
+                      }
+                    </div>
+                    <p className={`text-xs mt-2 opacity-70 ${
                       message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
                     }`}>
                       {new Date(message.timestamp).toLocaleTimeString('vi-VN', {
@@ -272,11 +328,15 @@ const SimpleChatbot = () => {
         
         {isSending && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 p-3 rounded-2xl rounded-bl-md">
+            <div className="bg-gray-50 border border-gray-200 p-3 rounded-2xl rounded-bl-md">
               <div className="flex items-center space-x-2">
                 <FaRobot className="text-blue-500" />
-                <FaSpinner className="animate-spin text-gray-500" />
-                <span className="text-sm text-gray-500">Đang trả lời...</span>
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                </div>
+                <span className="text-sm text-gray-500">Đang suy nghĩ...</span>
               </div>
             </div>
           </div>
@@ -286,35 +346,32 @@ const SimpleChatbot = () => {
       </div>
 
       {/* Input Area */}
-      <form onSubmit={handleSendMessage} className="p-4 border-t">
+      <form onSubmit={handleSendMessage} className="p-4 border-t bg-gray-50 rounded-b-2xl">
         <div className="flex space-x-2">
           <input
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Hỏi về trích dẫn và đạo văn..."
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            placeholder={userId ? "Hỏi về trích dẫn và đạo văn..." : "Vui lòng đăng nhập..."}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
             disabled={isSending || !userId}
           />
           <button
             type="submit"
             disabled={!inputMessage.trim() || isSending || !userId}
-            className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white p-2 rounded-xl transition-colors"
+            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 text-white p-2 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg"
           >
             <FaPaperPlane className="text-sm" />
           </button>
         </div>
         
-        {/* Debug info */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
-            <p><strong>Debug:</strong> UserId = {userId || 'null'}</p>
-            <p>AuthUser: {authUser ? JSON.stringify(authUser) : 'null'}</p>
-          </div>
-        )}
-        
         {!userId && (
-          <p className="text-xs text-red-500 mt-2">Vui lòng đăng nhập để sử dụng chatbot</p>
+          <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+            <p className="text-xs text-orange-700 flex items-center">
+              <FaUser className="mr-2" />
+              Vui lòng đăng nhập để sử dụng Citation Assistant
+            </p>
+          </div>
         )}
       </form>
     </div>
