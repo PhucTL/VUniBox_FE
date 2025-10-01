@@ -64,7 +64,7 @@ const authService = {
       
       console.log('Register API - Request payload:', requestPayload);
       
-      const response = await axios.post('/api/auth/register', requestPayload);
+      const response = await axios.post('/api/authentication/register', requestPayload);
       
       console.log('Register API - Full response:', response);
       console.log('Register API - Response data:', response.data);
