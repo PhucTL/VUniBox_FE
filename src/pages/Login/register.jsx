@@ -44,8 +44,8 @@ export default function Register() {
     }
 
     // Validate password length
-    if (formData.password.length < 6) {
-      toast.error("Mật khẩu phải có ít nhất 6 ký tự!");
+    if (formData.password.length < 8) {
+      toast.error("Mật khẩu phải có ít nhất 8 ký tự!");
       return;
     }
     
@@ -162,8 +162,8 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleInputChange}
                 className="w-full px-6 py-3 rounded-full text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
-                minLength="6"
+                placeholder="Nhập mật khẩu (tối thiểu 8 ký tự)"
+                minLength="8"
                 required
               />
             </div>
@@ -179,7 +179,7 @@ export default function Register() {
                 onChange={handleInputChange}
                 className="w-full px-6 py-3 rounded-full text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Nhập lại mật khẩu"
-                minLength="6"
+                minLength="8"
                 required
               />
             </div>

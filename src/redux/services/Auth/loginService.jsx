@@ -90,9 +90,35 @@ const authService = {
       console.log('Register API - Error status:', error.response?.status);
       console.log('Register API - Error message:', error.message);
       
+      // Handle .NET validation errors (400 Bad Request with errors object)
+      if (error.response?.status === 400 && error.response?.data?.errors) {
+        const errors = error.response.data.errors;
+        const errorMessages = [];
+        
+        // Extract validation error messages
+        Object.keys(errors).forEach(field => {
+          if (Array.isArray(errors[field])) {
+            errors[field].forEach(msg => {
+              // Translate common validation messages
+              if (msg.includes('minimum length') && msg.includes('8')) {
+                errorMessages.push('Mật khẩu phải có ít nhất 8 ký tự');
+              } else {
+                errorMessages.push(msg);
+              }
+            });
+          }
+        });
+        
+        throw new Error(errorMessages.join('. ') || 'Dữ liệu không hợp lệ');
+      }
+      
       // If backend returns structured error
       if (error.response?.data?.message) {
         throw new Error(error.response.data.message);
+      }
+      
+      if (error.response?.data?.title) {
+        throw new Error(error.response.data.title);
       }
       
       if (error.response?.data) {
