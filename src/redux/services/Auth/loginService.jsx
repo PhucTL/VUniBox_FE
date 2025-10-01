@@ -54,13 +54,17 @@ const authService = {
     try {
       console.log('Register API - Sending data:', userData);
       
-      const response = await axios.post('/api/authentication/register', {
+      const requestPayload = {
         email: userData.email,
         fullName: userData.fullName,
         phoneNumber: userData.phoneNumber,
         password: userData.password,
         confirmPassword: userData.confirmPassword
-      });
+      };
+      
+      console.log('Register API - Request payload:', requestPayload);
+      
+      const response = await axios.post('/api/auth/register', requestPayload);
       
       console.log('Register API - Full response:', response);
       console.log('Register API - Response data:', response.data);
@@ -83,13 +87,19 @@ const authService = {
       console.log('Register API - Error occurred:', error);
       console.log('Register API - Error response:', error.response);
       console.log('Register API - Error response data:', error.response?.data);
+      console.log('Register API - Error status:', error.response?.status);
+      console.log('Register API - Error message:', error.message);
       
       // If backend returns structured error
       if (error.response?.data?.message) {
-        throw error.response.data.message;
+        throw new Error(error.response.data.message);
       }
       
-      throw error.response?.data || error.message;
+      if (error.response?.data) {
+        throw new Error(JSON.stringify(error.response.data));
+      }
+      
+      throw new Error(error.message || 'Đăng ký thất bại');
     }
   },
 
