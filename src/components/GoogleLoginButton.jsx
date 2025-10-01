@@ -8,6 +8,15 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
 
   useEffect(() => {
     const initializeGoogle = () => {
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+      console.log('Google Client ID:', clientId);
+      console.log('All env vars:', import.meta.env);
+      
+      if (!clientId) {
+        console.error('VITE_GOOGLE_CLIENT_ID is not defined!');
+        return;
+      }
+      
       if (window.google && googleButtonRef.current) {
         // Suppress Google warnings
         const originalError = console.error;
@@ -24,7 +33,7 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
         };
 
         window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          client_id: clientId || "859564462424-a81d1ieeimchlh52a2mcmdriip828ju2.apps.googleusercontent.com",
           callback: handleGoogleResponse
         });
 
