@@ -1,6 +1,6 @@
 import Banner1 from "../../assets/Banner1.png";
 import Banner2 from "../../assets/Banner2.png";
-import Aboutus from "../../assets/Aboutus.png";
+import Aboutus from "../../assets/Aboutus.jpg";
 
 export default function FeaturesSection() {
   return (
@@ -77,7 +77,7 @@ export default function FeaturesSection() {
             <img
               src={Aboutus}
               alt="Study tools"
-              className="w-full rounded-2xl shadow-md"
+              className="w-full h-[500px] rounded-2xl shadow-md"
             />
           </div>
 

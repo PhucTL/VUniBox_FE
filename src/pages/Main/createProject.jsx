@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { FaSearch, FaUpload, FaLink, FaTrash, FaFilter } from "react-icons/fa";
+import { FaSearch, FaUpload, FaLink, FaTrash, FaFilter, FaClipboard } from "react-icons/fa";
+import toast, { Toaster } from 'react-hot-toast';
 import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
 import documentService from "../../redux/services/document/documentService";
@@ -203,7 +204,7 @@ export default function CreateProject() {
                           setModalOpen(false);
                           setInfoModal(true);
                         } catch (err) {
-                          alert(err.message || 'Upload thất bại');
+                          toast.error(err.message || 'Upload thất bại');
                         }
                         setLoadingUpload(false);
                       }}
@@ -247,7 +248,7 @@ export default function CreateProject() {
                             setModalOpen(false);
                             setInfoModal(true);
                           } catch (err) {
-                            alert(err.message || 'Upload thất bại');
+                            toast.error(err.message || 'Upload thất bại');
                           }
                           setLoadingUpload(false);
                         }}
@@ -261,10 +262,12 @@ export default function CreateProject() {
             </div>
           )}
 
+          <Toaster position="top-right" />
+
           {/* Info Modal sau khi upload file/url */}
           {infoModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
-              <div className="bg-white rounded-3xl shadow-2xl p-8 w-[500px] border border-blue-100 relative animate-fadeIn">
+              <div className="bg-white rounded-3xl shadow-2xl p-8 w-[600px] border border-blue-100 relative animate-fadeIn">
                 <button
                   className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full border border-blue-200 flex items-center justify-center text-blue-600 hover:text-blue-800 hover:border-blue-400 transition-colors duration-200"
                   onClick={() => setInfoModal(false)}
@@ -272,20 +275,62 @@ export default function CreateProject() {
                 >
                   ×
                 </button>
-                <div className="space-y-4">
-                  <h3 className="text-xl font-bold text-blue-600">Thông tin nhận diện tài liệu</h3>
-                  <div className="text-gray-700">
-                    <div className="mb-2"><span className="font-semibold">Loại tài liệu:</span> {uploadInfo.typeName}</div>
-                    <div className="mb-2"><span className="font-semibold">Mã loại:</span> {uploadInfo.documentType}</div>
-                    {uploadInfo.url && <div className="mb-2"><span className="font-semibold">URL:</span> {uploadInfo.url}</div>}
-                    {uploadInfo.filePath && <div className="mb-2"><span className="font-semibold">File Path:</span> {uploadInfo.filePath}</div>}
-                    {uploadInfo.fileName && <div className="mb-2"><span className="font-semibold">File Name:</span> {uploadInfo.fileName}</div>}
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-blue-600 mb-2">Thông tin nhận diện tài liệu</h3>
+                    <p className="text-gray-500">Xác nhận thông tin tài liệu trước khi lưu</p>
                   </div>
-                  <div className="text-blue-600 font-semibold mb-2">{uploadInfo.confirmationMessage}</div>
-                  <div className="text-gray-500 mb-2">{uploadInfo.subtitle}</div>
-                  <div className="text-gray-700 mb-2">{uploadInfo.question}</div>
+                  
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
+                        <span className="font-semibold text-gray-700">Loại tài liệu:</span>
+                        <span className="text-blue-600">{uploadInfo.typeName}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
+                        <span className="font-semibold text-gray-700">Mã loại:</span>
+                        <span className="text-blue-600">{uploadInfo.documentType}</span>
+                      </div>
+                      {uploadInfo.url && (
+                        <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
+                          <span className="font-semibold text-gray-700">URL:</span>
+                          <span className="text-blue-600 max-w-[300px] truncate">{uploadInfo.url}</span>
+                        </div>
+                      )}
+                      {uploadInfo.filePath && (
+                        <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
+                          <span className="font-semibold text-gray-700">File Path:</span>
+                          <span className="text-blue-600 max-w-[300px] truncate">{uploadInfo.filePath}</span>
+                        </div>
+                      )}
+                      {uploadInfo.fileName && (
+                        <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
+                          <span className="font-semibold text-gray-700">File Name:</span>
+                          <span className="text-blue-600">{uploadInfo.fileName}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {uploadInfo.confirmationMessage && (
+                    <div className="bg-blue-50 text-blue-700 p-4 rounded-xl border border-blue-200">
+                      <p className="font-medium">{uploadInfo.confirmationMessage}</p>
+                      {uploadInfo.subtitle && (
+                        <p className="text-blue-600 mt-2 text-sm">{uploadInfo.subtitle}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {uploadInfo.question && (
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                      <p className="text-gray-700">{uploadInfo.question}</p>
+                    </div>
+                  )}
+
                   <button
-                    className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 font-semibold"
+                    className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full 
+                    hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 
+                    font-semibold flex items-center justify-center gap-2"
                     disabled={extractLoading}
                     onClick={async () => {
                       setExtractLoading(true);
@@ -311,11 +356,11 @@ export default function CreateProject() {
                         if (newDocId) {
                           setDocumentId(newDocId);
                         }
-                        alert(res?.message || "Lưu thành công!");
+                        toast.success(res?.message || "Lưu thành công!");
                         setInfoModal(false);
                         setCitationModal(true);
                       } catch (err) {
-                        alert(err.message || "Lưu thất bại!");
+                        toast.error(err.message || "Lưu thất bại!");
                       }
                       setExtractLoading(false);
                     }}
@@ -383,7 +428,7 @@ export default function CreateProject() {
                     <button
                       onClick={async () => {
                         if (!documentId) {
-                          alert("Không tìm thấy documentId. Vui lòng lưu tài liệu trước.");
+                          toast.error("Không tìm thấy documentId. Vui lòng lưu tài liệu trước.");
                           return;
                         }
                         try {
@@ -400,7 +445,7 @@ export default function CreateProject() {
                           }
                         } catch (e) {
                           console.error("Generate citation failed", e);
-                          alert(e?.message || "Tạo trích dẫn thất bại");
+                          toast.error(e?.message || "Tạo trích dẫn thất bại");
                         } finally {
                           setGeneratingCitation(false);
                         }
@@ -432,12 +477,49 @@ export default function CreateProject() {
                 >
                   ×
                 </button>
-                <div className="space-y-4">
-                  <h3 className="text-xl font-bold text-blue-600">Kết quả trích dẫn</h3>
-                  <div className="text-gray-700">
-                    <div className="mb-2"><span className="font-semibold">Style:</span> {citationResult?.style}</div>
-                    <div className="mb-2"><span className="font-semibold">Formatted:</span> {citationResult?.formattedCitation}</div>
-                    <div className="mb-2"><span className="font-semibold">In-text:</span> {citationResult?.inTextCitation}</div>
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-blue-600 mb-2">Kết quả trích dẫn</h3>
+                    <p className="text-gray-500">Bạn có thể sao chép và sử dụng các trích dẫn sau</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-semibold text-gray-700">Kiểu trích dẫn:</span>
+                        <span className="text-blue-600">{citationResult?.style}</span>
+                      </div>
+                      <div className="relative">
+                        <div className="bg-white rounded-lg p-3 pr-10 border border-gray-200 hover:border-blue-300 transition-colors">
+                          {citationResult?.formattedCitation}
+                          <button 
+                            onClick={() => {
+                              navigator.clipboard.writeText(citationResult?.formattedCitation);
+                              toast.success('Đã sao chép trích dẫn!');
+                            }}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                          >
+                            <FaClipboard />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-semibold text-gray-700">Trích dẫn trong văn bản:</span>
+                        <button 
+                          onClick={() => {
+                            navigator.clipboard.writeText(citationResult?.inTextCitation);
+                            toast.success('Đã sao chép trích dẫn!');
+                          }}
+                          className="text-gray-400 hover:text-blue-600 transition-colors p-2"
+                        >
+                          <FaClipboard />
+                        </button>
+                      </div>
+                      <div className="bg-white rounded-lg p-3 border border-gray-200 hover:border-blue-300 transition-colors">
+                        {citationResult?.inTextCitation}
+                      </div>
+                    </div>
                   </div>
                   <div className="flex gap-4 pt-2">
                     <button

@@ -2,7 +2,7 @@ export default function HelpCenter() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center  mt-20">
       {/* Help Options với background */}
-      <div className="w-full bg-[url('/images/Help.png')] bg-no-repeat bg-cover flex flex-col items-center justify-center py-20">
+      <div className="w-full bg-[url('/images/Help.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-center py-20">
         <h1 className="text-4xl md:text-5xl font-bold text-blue-600 mb-10 text-center">
           Help Center
         </h1>
