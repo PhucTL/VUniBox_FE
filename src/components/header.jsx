@@ -39,7 +39,7 @@ export default function Header() {
     <header className="z-10 fixed w-full top-0 right-0 left-0 h-[90px] flex items-center justify-between px-8 bg-gradient-to-r from-white to-[#f5f7fa] shadow-sm ">
       {/* Logo */}
       <div className="flex items-center">
-        <img src="/vite.svg" alt="Logo" className="w-20 h-20" />
+        <img src="/logo.png" alt="Logo" className="w-25 h-20" />
       </div>
 
       {/* Menu */}
@@ -65,11 +65,13 @@ export default function Header() {
               Policy
             </li>
           </Link>
-          <Link to="createproject">
-            <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-              Project
-            </li>
-          </Link>
+          {isAuthenticated && (
+            <Link to="createproject">
+              <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
+                Project
+              </li>
+            </Link>
+          )}
         </ul>
       </nav>
 
