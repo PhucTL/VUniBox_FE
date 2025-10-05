@@ -141,9 +141,11 @@ export default function LibItem() {
                       <td className="px-6 py-5 text-base">{item.created}</td>
                       <td className="px-6 py-5 text-base font-semibold text-blue-600">
                         {item.citationStyle}
+                      </td>
+                      <td className="px-6 py-5 text-right flex gap-2 justify-end">
                         {item.citationStyle && (
                           <button
-                            className="ml-3 px-3 py-1.5 rounded border text-blue-600 border-blue-400 hover:bg-blue-50 text-sm"
+                            className="px-3 py-1.5 rounded border text-blue-600 border-blue-400 hover:bg-blue-50 text-sm"
                             onClick={async () => {
                               try {
                                 await citationService.regenerateCitaion({
@@ -160,8 +162,6 @@ export default function LibItem() {
                             Recitation
                           </button>
                         )}
-                      </td>
-                      <td className="px-6 py-5 text-right">
                         <button
                           className="inline-flex items-center gap-2 px-3 py-1.5 rounded border text-red-600 hover:bg-red-50"
                           onClick={async () => {
