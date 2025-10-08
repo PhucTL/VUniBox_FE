@@ -66,7 +66,7 @@ export default function Header() {
             </li>
           </Link>
           {isAuthenticated && (
-            <Link to="createproject">
+            <Link to="demo">
               <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
                 Project
               </li>

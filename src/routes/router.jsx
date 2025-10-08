@@ -19,6 +19,7 @@ import AllDoc from "../pages/Main/allDoc";
 import Plans from "../pages/plans/plans";
 import PaymentSuccess from "../pages/payment/PaymentSuccess";
 import PaymentCancel from "../pages/payment/PaymentCancel";
+import Demo from "../pages/Main/demo";
 
 const AppRouter = () => (
   <Routes>
@@ -42,6 +43,7 @@ const AppRouter = () => (
       <Route path="trashdoc" element={<TrashDoc/>} />
       <Route path="saveddoc" element={<SavedDoc/>} />
       <Route path="alldoc" element={<AllDoc/>} />
+      <Route path="demo" element={<Demo />} />
     </Route>
   </Routes>
 );
