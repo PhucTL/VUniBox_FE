@@ -46,7 +46,7 @@ export default function Sidebar() {
               </Link>
             </div>
           </div>
-          <Link to="/createproject" className="flex items-center gap-2">
+          <Link to="/demo" className="flex items-center gap-2">
             <IoLayersOutline size={30} /> Dự Án mới
           </Link>
           <Link to="/trashdoc" className="flex items-center gap-2">
