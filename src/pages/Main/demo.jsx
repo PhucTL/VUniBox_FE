@@ -5,6 +5,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
 import documentService from "../../redux/services/document/documentService";
+import { Link } from "react-router-dom";
 
 export default function Demo() {
   const [infoModal, setInfoModal] = useState(false);
@@ -35,10 +36,17 @@ export default function Demo() {
         {/* Main Content */}
         <div className="flex-1 p-8">
           {/* Title */}
+          <div className="flex items-center justify-start">
           <h1 className="text-3xl font-bold text-blue-600 mb-6">
             Trích Dẫn Và Lưu Trữ (Demo)
           </h1>
-
+          <button className="h-10 w-50 mb-5 justify-start items-start rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-semibold shadow hover:opacity-90 transition">
+            <Link to="https://docs.google.com/forms/d/e/1FAIpQLScN1zi3edgSS2rg5nSFGql-_TdCKa4dBk4jEBwPGqChCDf-7g/viewform?usp=sharing&ouid=112926310380479204670">
+             Gửi Feedback
+           </Link>
+          </button>
+          </div>
+          
           {/* Top Form */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
             {/* Tìm dự án */}
@@ -53,6 +61,7 @@ export default function Demo() {
 
             {/* Nút Xóa + Dự án mới */}
             <div className="flex items-center justify-end gap-3">
+              
               <button className="p-3 bg-blue-100 rounded-full border border-blue-400 hover:bg-blue-200">
                 <FaTrash className="text-blue-600" />
               </button>
@@ -296,6 +305,10 @@ export default function Demo() {
               </div>
             </div>
           )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+          
+          </div>
         </div>
       </div>
     </div>

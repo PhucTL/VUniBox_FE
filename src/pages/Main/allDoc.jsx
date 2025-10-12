@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { FaSearch, FaFileAlt, FaChevronDown, FaTrash } from "react-icons/fa";
+import { FaSearch, FaFileAlt, FaChevronDown, FaTrash, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
 import documentService from "../../redux/services/document/documentService";
@@ -16,6 +16,8 @@ export default function AllDoc() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [filterType, setFilterType] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,9 +29,10 @@ export default function AllDoc() {
           documents.map((d) => ({
             id: d.documentId,
             fileName: d.title || d.filePath || "Untitled",
-            title: d.title || "",
-            created: d.createdAt || "",
-            citationStyle: d.citation?.style || "",
+            source: d.source || "",
+            created: d.createdAt ? new Date(d.createdAt).toLocaleDateString('en-GB') : "",
+            citationStyle: d.citationStyle || "",
+            abstract: d.abstract || "",
             filePath: d.filePath,
             sourceUrl: d.sourceUrl,
           }))
@@ -49,6 +52,17 @@ export default function AllDoc() {
   const filteredItems = items.filter((item) =>
     item.fileName.toLowerCase().includes(search.toLowerCase())
   );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filteredItems.slice(startIndex, endIndex);
+
+  // Reset to first page when search or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, filterStatus, filterType]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col mt-25 w-full">
@@ -108,10 +122,11 @@ export default function AllDoc() {
             <table className="min-w-[900px] w-full text-left border-collapse">
               <thead className="bg-blue-50">
                 <tr>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg max-w-[260px] w-[260px]">File name</th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg max-w-[260px] w-[260px]">Title</th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg whitespace-nowrap w-[160px]">Created</th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[160px]">Citation</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg ">Tên File</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg ">Nguồn</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg ">Ngày tạo</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[240px]">Kiểu trích</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]">Lưu ý</th>
                   <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]"></th>
                 </tr>
               </thead>
@@ -120,48 +135,29 @@ export default function AllDoc() {
                   <tr>
                     <td colSpan={5} className="text-center py-8">Đang tải...</td>
                   </tr>
-                ) : filteredItems.length === 0 ? (
+                ) : currentItems.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="text-center py-8">Không có dữ liệu</td>
                   </tr>
                 ) : (
-                  filteredItems.map((item, idx) => (
+                  currentItems.map((item, idx) => (
                     <tr key={idx} className="hover:bg-blue-50">
-                      <td className="px-2 py-5 flex items-center gap-3 max-w-[240px] truncate">
+                      <td className="px-2 py-5 flex items-center gap-3 w-70">
                         <Link
                           to={item.filePath || item.sourceUrl || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-base text-blue-700 no-underline hover:text-blue-900 truncate max-w-[200px] block"
-                          title={item.fileName}
+                          className="text-base text-blue-700 no-underline hover:text-blue-900"
                         >
                           {item.fileName}
                         </Link>
                       </td>
-                      <td className="px-6 py-5 text-base max-w-[240px] truncate" title={item.title}>{item.title}</td>
+                      <td className="px-6 py-5 text-base w-80">{item.source}</td>
                       <td className="px-6 py-5 text-base whitespace-nowrap">{item.created}</td>
-                      <td className="px-6 py-5 text-base font-semibold text-blue-600 w-[160px]">
-                        {item.citationStyle}
-                        {item.citationStyle && (
-                          <button
-                            className="ml-3 px-3 py-1.5 rounded border text-blue-600 border-blue-400 hover:bg-blue-50 text-sm"
-                            onClick={async () => {
-                              try {
-                                await citationService.regenerateCitaion({
-                                  userId,
-                                  documentId: item.id,
-                                  citationStyle: item.citationStyle
-                                });
-                                toast.success('Đã tái tạo trích dẫn!');
-                              } catch (err) {
-                                toast.error(err?.message || 'Lỗi tái tạo trích dẫn');
-                              }
-                            }}
-                          >
-                            Recitation
-                          </button>
-                        )}
-                      </td>
+                        <td className="px-6 py-5 text-base font-semibold text-blue-600">
+                          {item.citationStyle}
+                        </td>
+                      <td className="px-6 py-5 text-base line-clamp-3 w-50">{item.abstract}</td>
                       <td className="px-6 py-5 text-right w-[120px]">
                         <button
                           className="inline-flex items-center gap-2 px-3 py-1.5 rounded border text-red-600 hover:bg-red-50"
@@ -182,6 +178,41 @@ export default function AllDoc() {
                 )}
               </tbody>
             </table>
+          </div>
+          
+          {/* Pagination */}
+          <div className="flex justify-between items-center mt-6">
+            <button
+              className="flex items-center gap-2 px-4 py-2 border border-blue-400 rounded-full text-blue-600 disabled:opacity-50"
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              <FaChevronLeft /> Back
+            </button>
+
+            <div className="flex gap-2">
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`w-8 h-8 rounded-full border ${
+                    currentPage === i + 1
+                      ? "bg-blue-600 text-white"
+                      : "border-blue-400 text-blue-600"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+
+            <button
+              className="flex items-center gap-2 px-4 py-2 border border-blue-400 rounded-full text-blue-600 disabled:opacity-50"
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next <FaChevronRight />
+            </button>
           </div>
         </div>
       </div>

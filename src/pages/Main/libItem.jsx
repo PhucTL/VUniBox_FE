@@ -41,9 +41,10 @@ export default function LibItem() {
           documents.map((d) => ({
             id: d.documentId,
             fileName: d.title || d.filePath || "Untitled",
-            title: d.title || "",
-            created: d.createdAt || "",
-            citationStyle: d.citation?.style || "",
+            source: d.source || "",
+            created: d.createdAt ? new Date(d.createdAt).toLocaleDateString('en-GB') : "",
+            citationStyle: d.citationStyle || "",
+            abstract: d.abstract || "",
             filePath: d.filePath,
             sourceUrl: d.sourceUrl,
           }))
@@ -95,18 +96,22 @@ export default function LibItem() {
               <thead className="bg-blue-50">
                 <tr>
                   <th className="px-6 py-5 border-b border-blue-200 text-lg">
-                    File name
+                    Tên File
                   </th>
                   <th className="px-6 py-5 border-b border-blue-200 text-lg">
-                    Title
+                    Nguồn
                   </th>
                   <th className="px-6 py-5 border-b border-blue-200 text-lg">
-                    Created
+                    Ngày tạo
                   </th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg">
-                    Citation
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[270px]">
+                    Kiểu trích
                   </th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg"></th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]">
+                    Lưu ý
+                  </th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]">
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -125,7 +130,7 @@ export default function LibItem() {
                 ) : (
                   items.filter(item => item.fileName.toLowerCase().includes(search.toLowerCase())).map((item, idx) => (
                     <tr key={idx} className="hover:bg-blue-50">
-                      <td className="px-2 py-5 flex items-center gap-3">
+                      <td className="px-2 py-5 flex items-center gap-3 w-70">
                         <Link
                           to={item.filePath || item.sourceUrl || "#"}
                           target="_blank"
@@ -135,11 +140,12 @@ export default function LibItem() {
                           {item.fileName}
                         </Link>
                       </td>
-                      <td className="px-6 py-5 text-base">{item.title}</td>
+                      <td className="px-6 py-5 text-base w-80">{item.source}</td>
                       <td className="px-6 py-5 text-base">{item.created}</td>
                       <td className="px-6 py-5 text-base font-semibold text-blue-600">
                         {item.citationStyle}
                       </td>
+                      <td className="px-6 py-5 text-base line-clamp-3 w-50">{item.abstract}</td>
                       <td className="px-6 py-5 text-right">
                         <button
                           className="inline-flex items-center gap-2 px-3 py-1.5 rounded border text-red-600 hover:bg-red-50"
