@@ -11,16 +11,10 @@ import { FaHdd, FaFileAlt, FaQuoteLeft, FaRobot } from "react-icons/fa";
 const getAvatarUrl = (avatarUrl) => {
   if (!avatarUrl) return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
   
-  // If running on HTTPS, try to use a proxy or fallback to default avatar
-  // Since backend doesn't support HTTPS, we'll use HTTP even on HTTPS pages
-  // and handle the Mixed Content by using a fallback
-  if (window.location.protocol === 'https:') {
-    // For production HTTPS, we'll fallback to default avatar since backend doesn't support HTTPS
-    return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
-  }
-  
-  // For HTTP (local development), use the backend URL
-  return `http://103.253.146.132:5000${avatarUrl}`;
+  // Always try to load the backend avatar first
+  // The browser will handle Mixed Content/SSL errors and fallback will be handled by onError
+  const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+  return `${protocol}//103.253.146.132:5000${avatarUrl}`;
 };
 
 export default function Account() {
@@ -63,6 +57,8 @@ export default function Account() {
   // Update form data when userProfile changes
   useEffect(() => {
     if (userProfile) {
+      console.log("User profile updated:", userProfile);
+      console.log("Avatar URL:", userProfile.avatarUrl);
       setEditFormData({
         fullName: userProfile.fullName || "",
         email: userProfile.email || "",
@@ -79,20 +75,28 @@ export default function Account() {
       setSelectedFile(file);
 
       try {
+        console.log("Uploading avatar for userId:", userId);
         const result = await dispatch(uploadAvatarThunk(userId, file));
-        if (result.success || result.payload?.success) {
+        console.log("Upload result:", result);
+        
+        if (result.success || result.payload?.success || result.type?.includes('fulfilled')) {
           // Successfully uploaded, reload profile to get new avatarUrl
+          console.log("Upload successful, reloading profile...");
           await dispatch(getUserProfileThunk(userId));
           console.log("Avatar uploaded successfully");
+          
+          // Clear preview after successful upload
+          setTimeout(() => {
+            setSelectedFile(null);
+          }, 1000); // Give time for new avatar to load
         } else {
-          console.error("Upload failed:", result.message);
+          console.error("Upload failed:", result);
           alert("Tải ảnh thất bại. Vui lòng thử lại.");
+          setSelectedFile(null);
         }
       } catch (error) {
         console.error("Upload error:", error);
         alert("Có lỗi xảy ra khi tải ảnh lên");
-      } finally {
-        // Cleanup after upload
         setSelectedFile(null);
       }
     }
