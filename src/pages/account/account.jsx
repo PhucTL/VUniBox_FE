@@ -11,10 +11,80 @@ import { FaHdd, FaFileAlt, FaQuoteLeft, FaRobot } from "react-icons/fa";
 const getAvatarUrl = (avatarUrl) => {
   if (!avatarUrl) return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
   
-  // Always try to load the backend avatar first
-  // The browser will handle Mixed Content/SSL errors and fallback will be handled by onError
-  const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-  return `${protocol}//103.253.146.132:5000${avatarUrl}`;
+  // Check if we're in development (localhost) or production (vercel/https)
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  
+  if (isLocalhost) {
+    // Local development - use HTTP
+    return `http://103.253.146.132:5000${avatarUrl}`;
+  } else {
+    // Production (HTTPS) - since backend doesn't support HTTPS, fallback to default avatar
+    // This ensures no SSL errors in production
+    return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
+  }
+};
+
+// Avatar Image Component with smart fallback
+const AvatarImage = ({ selectedFile, userProfile, className }) => {
+  const [imageError, setImageError] = useState(false);
+  const [showCustomAvatar, setShowCustomAvatar] = useState(false);
+  
+  const defaultAvatar = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
+  
+  useEffect(() => {
+    // Reset error state when userProfile changes
+    setImageError(false);
+    setShowCustomAvatar(false);
+  }, [userProfile?.avatarUrl]);
+  
+  const handleImageError = () => {
+    setImageError(true);
+  };
+  
+  const tryShowCustomAvatar = () => {
+    if (!imageError && userProfile?.avatarUrl) {
+      setShowCustomAvatar(true);
+    }
+  };
+  
+  // Get image source
+  const getImageSrc = () => {
+    if (selectedFile) {
+      return URL.createObjectURL(selectedFile);
+    }
+    
+    if (showCustomAvatar && userProfile?.avatarUrl && !imageError) {
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      if (isLocalhost) {
+        return `http://103.253.146.132:5000${userProfile.avatarUrl}`;
+      }
+    }
+    
+    return defaultAvatar;
+  };
+  
+  return (
+    <div className="relative">
+      <img
+        src={getImageSrc()}
+        alt="Profile"
+        className={className}
+        onError={handleImageError}
+        onLoad={() => {
+          if (!selectedFile && userProfile?.avatarUrl && !showCustomAvatar) {
+            tryShowCustomAvatar();
+          }
+        }}
+      />
+      
+      {/* Show indicator if custom avatar exists but can't be loaded in production */}
+      {!window.location.hostname.includes('localhost') && userProfile?.avatarUrl && !selectedFile && (
+        <div className="absolute bottom-0 right-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">
+          ✓
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default function Account() {
@@ -173,18 +243,10 @@ export default function Account() {
       <div className="flex items-start gap-8 mb-12">
         <div className="flex flex-col items-center">
           <div className="relative">
-            <img
-              src={
-                selectedFile
-                  ? URL.createObjectURL(selectedFile)
-                  : getAvatarUrl(userProfile?.avatarUrl)
-              }
-              alt="Profile"
+            <AvatarImage 
+              selectedFile={selectedFile}
+              userProfile={userProfile}
               className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
-              onError={(e) => {
-                // Fallback to default avatar if image fails to load
-                e.target.src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
-              }}
             />
             {/* Delete Avatar Button - Only show if user has custom avatar */}
             {userProfile?.avatarUrl && !isUploadAvatarLoading && (
