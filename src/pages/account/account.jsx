@@ -156,9 +156,11 @@ export default function Account() {
             <img
               src={
                 selectedFile
-                  ? URL.createObjectURL(selectedFile) // Show preview while uploading
+                  ? URL.createObjectURL(selectedFile)
                   : userProfile?.avatarUrl
-                    ? `http://103.253.146.132:5000${userProfile.avatarUrl}` // Backend avatar URL
+                    ? (window.location.protocol === 'https:'
+                        ? `https://103.253.146.132:5000${userProfile.avatarUrl}`
+                        : `http://103.253.146.132:5000${userProfile.avatarUrl}`)
                     : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80"
               }
               alt="Profile"
