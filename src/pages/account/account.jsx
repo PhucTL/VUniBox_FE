@@ -7,21 +7,15 @@ import StatsCard from "../../components/StatsCard";
 import SubscriptionCard from "../../components/SubscriptionCard";
 import { FaHdd, FaFileAlt, FaQuoteLeft, FaRobot } from "react-icons/fa";
 
-// Helper function to get avatar URL
+// Helper function to get avatar URL  
 const getAvatarUrl = (avatarUrl) => {
   if (!avatarUrl) return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
 
   // Lấy domain từ biến môi trường
   const apiDomain = import.meta.env.VITE_BE_API_URL || "";
-  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-  if (isLocalhost) {
-    // Local development - dùng domain từ .env (HTTP)
-    return `${apiDomain}${avatarUrl}`;
-  } else {
-    // Production (HTTPS) - fallback về avatar mặc định nếu backend không hỗ trợ HTTPS
-    return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
-  }
+  
+  // Luôn thử load avatar từ backend trước, browser sẽ tự xử lý lỗi nếu có
+  return `${apiDomain}${avatarUrl}`;
 };
 
 // Avatar Image Component with smart fallback
@@ -54,10 +48,9 @@ const AvatarImage = ({ selectedFile, userProfile, className }) => {
     }
     
     if (showCustomAvatar && userProfile?.avatarUrl && !imageError) {
-      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      if (isLocalhost) {
-        return `http://103.253.146.132:5000${userProfile.avatarUrl}`;
-      }
+      // Sử dụng biến môi trường cho tất cả môi trường
+      const apiDomain = import.meta.env.VITE_BE_API_URL || "";
+      return `${apiDomain}${userProfile.avatarUrl}`;
     }
     
     return defaultAvatar;
