@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import SimpleChatbot from "./components/SimpleChatbot";
+import VUniBoxChatbot from "./components/VUniBoxChatbot";
 import React from "react";
 
 function App() {
@@ -17,8 +17,8 @@ function App() {
       {/* Footer */}
       <Footer />
       
-      {/* Simple Chatbot - Test version */}
-      <SimpleChatbot />
+      {/* VUniBox Chatbot - Updated version */}
+      <VUniBoxChatbot />
     </div>
   );
 }
