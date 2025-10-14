@@ -50,11 +50,11 @@ const CitationChatbot = () => {
   };
 
   const contextPrompts = [
-    "Làm sao để trích dẫn đúng cách?",
-    "Phân biệt đạo văn và trích dẫn",
-    "Định dạng trích dẫn APA",
-    "Kiểm tra đạo văn như thế nào?",
-    "Các loại trích dẫn phổ biến"
+    "Làm sao để tổ chức tài liệu hiệu quả?",
+    "Cách quản lý thư viện tài liệu cá nhân", 
+    "Tìm kiếm tài liệu nhanh chóng",
+    "Phân loại tài liệu theo chủ đề",
+    "Backup và đồng bộ tài liệu"
   ];
 
   const handleContextPrompt = (prompt) => {
@@ -82,8 +82,8 @@ const CitationChatbot = () => {
         <div className="flex items-center space-x-3">
           <FaQuoteLeft className="text-lg" />
           <div>
-            <h3 className="font-semibold">Citation Assistant</h3>
-            <p className="text-xs opacity-90">Hỗ trợ trích dẫn & đạo văn</p>
+            <h3 className="font-semibold">VUniBox Assistant</h3>
+            <p className="text-xs opacity-90">Hỗ trợ quản lý tài liệu</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -115,13 +115,13 @@ const CitationChatbot = () => {
             <div className="bg-blue-50 p-4 rounded-xl">
               <FaQuoteLeft className="text-blue-500 text-2xl mx-auto mb-2" />
               <p className="text-gray-700 text-sm">
-                Xin chào! Tôi là trợ lý Citation AI. Tôi có thể giúp bạn:
+                Xin chào! Tôi là trợ lý VUniBox AI. Tôi có thể giúp bạn:
               </p>
               <ul className="text-xs text-gray-600 mt-2 space-y-1">
-                <li>• Hướng dẫn cách trích dẫn đúng</li>
-                <li>• Phân biệt đạo văn và trích dẫn</li>
-                <li>• Định dạng citation chuẩn</li>
-                <li>• Kiểm tra tính nguyên bản</li>
+                <li>• Tổ chức và quản lý tài liệu</li>
+                <li>• Tìm kiếm thông tin nhanh chóng</li>
+                <li>• Phân loại tài liệu theo chủ đề</li>
+                <li>• Tối ưu hóa quy trình học tập</li>
               </ul>
             </div>
             
@@ -208,7 +208,7 @@ const CitationChatbot = () => {
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Hỏi về trích dẫn và đạo văn..."
+            placeholder="Hỏi về quản lý tài liệu và học tập..."
             className="flex-1 px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             disabled={isSending}
           />

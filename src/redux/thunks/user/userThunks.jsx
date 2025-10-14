@@ -64,3 +64,18 @@ export const uploadAvatarThunk = (userId, file) => async (dispatch) => {
     return { success: false, error: error.message || 'Upload avatar thất bại!' };
   }
 };
+
+// Delete avatar
+export const deleteAvatarThunk = (userId) => async (dispatch) => {
+  try {
+    dispatch(uploadAvatarRequest()); // Reuse same loading state
+    const result = await userService.deleteAvatar(userId);
+    dispatch(uploadAvatarSuccess(null)); // Clear avatar
+    toast.success('Xóa avatar thành công!');
+    return { success: true, data: result };
+  } catch (error) {
+    dispatch(uploadAvatarFailure(error));
+    toast.error(error.message || 'Xóa avatar thất bại!');
+    return { success: false, error: error.message || 'Xóa avatar thất bại!' };
+  }
+};

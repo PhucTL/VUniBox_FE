@@ -7,7 +7,7 @@ import axios from "axios";
 // NProgress.configure({ showSpinner: false, trickleSpeed: 100 });
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BE_API_URL ||  "",
+  baseURL: import.meta.env.VITE_BE_API_URL || "",
   headers: {
     "Content-Type": "application/json",
   },

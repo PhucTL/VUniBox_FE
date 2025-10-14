@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getUserProfileThunk, getUserStorageThunk, uploadAvatarThunk, updateProfileThunk } from "../../redux/thunks/user/userThunks";
+import { getUserProfileThunk, getUserStorageThunk, uploadAvatarThunk, updateProfileThunk, deleteAvatarThunk } from "../../redux/thunks/user/userThunks";
 import { getUserSubscriptionThunk } from "../../redux/thunks/plan/planThunks";
 import StatsCard from "../../components/StatsCard";
 import SubscriptionCard from "../../components/SubscriptionCard";
@@ -14,18 +14,19 @@ export default function Account() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editFormData, setEditFormData] = useState({
     fullName: "",
-    email: ""
+    email: "",
+    phoneNumber: ""
   });
-  
+
   // Get auth user info
   const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
   const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
-  
+
   // Get user profile from Redux store
-  const { 
-    userProfile, 
-    storageInfo, 
-    isGetProfileLoading, 
+  const {
+    userProfile,
+    storageInfo,
+    isGetProfileLoading,
     isGetStorageLoading,
     isUploadAvatarLoading,
     isUpdateProfileLoading
@@ -48,7 +49,8 @@ export default function Account() {
     if (userProfile) {
       setEditFormData({
         fullName: userProfile.fullName || "",
-        email: userProfile.email || ""
+        email: userProfile.email || "",
+        phoneNumber: userProfile.phoneNumber || ""
       });
     }
   }, [userProfile]);
@@ -57,10 +59,49 @@ export default function Account() {
   const handleAvatarUpload = async (event) => {
     const file = event.target.files[0];
     if (file && userId) {
+      // Show preview immediately
       setSelectedFile(file);
-      await dispatch(uploadAvatarThunk(userId, file));
-      // Reload profile to get updated avatar
-      dispatch(getUserProfileThunk(userId));
+
+      try {
+        const result = await dispatch(uploadAvatarThunk(userId, file));
+        if (result.success || result.payload?.success) {
+          // Successfully uploaded, reload profile to get new avatarUrl
+          await dispatch(getUserProfileThunk(userId));
+          console.log("Avatar uploaded successfully");
+        } else {
+          console.error("Upload failed:", result.message);
+          alert("Tải ảnh thất bại. Vui lòng thử lại.");
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("Có lỗi xảy ra khi tải ảnh lên");
+      } finally {
+        // Cleanup after upload
+        setSelectedFile(null);
+      }
+    }
+  };
+
+  // Handle avatar delete
+  const handleAvatarDelete = async () => {
+    if (userId && userProfile?.avatarUrl) {
+      const confirmed = window.confirm("Bạn có chắc muốn xóa ảnh đại diện?");
+      if (confirmed) {
+        try {
+          const result = await dispatch(deleteAvatarThunk(userId));
+          if (result.success) {
+            // Successfully deleted, reload profile
+            await dispatch(getUserProfileThunk(userId));
+            console.log("Avatar deleted successfully");
+          } else {
+            console.error("Delete failed:", result.message);
+            alert("Xóa ảnh thất bại. Vui lòng thử lại.");
+          }
+        } catch (error) {
+          console.error("Delete error:", error);
+          alert("Có lỗi xảy ra khi xóa ảnh");
+        }
+      }
     }
   };
 
@@ -111,14 +152,54 @@ export default function Account() {
       {/* Profile Section */}
       <div className="flex items-start gap-8 mb-12">
         <div className="flex flex-col items-center">
-          <img
-            src={userProfile?.avatarUrl || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80"}
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover"
-          />
-          <label htmlFor="avatar-upload" className="mt-4 text-blue-600 hover:underline cursor-pointer">
-            {isUploadAvatarLoading ? "Đang tải..." : "Tải ảnh lên"}
-          </label>
+          <div className="relative">
+            <img
+              src={
+                selectedFile
+                  ? URL.createObjectURL(selectedFile) // Show preview while uploading
+                  : userProfile?.avatarUrl
+                    ? `http://103.253.146.132:5000${userProfile.avatarUrl}` // Backend avatar URL
+                    : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80"
+              }
+              alt="Profile"
+              className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+              onError={(e) => {
+                // Fallback to default avatar if image fails to load
+                e.target.src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
+              }}
+            />
+            {/* Delete Avatar Button - Only show if user has custom avatar */}
+            {userProfile?.avatarUrl && !isUploadAvatarLoading && (
+              <button
+                onClick={handleAvatarDelete}
+                className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors duration-200 flex items-center justify-center shadow-lg"
+                title="Xóa ảnh đại diện"
+              >
+                ×
+              </button>
+            )}
+          </div>
+          <div className="mt-4 flex flex-col items-center gap-2">
+            <label htmlFor="avatar-upload" className="text-blue-600 hover:underline cursor-pointer font-medium">
+              {isUploadAvatarLoading ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                  Đang xử lý...
+                </span>
+              ) : (
+                "Thay đổi ảnh"
+              )}
+            </label>
+            {userProfile?.avatarUrl && (
+              <button
+                onClick={handleAvatarDelete}
+                className="text-red-500 hover:underline cursor-pointer font-medium text-sm"
+                disabled={isUploadAvatarLoading}
+              >
+                Xóa ảnh
+              </button>
+            )}
+          </div>
           <input
             id="avatar-upload"
             type="file"
@@ -143,12 +224,25 @@ export default function Account() {
               Đổi Tài Khoản
             </button>
           </div>
-          <div className="flex gap-4">
-            <span className="px-4 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
-              Trạng thái: {userProfile?.planName || "Free"}
+          <div className="flex flex-wrap gap-3">
+            <span className="px-4 py-2 rounded-full bg-blue-50 text-blue-600 border border-blue-200 text-sm font-medium">
+              {userProfile?.planName || "Free"} Plan
             </span>
-            <button 
-              className="px-4 py-1 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+            {userProfile?.accountStatus && (
+              <span className={`px-4 py-2 rounded-full text-sm font-medium ${userProfile.isVerified
+                  ? 'bg-green-50 text-green-600 border border-green-200'
+                  : 'bg-yellow-50 text-yellow-600 border border-yellow-200'
+                }`}>
+                {userProfile.accountStatus}
+              </span>
+            )}
+            {userProfile?.daysUntilExpiry !== undefined && userProfile?.daysUntilExpiry <= 7 && (
+              <span className="px-4 py-2 rounded-full bg-orange-50 text-orange-600 border border-orange-200 text-sm font-medium">
+                {userProfile.daysUntilExpiry} ngày còn lại
+              </span>
+            )}
+            <button
+              className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 text-sm font-medium transition-colors"
               onClick={handleUpgradeClick}
             >
               Nâng cấp ngay
@@ -167,14 +261,14 @@ export default function Account() {
           progressColor="blue"
           icon={<FaHdd />}
         />
-        
+
         <StatsCard
           title="Tài liệu đã lưu"
           value={storageInfo?.totalFiles || userProfile?.usageStats?.totalFiles || 0}
           subtitle="files"
           icon={<FaFileAlt />}
         />
-        
+
         <StatsCard
           title="Citation đã sử dụng"
           value={`${userProfile?.usageStats?.citationUsed || 0}/${userProfile?.usageStats?.citationLimit || 9}`}
@@ -183,7 +277,7 @@ export default function Account() {
           progressColor="green"
           icon={<FaQuoteLeft />}
         />
-        
+
         <StatsCard
           title="Chatbot đã sử dụng"
           value={`${userProfile?.usageStats?.chatbotUsed || 0}/${userProfile?.usageStats?.chatbotLimit || 5}`}
@@ -194,19 +288,6 @@ export default function Account() {
         />
       </div>
 
-      {/* Subscription Card */}
-      {subscriptionData && (
-        <div className="mb-8">
-          {/* Debug info */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mb-4 p-4 bg-gray-100 rounded-lg text-xs">
-              <p><strong>Debug Subscription:</strong></p>
-              <pre>{JSON.stringify(subscriptionData, null, 2)}</pre>
-            </div>
-          )}
-          <SubscriptionCard subscriptionData={subscriptionData} />
-        </div>
-      )}
 
       {/* Account Details */}
       <div className="bg-white rounded-3xl shadow-lg p-8">
@@ -229,8 +310,29 @@ export default function Account() {
           <div className="flex justify-between items-center py-4 border-b">
             <div>
               <div className="font-medium">Gói đang sử dụng</div>
-              <div className="text-gray-600">
-                {userProfile?.planName || "Free"}
+              <div className="space-y-1">
+                <div className="text-gray-600">
+                  {userProfile?.planName || "Free"}
+                </div>
+                {userProfile?.planExpiryDate && (
+                  <div className="text-sm">
+                    <span className="text-gray-500">Hết hạn: </span>
+                    <span className={`${userProfile?.isPlanExpired
+                        ? 'text-red-600 font-medium'
+                        : userProfile?.daysUntilExpiry <= 7
+                          ? 'text-orange-600 font-medium'
+                          : 'text-gray-600'
+                      }`}>
+                      {new Date(userProfile.planExpiryDate).toLocaleDateString('vi-VN')}
+                      {userProfile?.daysUntilExpiry !== undefined && !userProfile?.isPlanExpired && (
+                        <span className="ml-1">({userProfile.daysUntilExpiry} ngày còn lại)</span>
+                      )}
+                      {userProfile?.isPlanExpired && (
+                        <span className="ml-1 text-red-600 font-medium">(Đã hết hạn)</span>
+                      )}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             <button className="text-blue-600 hover:underline" onClick={handleUpgradeClick}>Upgrade</button>
@@ -247,10 +349,10 @@ export default function Account() {
                   {(storageInfo?.usagePercentage !== undefined || userProfile?.usageStats?.storageUsagePercentage !== undefined) && (
                     <div className="mt-1">
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-blue-600 h-2 rounded-full" 
-                          style={{ 
-                            width: `${storageInfo?.usagePercentage || userProfile?.usageStats?.storageUsagePercentage || 0}%` 
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
+                          style={{
+                            width: `${storageInfo?.usagePercentage || userProfile?.usageStats?.storageUsagePercentage || 0}%`
                           }}
                         ></div>
                       </div>
@@ -263,8 +365,8 @@ export default function Account() {
                   {userProfile?.usageStats?.citationUsagePercentage !== undefined && (
                     <div className="mt-1">
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-green-600 h-2 rounded-full" 
+                        <div
+                          className="bg-green-600 h-2 rounded-full"
                           style={{ width: `${userProfile.usageStats.citationUsagePercentage}%` }}
                         ></div>
                       </div>
@@ -276,8 +378,8 @@ export default function Account() {
                   {userProfile?.usageStats?.chatbotUsagePercentage !== undefined && (
                     <div className="mt-1">
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-purple-600 h-2 rounded-full" 
+                        <div
+                          className="bg-purple-600 h-2 rounded-full"
                           style={{ width: `${userProfile.usageStats.chatbotUsagePercentage}%` }}
                         ></div>
                       </div>
@@ -292,11 +394,28 @@ export default function Account() {
           <div className="flex justify-between items-center py-4 border-b">
             <div>
               <div className="font-medium">Email</div>
-              <div className="text-gray-600">
+              <div className="text-gray-600 flex items-center gap-2">
                 {userProfile?.email || "Chưa có email"}
+                {userProfile?.isVerified && (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-50 text-green-600 border border-green-200">
+                    ✓ Đã xác thực
+                  </span>
+                )}
               </div>
             </div>
-            <button className="text-blue-600 hover:underline" onClick={() => handleEditClick('email')}>Change</button>
+
+          </div>
+
+
+          {/* Phone Number */}
+          <div className="flex justify-between items-center py-4 border-b">
+            <div>
+              <div className="font-medium">Số điện thoại</div>
+              <div className="text-gray-600">
+                {userProfile?.phoneNumber || "Chưa cập nhật"}
+              </div>
+            </div>
+            <button className="text-blue-600 hover:underline" onClick={() => handleEditClick('phone')}>Change</button>
           </div>
 
           {/* Password */}
@@ -322,17 +441,49 @@ export default function Account() {
             <div>
               <div className="font-medium">Ngày tạo tài khoản</div>
               <div className="text-gray-600">
-                {userProfile?.createdAt 
+                {userProfile?.createdAt
                   ? new Date(userProfile.createdAt).toLocaleDateString('vi-VN', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })
                   : "Không có thông tin"
                 }
               </div>
             </div>
           </div>
+
+          {/* Activity Summary */}
+          {userProfile?.activitySummary && (
+            <div className="flex justify-between items-start py-4 border-b">
+              <div className="flex-1">
+                <div className="font-medium">Hoạt động tháng này</div>
+                <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
+                  <div>
+                    <span className="text-gray-500">Tài liệu: </span>
+                    <span className="font-medium text-blue-600">{userProfile.activitySummary.documentsThisMonth}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Trích dẫn: </span>
+                    <span className="font-medium text-green-600">{userProfile.activitySummary.citationsThisMonth}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Chat AI: </span>
+                    <span className="font-medium text-purple-600">{userProfile.activitySummary.chatbotThisMonth}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Ngày hoạt động: </span>
+                    <span className="font-medium text-gray-700">{userProfile.activitySummary.totalActiveDays}</span>
+                  </div>
+                </div>
+                {userProfile.activitySummary.lastDocumentUpload && (
+                  <div className="text-xs text-gray-500 mt-2">
+                    Tải lên gần nhất: {new Date(userProfile.activitySummary.lastDocumentUpload).toLocaleDateString('vi-VN')}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Role */}
           <div className="flex justify-between items-center py-4">
@@ -367,10 +518,10 @@ export default function Account() {
             >
               ×
             </button>
-            
+
             <div className="space-y-6">
               <h3 className="text-2xl font-bold text-blue-600">Chỉnh sửa thông tin</h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-blue-900 font-semibold mb-2">
@@ -385,7 +536,7 @@ export default function Account() {
                     placeholder="Nhập họ và tên"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-blue-900 font-semibold mb-2">
                     Email
@@ -394,13 +545,27 @@ export default function Account() {
                     type="email"
                     name="email"
                     value={editFormData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    readOnly
+                    className="w-full px-4 py-3 border border-blue-300 rounded-xl bg-gray-100 cursor-not-allowed"
                     placeholder="Nhập email"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-blue-900 font-semibold mb-2">
+                    Số điện thoại
+                  </label>
+                  <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={editFormData.phoneNumber}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Nhập số điện thoại"
+                  />
+                </div>
               </div>
-              
+
               <div className="flex gap-4 pt-4">
                 <button
                   className="flex-1 px-6 py-3 border-2 border-blue-200 text-blue-600 rounded-xl hover:bg-blue-50 transition-colors duration-200"
