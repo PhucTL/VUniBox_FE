@@ -7,6 +7,22 @@ import StatsCard from "../../components/StatsCard";
 import SubscriptionCard from "../../components/SubscriptionCard";
 import { FaHdd, FaFileAlt, FaQuoteLeft, FaRobot } from "react-icons/fa";
 
+// Helper function to get avatar URL
+const getAvatarUrl = (avatarUrl) => {
+  if (!avatarUrl) return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
+  
+  // If running on HTTPS, try to use a proxy or fallback to default avatar
+  // Since backend doesn't support HTTPS, we'll use HTTP even on HTTPS pages
+  // and handle the Mixed Content by using a fallback
+  if (window.location.protocol === 'https:') {
+    // For production HTTPS, we'll fallback to default avatar since backend doesn't support HTTPS
+    return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
+  }
+  
+  // For HTTP (local development), use the backend URL
+  return `http://103.253.146.132:5000${avatarUrl}`;
+};
+
 export default function Account() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -157,11 +173,7 @@ export default function Account() {
               src={
                 selectedFile
                   ? URL.createObjectURL(selectedFile)
-                  : userProfile?.avatarUrl
-                    ? (window.location.protocol === 'https:'
-                        ? `https://103.253.146.132:5000${userProfile.avatarUrl}`
-                        : `http://103.253.146.132:5000${userProfile.avatarUrl}`)
-                    : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80"
+                  : getAvatarUrl(userProfile?.avatarUrl)
               }
               alt="Profile"
               className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
