@@ -10,16 +10,16 @@ import { FaHdd, FaFileAlt, FaQuoteLeft, FaRobot } from "react-icons/fa";
 // Helper function to get avatar URL
 const getAvatarUrl = (avatarUrl) => {
   if (!avatarUrl) return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
-  
-  // Check if we're in development (localhost) or production (vercel/https)
+
+  // Lấy domain từ biến môi trường
+  const apiDomain = import.meta.env.VITE_BE_API_URL || "";
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  
+
   if (isLocalhost) {
-    // Local development - use HTTP
-    return `http://103.253.146.132:5000${avatarUrl}`;
+    // Local development - dùng domain từ .env (HTTP)
+    return `${apiDomain}${avatarUrl}`;
   } else {
-    // Production (HTTPS) - since backend doesn't support HTTPS, fallback to default avatar
-    // This ensures no SSL errors in production
+    // Production (HTTPS) - fallback về avatar mặc định nếu backend không hỗ trợ HTTPS
     return "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=150&h=150&q=80";
   }
 };
