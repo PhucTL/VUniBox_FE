@@ -5,6 +5,7 @@ import citationReducer from "../reducer/citation/citationReducer";
 import userReducer from "../reducer/user/userReducer";
 import planReducer from "../reducer/plan/planReducer";
 import chatbotReducer from "../slices/chatbotSlice";
+import adminDashboardReducer from "../reducer/admin/adminDashboardReducer";
 
 
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   plan: planReducer,
   chatbot: chatbotReducer,
+  adminDashboard: adminDashboardReducer,
 });
 
 export default rootReducer;

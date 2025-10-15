@@ -9,11 +9,8 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
   useEffect(() => {
     const initializeGoogle = () => {
       const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-      console.log('Google Client ID:', clientId);
-      console.log('All env vars:', import.meta.env);
       
       if (!clientId) {
-        console.error('VITE_GOOGLE_CLIENT_ID is not defined!');
         return;
       }
       

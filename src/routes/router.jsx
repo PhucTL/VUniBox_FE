@@ -20,6 +20,8 @@ import Plans from "../pages/plans/plans";
 import PaymentSuccess from "../pages/payment/PaymentSuccess";
 import PaymentCancel from "../pages/payment/PaymentCancel";
 import Demo from "../pages/Main/demo";
+import AdminDashboard from "../pages/Admin/adminDashboard";
+import AdminProtectedRoute from "../components/AdminProtectedRoute";
 
 const AppRouter = () => (
   <Routes>
@@ -44,6 +46,11 @@ const AppRouter = () => (
       <Route path="saveddoc" element={<SavedDoc/>} />
       <Route path="alldoc" element={<AllDoc/>} />
       <Route path="demo" element={<Demo />} />
+      <Route path="admin/dashboard" element={
+        <AdminProtectedRoute>
+          <AdminDashboard />
+        </AdminProtectedRoute>
+      } />
     </Route>
   </Routes>
 );

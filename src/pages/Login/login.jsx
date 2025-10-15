@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { loginThunk } from "../../redux/thunks/auth";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 import GoogleErrorBoundary from "../../components/GoogleErrorBoundary";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -21,7 +22,8 @@ export default function Login() {
     loginSuccess,
     isGoogleLoginLoading,
     googleLoginError,
-    isAuthenticated 
+    isAuthenticated,
+    user
   } = useSelector(state => state.auth);
 
   // Handle form input changes
@@ -43,16 +45,37 @@ export default function Login() {
     }));
     
     if (result.success) {
+      const userData = result.data?.user;
+      
       // Delay navigation to show toast
       setTimeout(() => {
-        navigate("/library");
+        // Check if user is admin - handle both string and number
+        const isAdmin = userData && (userData.role === 1 || userData.role === "1");
+        
+        if (isAdmin) {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/library");
+        }
       }, 1000);
     }
   };
 
   // Handle Google login success
-  const handleGoogleLoginSuccess = (userData) => {
-    navigate("/library");
+  const handleGoogleLoginSuccess = (responseData) => {
+    // Delay navigation to show toast
+    setTimeout(() => {
+      const userData = responseData?.user;
+      
+      // Check if user is admin - handle both string and number
+      const isAdmin = userData && (userData.role === 1 || userData.role === "1");
+      
+      if (isAdmin) {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/library");
+      }
+    }, 1000);
   };
 
   // Handle Google login error
@@ -62,10 +85,17 @@ export default function Login() {
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/library");
+    if (isAuthenticated && user) {
+      // Check if user is admin - handle both string and number
+      const isAdmin = user.role === 1 || user.role === "1";
+                     
+      if (isAdmin) {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/library");
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   return (
     <div className="relative bg-gray-100" style={{ minHeight: "100vh" }}>
