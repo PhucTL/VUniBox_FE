@@ -70,7 +70,6 @@ const documentService = {
     }
   },
 
-  // Xóa tài liệu vĩnh viễn từ thùng rác
   deleteDocPermanent: async (documentId, userId) => {
     try {
       const response = await axios.delete(`/api/document/permanent`, {

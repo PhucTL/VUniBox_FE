@@ -5,17 +5,18 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 import React from "react";
+import { Link } from "react-router-dom";
 export default function IntroSection() {
   return (
     <div className="bg-white">
       {/* Section 1 */}
-      <div className="flex flex-row container mx-auto px-4 py-16 mt-10 h-100 bg-[url('/images/image.jpg')] bg-local bg-no-repeat bg-cover">
-        <div className="text-start justify-items-start mt-30 ml-20 ">
-          <p className="text-sm text-gray-600 mb-2">
+      <div className="flex flex-row  mx-auto px-4 py-16 mt-10 h-100 bg-[url('/images/image.jpg')] bg-local bg-no-repeat bg-cover">
+        <div className="text-start justify-items-start mt-40  ">
+          <p className="text-sm text-blue-600 mb-2">
             Tài liệu gọn gàng, trích dẫn sẵn sàng
           </p>
           <h1 className="text-4xl font-bold text-blue-600 mb-2">VUniBox</h1>
-          <p className="text-gray-600">
+          <p className="text-blue-600">
             Nâng tầm nghiên cứu với nền tảng lưu trữ và trích dẫn toàn diện.
           </p>
           <div className="flex justify-center gap-4 mt-8">
@@ -23,7 +24,8 @@ export default function IntroSection() {
               Về chúng tôi
             </button>
             <button className="px-6 py-2 bg-blue-600 text-white rounded-full">
-              Bắt đầu ngay
+              <Link to="demo">Bắt đầu ngay</Link>
+              
             </button>
           </div>
         </div>

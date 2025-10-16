@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function AboutUs() {
   return (
     <div className="min-h-screen w-full bg-gray-50 flex flex-col">
@@ -47,7 +49,9 @@ export default function AboutUs() {
               Cách sử dụng
             </button>
             <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-semibold shadow hover:opacity-90 transition">
+              <Link to="demo">
               Bắt đầu ngay
+              </Link>
             </button>
           </div>
         </div>

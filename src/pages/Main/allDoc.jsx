@@ -59,7 +59,6 @@ export default function AllDoc() {
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredItems.slice(startIndex, endIndex);
 
-  // Reset to first page when search or filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filterStatus, filterType]);
@@ -160,8 +159,10 @@ export default function AllDoc() {
                       <td className="px-6 py-5 text-base line-clamp-3 w-50">{item.abstract}</td>
                       <td className="px-6 py-5 text-right w-[120px]">
                         <button
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded border text-red-600 hover:bg-red-50"
+                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded border ${filterStatus === "trash" ? "text-gray-400 bg-gray-100 border-gray-300 cursor-not-allowed" : "text-red-600 hover:bg-red-50 border-red-400"}`}
+                          disabled={filterStatus === "trash"}
                           onClick={async () => {
+                            if (filterStatus === "trash") return;
                             try {
                               await documentService.trashDocument({ documentId: item.id, userId: Number(userId) });
                               toast.success('Đã chuyển vào thùng rác!');

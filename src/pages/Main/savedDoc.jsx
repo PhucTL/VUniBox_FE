@@ -127,6 +127,7 @@ export default function SavedDoc() {
                           onClick={async () => {
                             try {
                               await documentService.trashDocument({ documentId: item.id, userId: Number(userId) });
+                              setItems(prev => prev.filter(i => i.id !== item.id));
                               toast.success('Đã chuyển vào thùng rác!');
                             } catch {
                               toast.error('Lỗi xóa tài liệu');

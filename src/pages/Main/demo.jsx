@@ -267,40 +267,6 @@ export default function Demo() {
                     </div>
                   )}
 
-                  <button
-                    className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full 
-                    hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 
-                    font-semibold flex items-center justify-center gap-2"
-                    disabled={extractLoading}
-                    onClick={async () => {
-                      setExtractLoading(true);
-                      try {
-                        let payload = {
-                          userId,
-                          filePath: "",
-                          fileName: "",
-                          url: "",
-                          documentType: uploadInfo.documentType,
-                          saveToFolder: true,
-                          tempId: uploadInfo.tempId,
-                        };
-                        if (uploadInfo.url) {
-                          payload.url = uploadInfo.url;
-                        } else if (uploadInfo.filePath || uploadInfo.fileName) {
-                          payload.filePath = uploadInfo.filePath || "";
-                          payload.fileName = uploadInfo.fileName || "";
-                        }
-                        const res = await documentService.extractAndSave(payload);
-                        toast.success(res?.message || "Lưu thành công!");
-                        setInfoModal(false);
-                      } catch (err) {
-                        toast.error(err.message || "Lưu thất bại!");
-                      }
-                      setExtractLoading(false);
-                    }}
-                  >
-                    {extractLoading ? "Đang lưu..." : "Lưu tài liệu"}
-                  </button>
                 </div>
               </div>
             </div>

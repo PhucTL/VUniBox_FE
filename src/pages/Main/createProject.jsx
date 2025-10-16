@@ -21,7 +21,6 @@ export default function CreateProject() {
   const [citationResult, setCitationResult] = useState(null);
   const [citationResultModal, setCitationResultModal] = useState(false);
 
-  // Fetch citation styles when opening the citation modal for the first time
   useEffect(() => {
     const fetchStyles = async () => {
       if (!citationModal || citationStyles.length) return;
@@ -29,7 +28,6 @@ export default function CreateProject() {
       try {
         const styles = await citationService.getCitationStyle();
         setCitationStyles(styles || []);
-        // If current selection not in new list, default to first style
         if (styles && styles.length) {
           const hasSelected = styles.some((s) => (s.style || s.id) === selectedCitation);
           if (!hasSelected) {
@@ -37,7 +35,6 @@ export default function CreateProject() {
           }
         }
       } catch (e) {
-        // Keep fallback list silently; optionally log
         console.error("Failed to load citation styles", e);
       }
       setLoadingCitations(false);
@@ -45,13 +42,11 @@ export default function CreateProject() {
     fetchStyles();
   }, [citationModal]);
 
-  // State lưu thông tin sau khi upload
   const [uploadInfo, setUploadInfo] = useState({});
   const [fileInput, setFileInput] = useState(null);
   const [urlInput, setUrlInput] = useState("");
   const [loadingUpload, setLoadingUpload] = useState(false);
 
-  // Lấy user từ Redux hoặc localStorage
   const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
   const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
 
