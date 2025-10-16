@@ -5,6 +5,7 @@ import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
 import documentService from "../../redux/services/document/documentService";
 import { Link } from "react-router-dom";
+import { MdDeleteForever } from "react-icons/md";
 
 export default function TrashDoc() {
   const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
@@ -14,6 +15,7 @@ export default function TrashDoc() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,23 +117,32 @@ export default function TrashDoc() {
                       <td className="px-6 py-5 text-base w-50">{item.source}</td>
                       <td className="px-6 py-5 text-base">{item.created}</td>
                       <td className="px-6 py-5 text-base font-semibold text-blue-600">{item.citationStyle}</td>
-                      <td className="px-6 py-5 text-right">
-                        <div className="flex gap-2 justify-end">
-                          <button
-                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded border text-green-600 hover:bg-green-50"
-                            onClick={async () => {
+                      <td className="px-6 py-5 text-right relative">
+                        <button
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-300 hover:bg-gray-50"
+                          onClick={() => setActiveDropdown(activeDropdown === item.id ? null : item.id)}
+                        >
+                          <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
+                          <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
+                          <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
+                        </button>
+                        {activeDropdown === item.id && (
+                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <div className="py-1">
+                              <button
+                                className="flex items-center gap-2 px-4 py-2 text-sm text-green-600 hover:bg-blue-50 w-full text-left"
+                                onClick={async () => {
                               try {
                                 await documentService.restoreDocument({ documentId: item.id, userId: Number(userId) });
                               } finally {
-                                // Refresh list
                                 setItems((prev) => prev.filter((x) => x.id !== item.id));
                               }
                             }}
                           >
-                            <FaUndo /> Restore
+                            <FaUndo /> Phục hồi
                           </button>
                           <button
-                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded border text-red-600 hover:bg-red-50"
+                                className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
                             onClick={async () => {
                               try {
                                 await documentService.deleteDocPermanent(item.id, Number(userId));
@@ -140,9 +151,11 @@ export default function TrashDoc() {
                               }
                             }}
                           >
-                            Delete
+                            <MdDeleteForever /> Xóa vĩnh viễn
                           </button>
-                        </div>
+                            </div>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))

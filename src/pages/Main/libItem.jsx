@@ -270,7 +270,6 @@ export default function LibItem() {
               </div>
             </div>
           )}
-
           {citationModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
               <div
