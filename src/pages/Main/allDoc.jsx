@@ -227,7 +227,7 @@ export default function AllDoc() {
                                 Chuyển đến thùng rác
                               </button>
 
-                              <button
+                              {/* <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-green-600 hover:bg-red-50 w-full text-left"
                                 onClick={() => {setCitationModal(true) 
                                                setDocumentId(item.id) }
@@ -235,7 +235,7 @@ export default function AllDoc() {
                               >
                                 <FaFilePen className="h-4 w-4" />
                                 Đổi kiểu trích dẫn
-                              </button>
+                              </button> */}
                             </div>
                           </div>
                         )}
