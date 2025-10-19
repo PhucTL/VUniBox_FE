@@ -260,109 +260,120 @@ export default function CreateProject() {
           <Toaster position="top-right" />
 
           {/* Info Modal sau khi upload file/url */}
+          
           {infoModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
-              <div className="bg-white rounded-3xl shadow-2xl p-8 w-[600px] border border-blue-100 relative animate-fadeIn">
+              <div className="bg-white rounded-3xl shadow-2xl p-6 w-[600px] h-[600px] border border-blue-100 relative animate-fadeIn flex flex-col">
+                {/* Nút đóng */}
                 <button
-                  className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full border border-blue-200 flex items-center justify-center text-blue-600 hover:text-blue-800 hover:border-blue-400 transition-colors duration-200"
+                  className="absolute -top-3 -right-3 w-8 h-8 bg-white rounded-full border border-blue-200 
+                            flex items-center justify-center text-blue-600 hover:text-blue-800 
+                            hover:border-blue-400 transition-colors duration-200"
                   onClick={() => setInfoModal(false)}
                   aria-label="Đóng"
                 >
                   ×
                 </button>
-                <div className="space-y-6">
-                  <div className="text-center">
-                    <h3 className="text-2xl font-bold text-blue-600 mb-2">Thông tin nhận diện tài liệu</h3>
-                    <p className="text-gray-500">Xác nhận thông tin tài liệu trước khi lưu</p>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                    <div className="grid grid-cols-1 gap-3">
+
+                {/* Header */}
+                <div className="text-center mb-3">
+                  <h3 className="text-2xl font-bold text-blue-600 mb-1">Thông tin nhận diện tài liệu</h3>
+                  <p className="text-gray-500 text-sm">Xác nhận thông tin tài liệu trước khi lưu</p>
+                </div>
+
+                {/* Scrollable content */}
+                <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+                  {/* Thông tin tài liệu */}
+                  <div className="bg-gray-50 rounded-xl p-3 border border-gray-200">
+                    <div className="grid grid-cols-1 gap-2">
                       <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
                         <span className="font-semibold text-gray-700">Loại tài liệu:</span>
-                        <span className="text-blue-600">{uploadInfo.typeName}</span>
+                        <span className="text-blue-600 text-sm">{uploadInfo.typeName}</span>
                       </div>
                       <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
                         <span className="font-semibold text-gray-700">Mã loại:</span>
-                        <span className="text-blue-600">{uploadInfo.documentType}</span>
+                        <span className="text-blue-600 text-sm">{uploadInfo.documentType}</span>
                       </div>
                       {uploadInfo.url && (
                         <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
                           <span className="font-semibold text-gray-700">URL:</span>
-                          <span className="text-blue-600 max-w-[300px] truncate">{uploadInfo.url}</span>
+                          <span className="text-blue-600 text-sm max-w-[280px] truncate">{uploadInfo.url}</span>
                         </div>
                       )}
                       {uploadInfo.filePath && (
                         <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
                           <span className="font-semibold text-gray-700">File Path:</span>
-                          <span className="text-blue-600 max-w-[300px] truncate">{uploadInfo.filePath}</span>
+                          <span className="text-blue-600 text-sm max-w-[280px] truncate">{uploadInfo.filePath}</span>
                         </div>
                       )}
                       {uploadInfo.fileName && (
                         <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors">
                           <span className="font-semibold text-gray-700">File Name:</span>
-                          <span className="text-blue-600">{uploadInfo.fileName}</span>
+                          <span className="text-blue-600 text-sm">{uploadInfo.fileName}</span>
                         </div>
                       )}
                     </div>
                   </div>
 
+                  {/* Thông điệp xác nhận */}
                   {uploadInfo.confirmationMessage && (
-                    <div className="bg-blue-50 text-blue-700 p-4 rounded-xl border border-blue-200">
+                    <div className="bg-blue-50 text-blue-700 p-3 rounded-xl border border-blue-200 text-sm">
                       <p className="font-medium">{uploadInfo.confirmationMessage}</p>
                       {uploadInfo.subtitle && (
-                        <p className="text-blue-600 mt-2 text-sm">{uploadInfo.subtitle}</p>
+                        <p className="text-blue-600 mt-1 text-xs">{uploadInfo.subtitle}</p>
                       )}
                     </div>
                   )}
 
+                  {/* Câu hỏi */}
                   {uploadInfo.question && (
-                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                    <div className="bg-gray-50 p-3 rounded-xl border border-gray-200 text-sm">
                       <p className="text-gray-700">{uploadInfo.question}</p>
                     </div>
                   )}
-
-                  <button
-                    className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full 
-                    hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 
-                    font-semibold flex items-center justify-center gap-2"
-                    disabled={extractLoading}
-                    onClick={async () => {
-                      setExtractLoading(true);
-                      try {
-                        let payload = {
-                          userId,
-                          filePath: "",
-                          fileName: "",
-                          url: "",
-                          documentType: uploadInfo.documentType,
-                          saveToFolder: true,
-                          tempId: uploadInfo.tempId,
-                        };
-                        if (uploadInfo.url) {
-                          payload.url = uploadInfo.url;
-                        } else if (uploadInfo.filePath || uploadInfo.fileName) {
-                          payload.filePath = uploadInfo.filePath || "";
-                          payload.fileName = uploadInfo.fileName || "";
-                        }
-                        console.log("extractAndSave payload:", payload);
-                        const res = await documentService.extractAndSave(payload);
-                        const newDocId = res?.result?.documentId || res?.result?.id || res?.documentId;
-                        if (newDocId) {
-                          setDocumentId(newDocId);
-                        }
-                        toast.success(res?.message || "Lưu thành công!");
-                        setInfoModal(false);
-                        setCitationModal(true);
-                      } catch (err) {
-                        toast.error(err.message || "Lưu thất bại!");
-                      }
-                      setExtractLoading(false);
-                    }}
-                  >
-                    {extractLoading ? "Đang lưu..." : "Lưu tài liệu"}
-                  </button>
                 </div>
+
+                {/* Nút lưu */}
+                <button
+                  className="mt-4 w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full 
+                            hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 
+                            transition-all duration-200 font-semibold flex items-center justify-center gap-2"
+                  disabled={extractLoading}
+                  onClick={async () => {
+                    setExtractLoading(true);
+                    try {
+                      let payload = {
+                        userId,
+                        filePath: "",
+                        fileName: "",
+                        url: "",
+                        documentType: uploadInfo.documentType,
+                        saveToFolder: true,
+                        tempId: uploadInfo.tempId,
+                      };
+                      if (uploadInfo.url) {
+                        payload.url = uploadInfo.url;
+                      } else if (uploadInfo.filePath || uploadInfo.fileName) {
+                        payload.filePath = uploadInfo.filePath || "";
+                        payload.fileName = uploadInfo.fileName || "";
+                      }
+                      console.log("extractAndSave payload:", payload);
+                      const res = await documentService.extractAndSave(payload);
+                      const newDocId = res?.result?.documentId || res?.result?.id || res?.documentId;
+                      if (newDocId) {
+                        setDocumentId(newDocId);
+                      }
+                      toast.success(res?.message || "Lưu thành công!");
+                      setInfoModal(false);
+                      setCitationModal(true);
+                    } catch (err) {
+                      toast.error(err.message || "Lưu thất bại!");
+                    }
+                    setExtractLoading(false);
+                  }}
+                >
+                  {extractLoading ? "Đang lưu..." : "Lưu tài liệu"}
+                </button>
               </div>
             </div>
           )}
