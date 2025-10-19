@@ -1,6 +1,8 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 export default function AboutUs() {
+  const { user, isAuthenticated } = useSelector(state => state.auth);
   return (
     <div className="min-h-screen w-full bg-gray-50 flex flex-col">
       {/* Hero Section */}
@@ -48,11 +50,13 @@ export default function AboutUs() {
             <button className="px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-semibold hover:bg-blue-100 transition">
               Cách sử dụng
             </button>
-            <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-semibold shadow hover:opacity-90 transition">
-              <Link to="demo">
-              Bắt đầu ngay
-              </Link>
-            </button>
+            <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-medium shadow-md hover:opacity-90">
+            {isAuthenticated ? (
+              <Link to="/demo">Bắt đầu ngay</Link>
+            ) : (
+              <Link to="/login">Bắt đầu ngay</Link>
+            )}
+          </button>
           </div>
         </div>
         {/* Image */}

@@ -66,7 +66,7 @@ export default function Sidebar() {
         <a href="#" className="flex items-center gap-2">
           <GoQuestion  size={30} /> Hỗ Trợ
         </a>
-        <a href="#" className="flex items-center gap-2">
+        <a href="/account" className="flex items-center gap-2">
           <HiOutlineCog6Tooth  size={30} /> Cài Đặt
         </a>
       </div>

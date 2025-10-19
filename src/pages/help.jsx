@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function HelpCenter() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center  mt-20">
@@ -27,10 +29,14 @@ export default function HelpCenter() {
       {/* Bottom Buttons */}
       <div className="flex w-full justify-center gap-6 mt-12 mb-10">
         <button className="px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition">
+          <Link to="/account">
           Account
+          </Link>
         </button>
         <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-semibold shadow hover:opacity-90 transition">
+          <Link to="https://docs.google.com/forms/d/e/1FAIpQLScN1zi3edgSS2rg5nSFGql-_TdCKa4dBk4jEBwPGqChCDf-7g/viewform?usp=sharing&ouid=112926310380479204670">
           Feedback
+          </Link>
         </button>
       </div>
     </div>

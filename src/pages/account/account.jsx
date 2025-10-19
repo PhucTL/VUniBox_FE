@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getUserProfileThunk, getUserStorageThunk, uploadAvatarThunk, updateProfileThunk, deleteAvatarThunk } from "../../redux/thunks/user/userThunks";
 import { getUserSubscriptionThunk } from "../../redux/thunks/plan/planThunks";
 import StatsCard from "../../components/StatsCard";
@@ -241,16 +241,6 @@ export default function Account() {
               userProfile={userProfile}
               className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
             />
-            {/* Delete Avatar Button - Only show if user has custom avatar */}
-            {userProfile?.avatarUrl && !isUploadAvatarLoading && (
-              <button
-                onClick={handleAvatarDelete}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors duration-200 flex items-center justify-center shadow-lg"
-                title="Xóa ảnh đại diện"
-              >
-                ×
-              </button>
-            )}
           </div>
           <div className="mt-4 flex flex-col items-center gap-2">
             <label htmlFor="avatar-upload" className="text-blue-600 hover:underline cursor-pointer font-medium">
@@ -263,15 +253,7 @@ export default function Account() {
                 "Thay đổi ảnh"
               )}
             </label>
-            {userProfile?.avatarUrl && (
-              <button
-                onClick={handleAvatarDelete}
-                className="text-red-500 hover:underline cursor-pointer font-medium text-sm"
-                disabled={isUploadAvatarLoading}
-              >
-                Xóa ảnh
-              </button>
-            )}
+
           </div>
           <input
             id="avatar-upload"
@@ -573,10 +555,15 @@ export default function Account() {
       {/* Footer Buttons */}
       <div className="flex justify-end gap-4 mt-8">
         <button className="px-6 py-2 rounded-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50">
+          <Link to="https://docs.google.com/forms/d/e/1FAIpQLScN1zi3edgSS2rg5nSFGql-_TdCKa4dBk4jEBwPGqChCDf-7g/viewform?usp=sharing&ouid=112926310380479204670">
           Feedback
+          </Link>
         </button>
         <button className="px-6 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700">
+          <Link to="/help">
           Help Center
+          </Link>
+          
         </button>
       </div>
 

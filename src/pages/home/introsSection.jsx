@@ -6,7 +6,10 @@ import {
 } from "react-icons/ai";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 export default function IntroSection() {
+  const { user, isAuthenticated } = useSelector(state => state.auth);
   return (
     <div className="bg-white">
       {/* Section 1 */}
@@ -21,12 +24,15 @@ export default function IntroSection() {
           </p>
           <div className="flex justify-center gap-4 mt-8">
             <button className="px-6 py-2 border border-blue-600 text-blue-600 rounded-full">
-              Về chúng tôi
+              <Link to="https://www.facebook.com/VUniBox">Về chúng tôi</Link>
             </button>
-            <button className="px-6 py-2 bg-blue-600 text-white rounded-full">
+            <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-medium shadow-md hover:opacity-90">
+            {isAuthenticated ? (
               <Link to="demo">Bắt đầu ngay</Link>
-              
-            </button>
+            ) : (
+              <Link to="login">Bắt đầu ngay</Link>
+            )}
+          </button>
           </div>
         </div>
  
@@ -158,12 +164,16 @@ export default function IntroSection() {
 
           {/* Buttons */}
           <div className="flex justify-center gap-4">
-            <button className="px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-medium hover:bg-blue-50">
-              Về chúng tôi
+            <button className="px-6 py-2 border border-blue-600 text-blue-600 rounded-full">
+              <Link to="https://www.facebook.com/VUniBox">Về chúng tôi</Link>
             </button>
             <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-medium shadow-md hover:opacity-90">
-              Bắt đầu ngay
-            </button>
+            {isAuthenticated ? (
+              <Link to="demo">Bắt đầu ngay</Link>
+            ) : (
+              <Link to="login">Bắt đầu ngay</Link>
+            )}
+          </button>
           </div>
         </div>
       </div>

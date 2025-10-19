@@ -1,8 +1,11 @@
 import Banner1 from "../../assets/Banner1.png";
 import Banner2 from "../../assets/Banner2.png";
 import Aboutus from "../../assets/Aboutus.jpg";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function FeaturesSection() {
+  const { user, isAuthenticated } = useSelector(state => state.auth);
   return (
     <div className="bg-white">
       {/* Blog Section */}
@@ -94,12 +97,16 @@ export default function FeaturesSection() {
 
             {/* Buttons */}
             <div className="flex gap-4">
-              <button className="px-6 py-3 rounded-full border border-blue-600 text-blue-600 font-medium hover:bg-blue-50 transition">
-                Về chúng tôi
-              </button>
-              <button className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-blue-700 text-white font-medium hover:opacity-90 transition">
-                Bắt đầu ngay
-              </button>
+            <button className="px-6 py-2 border border-blue-600 text-blue-600 rounded-full">
+              <Link to="https://www.facebook.com/VUniBox">Về chúng tôi</Link>
+            </button>
+            <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-medium shadow-md hover:opacity-90">
+            {isAuthenticated ? (
+              <Link to="demo">Bắt đầu ngay</Link>
+            ) : (
+              <Link to="login">Bắt đầu ngay</Link>
+            )}
+          </button>
             </div>
           </div>
         </div>

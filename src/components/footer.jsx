@@ -8,15 +8,15 @@ export default function Footer() {
           <a href="#" className="hover:underline text-lg">
             Setting
           </a>
-          <a href="#" className="hover:underline text-lg">
+          <a href="/account" className="hover:underline text-lg">
             Account
           </a>
-          <a href="#" className="hover:underline text-lg">
+          <a href="/help" className="hover:underline text-lg">
             Help Center
           </a>
         </div>
         <div className="flex space-x-6">
-          <a href="#" aria-label="Facebook">
+          <a href="https://www.facebook.com/VUniBox" aria-label="Facebook">
             <FaFacebookF className="w-6 h-6 hover:text-blue-300" />
           </a>
           <a href="#" aria-label="Instagram">
