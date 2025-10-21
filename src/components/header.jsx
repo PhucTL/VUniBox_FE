@@ -43,32 +43,32 @@ export default function Header() {
       </div>
 
       {/* Menu */}
-      <nav className="absolute ml-90 -translate-x-1/2">
+      <nav className="absolute ml-110 -translate-x-1/2">
         <ul className="flex gap-10 bg-white border border-blue-400 rounded-full py-4 px-12 shadow-md">
           <Link to="/">
             <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-              Home
+              Trang chủ
             </li>
           </Link>
           <Link to="aboutUs">
             <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-              About Us
+              Chúng tôi
             </li>
           </Link>
           <Link to="help">
             <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-              Help Center
+              Liên hệ
             </li>
           </Link>
           <Link to="policy">
             <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-              Policy
+            Chính sách
             </li>
           </Link>
           {isAuthenticated && (
             <Link to="createproject">
               <li className="text-blue-700 font-semibold cursor-pointer hover:text-blue-900">
-                Project
+                Dự án
               </li>
             </Link>
           )}

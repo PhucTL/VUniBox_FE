@@ -24,46 +24,46 @@ export default function Sidebar() {
             </Link>
             <div className="ml-8 mt-2 flex flex-col gap-2">
               <Link to="/libitem/Book" className="flex items-center gap-2">
-                <CiFolderOn size={30} /> Book
+                <CiFolderOn size={30} /> Sách
               </Link>
               <Link to="/libitem/Word" className="flex items-center gap-2">
                 <CiFolderOn size={30} /> Word
               </Link>
               <Link to="/libitem/Newspaper" className="flex items-center gap-2">
-                <CiFolderOn size={30} /> Newspaper
+                <CiFolderOn size={30} /> Báo chí
               </Link>
               <Link to="/libitem/PDF" className="flex items-center gap-2 ">
                 <CiFolderOn size={30} /> PDF
               </Link>
               <Link to="/libitem/Article" className="flex items-center gap-2 ">
-                <CiFolderOn size={30} /> Article
+                <CiFolderOn size={30} /> Bài báo
               </Link>
               <Link to="/libitem/Research" className="flex items-center gap-2 ">
-                <CiFolderOn size={30} /> Research
+                <CiFolderOn size={30} /> Nghiên cứu
               </Link>
               <Link to="/libitem/Others" className="flex items-center gap-2 ">
-                <CiFolderOn size={30} /> Others
+                <CiFolderOn size={30} /> Khác
               </Link>
             </div>
           </div>
           <Link to="/createproject" className="flex items-center gap-2">
-            <IoLayersOutline size={30} /> Dự Án mới
+            <IoLayersOutline size={30} /> Dự án mới
           </Link>
           <Link to="/trashdoc" className="flex items-center gap-2">
-            <IoTrashOutline  size={30} /> Thùng Rác
+            <IoTrashOutline  size={30} /> Thùng rác
           </Link>
           <Link to="/alldoc" className="flex items-center gap-2">
             <CiFolderOn  size={30} /> Tất cả
           </Link>
           <Link to="/saveddoc" className="flex items-center gap-2">
-            <TfiSave  size={25} /> Đã save
+            <TfiSave  size={25} /> Đã lưu
           </Link>
         </nav>
       </div>
 
       {/* Bottom */}
       <div className="border-t border-gray-400 pt-4 flex flex-col gap-3">
-        <a href="#" className="flex items-center gap-2">
+        <a href="/help" className="flex items-center gap-2">
           <GoQuestion  size={30} /> Hỗ Trợ
         </a>
         <a href="/account" className="flex items-center gap-2">
