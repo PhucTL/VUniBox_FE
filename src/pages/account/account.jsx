@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { getUserProfileThunk, getUserStorageThunk, uploadAvatarThunk, updateProfileThunk, deleteAvatarThunk } from "../../redux/thunks/user/userThunks";
 import { getUserSubscriptionThunk } from "../../redux/thunks/plan/planThunks";
 import StatsCard from "../../components/StatsCard";
-import SubscriptionCard from "../../components/SubscriptionCard";
 import { FaHdd, FaFileAlt, FaQuoteLeft, FaRobot } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
 
 // Helper function to get avatar URL  
 const getAvatarUrl = (avatarUrl) => {
@@ -70,12 +70,6 @@ const AvatarImage = ({ selectedFile, userProfile, className }) => {
         }}
       />
       
-      {/* Show indicator if custom avatar exists but can't be loaded in production */}
-      {!window.location.hostname.includes('localhost') && userProfile?.avatarUrl && !selectedFile && (
-        <div className="absolute bottom-0 right-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">
-          ✓
-        </div>
-      )}
     </div>
   );
 };
@@ -146,20 +140,18 @@ export default function Account() {
           // Successfully uploaded, reload profile to get new avatarUrl
           console.log("Upload successful, reloading profile...");
           await dispatch(getUserProfileThunk(userId));
-          console.log("Avatar uploaded successfully");
+          toast.success("Thay đổi avatar thành công ");
           
           // Clear preview after successful upload
           setTimeout(() => {
             setSelectedFile(null);
           }, 1000); // Give time for new avatar to load
         } else {
-          console.error("Upload failed:", result);
-          alert("Tải ảnh thất bại. Vui lòng thử lại.");
+          toast.error("Thay đổi avatar thất bại");
           setSelectedFile(null);
         }
       } catch (error) {
-        console.error("Upload error:", error);
-        alert("Có lỗi xảy ra khi tải ảnh lên");
+        toast.error("Thay đổi avatar thất bại");
         setSelectedFile(null);
       }
     }

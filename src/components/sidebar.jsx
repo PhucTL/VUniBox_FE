@@ -15,9 +15,9 @@ export default function Sidebar() {
     <div className="w-80 min-h-screen bg-gradient-to-b from-blue-400 to-cyan-200 p-4 flex flex-col justify-between rounded-4xl shadow-lg">
       <div>
         <nav className="flex flex-col gap-4 mt-5">
-          <a href="#" className="flex items-center gap-2">
-            <IoHomeOutline size={30} /> Trang Chủ
-          </a>
+          <Link to="/" className="flex items-center gap-2">
+          <IoHomeOutline size={30} />  Trang Chủ
+          </Link>
           <div>
             <Link to="/library" className="flex items-center gap-2 relative">
               <CiStar size={30} /> Lưu Trữ

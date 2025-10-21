@@ -125,61 +125,50 @@ export default function LibItem() {
           </div>
 
           {/* Table */}
-          <div className=" border border-blue-400 rounded-xl overflow-hidden relative">
-            <table className="w-full text-left border-collapse">
+          <div className="border border-blue-400 rounded-xl overflow-visible relative min-h-[400px]">
+            <table className="min-w-[900px] w-full text-left border-collapse">
               <thead className="bg-blue-50">
                 <tr>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg">
-                    Tên File
-                  </th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]">
-                    Nguồn
-                  </th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg">
-                    Ngày tạo
-                  </th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[270px]">
-                    Kiểu trích
-                  </th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]">
-                    Lưu ý
-                  </th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]">
-                  </th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg">Tên File</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg">Nguồn</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg">Ngày tạo</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[240px]">Kiểu trích</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]">Lưu ý</th>
+                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]"></th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={7} className="text-center py-8">
+                    <td colSpan={6} className="text-center pt-30 text-lg">
                       Đang tải...
                     </td>
                   </tr>
                 ) : items.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center py-8">
+                    <td colSpan={6} className="text-center pt-30 text-lg">
                       Không có dữ liệu
                     </td>
                   </tr>
                 ) : (
                   items.filter(item => item.fileName.toLowerCase().includes(search.toLowerCase())).map((item, idx) => (
                     <tr key={idx} className="hover:bg-blue-50">
-                      <td className="px-2 py-5 flex items-center gap-3 w-70">
+                      <td className="px-2 py-3 w-[400px]">
                         <Link
                           to={item.filePath || item.sourceUrl || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-base text-blue-700 no-underline hover:text-blue-900"
+                          className="text-base text-blue-700 no-underline hover:text-blue-900 line-clamp-3"
                         >
                           {item.fileName}
                         </Link>
                       </td>
-                      <td className="px-6 py-5 text-base w-80">{item.source}</td>
-                      <td className="px-6 py-5 text-base">{item.created}</td>
-                      <td className="px-6 py-5 text-base font-semibold text-blue-600">
+                      <td className="px-6 py-5 text-base max-w-[240px] truncate" title={item.source}>{item.source}</td>
+                      <td className="px-6 py-5 text-base whitespace-nowrap">{item.created}</td>
+                      <td className="px-10 py-5 text-base font-semibold text-blue-600 w-20">
                         {item.citationStyle}
                       </td>
-                      <td className="px-6 py-5 text-base line-clamp-3 w-50">{item.abstract}</td>
+                      <td className="py-7 text-base line-clamp-3 w-70">{item.abstract}</td>
                       <td className="px-6 py-5 text-right relative">
                         <button
                           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-300 hover:bg-gray-50"
@@ -190,7 +179,7 @@ export default function LibItem() {
                           <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
                         </button>
                         {activeDropdown === item.id && (
-                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[9999]">
                             <div className="py-1">
                               <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 w-full text-left"
@@ -221,7 +210,7 @@ export default function LibItem() {
                               <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-green-600 hover:bg-red-50 w-full text-left"
                                 onClick={() => {setCitationModal(true) 
-                                               setDocumentId(item.id) }
+                                setDocumentId(item.id) }
                                 }
                               >
                                 <FaFilePen className="h-4 w-4" />

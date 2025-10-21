@@ -81,7 +81,7 @@ export default function TrashDoc() {
               </div>
             </div>
           </div>
-          <div className="border border-blue-400 rounded-xl overflow-hidden relative">
+          <div className="border border-blue-400 rounded-xl overflow-visible relative min-h-[400px]">
             <table className="w-full text-left border-collapse">
               <thead className="bg-blue-50">
                 <tr>
@@ -95,11 +95,11 @@ export default function TrashDoc() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8">Đang tải...</td>
+                    <td colSpan={5} className="text-center pt-30 text-lg">Đang tải...</td>
                   </tr>
                 ) : currentItems.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8">Không có dữ liệu</td>
+                    <td colSpan={5} className="text-center pt-30 text-lg">Không có dữ liệu</td>
                   </tr>
                 ) : (
                   currentItems.map((item, idx) => (
@@ -127,7 +127,7 @@ export default function TrashDoc() {
                           <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
                         </button>
                         {activeDropdown === item.id && (
-                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[9999]">
                             <div className="py-1">
                               <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-green-600 hover:bg-blue-50 w-full text-left"

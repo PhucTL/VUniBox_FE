@@ -44,6 +44,7 @@ export default function SavedDoc() {
             abstract: d.abstract || "",
             filePath: d.filePath,
             sourceUrl: d.sourceUrl,
+            formattedCitation: d.formattedCitation || "",
           }))
         );
       } catch (error) {
@@ -112,7 +113,7 @@ export default function SavedDoc() {
               </div>
             </div>
           </div>
-          <div className="border border-blue-400 rounded-xl overflow-x-auto relative">
+          <div className="border border-blue-400 rounded-xl overflow-visible relative min-h-[400px]">
             <table className="min-w-[900px] w-full text-left border-collapse">
               <thead className="bg-blue-50">
                 <tr>
@@ -127,31 +128,31 @@ export default function SavedDoc() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8">Đang tải...</td>
+                    <td colSpan={5} className="text-center pt-30 text-lg">Đang tải...</td>
                   </tr>
                 ) : currentItems.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8">Không có dữ liệu</td>
+                    <td colSpan={5} className="text-center items-center pt-30 text-lg">Không có dữ liệu</td>
                   </tr>
                 ) : (
                   currentItems.map((item, idx) => (
                     <tr key={idx} className="hover:bg-blue-50">
-                      <td className="px-2 py-5 flex items-center gap-3 w-70">
+                      <td className="px-2 py-3 w-[400px]">
                         <Link
                           to={item.filePath || item.sourceUrl || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-base text-blue-700 no-underline hover:text-blue-900"
+                          className="text-base text-blue-700 no-underline hover:text-blue-900 line-clamp-3"
                         >
                           {item.fileName}
                         </Link>
                       </td>
                       <td className="px-6 py-5 text-base max-w-[240px] truncate" title={item.source}>{item.source}</td>
                       <td className="px-6 py-5 text-base whitespace-nowrap">{item.created}</td>
-                      <td className="px-6 py-5 text-base font-semibold text-blue-600 w-[160px]">
+                      <td className="px-10 py-5 text-base font-semibold text-blue-600 w-20">
                         {item.citationStyle}
                       </td>
-                      <td className="px-6 py-5 text-base line-clamp-3 w-50">{item.abstract}</td>
+                      <td className="py-7 text-base line-clamp-3 w-70">{item.abstract}</td>
                       <td className="px-6 py-5 text-right relative">
                         <button
                           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-300 hover:bg-gray-50"
@@ -162,7 +163,7 @@ export default function SavedDoc() {
                           <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
                         </button>
                         {activeDropdown === item.id && (
-                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[9999]">
                             <div className="py-1">
                               <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 w-full text-left"

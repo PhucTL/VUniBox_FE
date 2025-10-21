@@ -30,6 +30,7 @@ export default function AllDoc() {
   const [reGeneratingCitation, setreGeneratingCitation] = useState(false);
   const [citationResult, setCitationResult] = useState(null);
   const [documentId, setDocumentId] = useState(null);
+  const [sortByAuthor, setSortByAuthor] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,6 +48,9 @@ export default function AllDoc() {
             abstract: d.abstract || "",
             filePath: d.filePath,
             sourceUrl: d.sourceUrl,
+            formattedCitation: d.formattedCitation || "",
+            publicationDate: d.publicationDate || "",
+            author: d.author || "",
           }))
         );
       } catch (error) {
@@ -85,15 +89,38 @@ export default function AllDoc() {
     item.fileName.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Sort items by author if sortByAuthor is true
+  const sortedItems = sortByAuthor 
+    ? [...filteredItems].sort((a, b) => {
+        const authorA = a.author || '';
+        const authorB = b.author || '';
+        
+        // If both have authors, sort alphabetically
+        if (authorA && authorB) {
+          return authorA.toLowerCase().localeCompare(authorB.toLowerCase());
+        }
+        // If only A has author, A comes first
+        if (authorA && !authorB) {
+          return -1;
+        }
+        // If only B has author, B comes first
+        if (!authorA && authorB) {
+          return 1;
+        }
+        // If neither has author, maintain original order
+        return 0;
+      })
+    : filteredItems;
+
   // Pagination logic
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredItems.slice(startIndex, endIndex);
+  const currentItems = sortedItems.slice(startIndex, endIndex);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, filterStatus, filterType]);
+  }, [search, filterStatus, filterType, sortByAuthor]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col mt-25 w-full">
@@ -149,49 +176,65 @@ export default function AllDoc() {
               </div>
             </div>
           </div>
-          <div className="border border-blue-400 rounded-xl overflow-x-auto relative">
-            <table className="min-w-[900px] w-full text-left border-collapse">
+          <div className="border border-blue-400 rounded-xl overflow-visible relative min-h-[400px]">
+            <table className="w-full text-left border-collapse">
               <thead className="bg-blue-50">
                 <tr>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg ">Tên File</th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg ">Nguồn</th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg ">Ngày tạo</th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[240px]">Kiểu trích</th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]">Lưu ý</th>
-                  <th className="px-6 py-5 border-b border-blue-200 text-lg w-[120px]"></th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[180px]">Tên File</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[120px]">
+                    <button
+                      onClick={() => setSortByAuthor(!sortByAuthor)}
+                      className="flex items-center gap-2 hover:text-blue-600 transition-colors"
+                    >
+                      Tác giả
+                      {sortByAuthor ? (
+                        <span className="text-blue-600">↓</span>
+                      ) : (
+                        <span className="text-gray-400">↕</span>
+                      )}
+                    </button>
+                  </th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Năm</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[140px]">Nguồn</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Ngày tạo</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Kiểu trích</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[150px]">Lưu ý</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[80px]"></th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8">Đang tải...</td>
+                    <td colSpan={8} className="text-center pt-30 text-lg">Đang tải...</td>
                   </tr>
                 ) : currentItems.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8">Không có dữ liệu</td>
+                    <td colSpan={8} className="text-center pt-30 text-lg">Không có dữ liệu</td>
                   </tr>
                 ) : (
                   currentItems.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-blue-50">
-                      <td className="px-2 py-5 flex items-center gap-3 w-70">
+                    <tr key={idx} className="hover:bg-blue-50 ">
+                      <td className="px-2 py-3 w-[180px]">
                         <Link
                           to={item.filePath || item.sourceUrl || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-base text-blue-700 no-underline hover:text-blue-900"
+                          className="text-xs text-blue-700 no-underline hover:text-blue-900 line-clamp-2"
                         >
                           {item.fileName}
                         </Link>
                       </td>
-                      <td className="px-6 py-5 text-base w-80">{item.source}</td>
-                      <td className="px-6 py-5 text-base whitespace-nowrap">{item.created}</td>
-                        <td className="px-6 py-5 text-base font-semibold text-blue-600">
-                          {item.citationStyle}
-                        </td>
-                      <td className="px-6 py-5 text-base line-clamp-3 w-50">{item.abstract}</td>
-                      <td className="px-6 py-5 text-right relative">
+                      <td className="px-2 py-5 text-xs w-[120px] truncate" title={item.author}>{item.author}</td>
+                      <td className="px-2 py-5 text-xs w-[100px]">{item.publicationDate}</td>
+                      <td className="px-2 py-5 text-xs w-[140px] truncate" title={item.source}>{item.source}</td>
+                      <td className="px-2 py-5 text-xs w-[100px] whitespace-nowrap">{item.created}</td>
+                      <td className="px-2 py-5 text-xs font-semibold text-blue-600 w-[100px]">
+                        {item.citationStyle}
+                      </td>
+                      <td className="px-2 py-5 text-xs w-[150px] line-clamp-2" title={item.abstract}>{item.abstract}</td>
+                      <td className="px-2 py-5 text-right relative w-[80px]">
                         <button
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-300 hover:bg-gray-50"
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-gray-300 hover:bg-gray-50"
                           onClick={() => setActiveDropdown(activeDropdown === item.id ? null : item.id)}
                         >
                           <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
@@ -199,7 +242,7 @@ export default function AllDoc() {
                           <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
                         </button>
                         {activeDropdown === item.id && (
-                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[9999]">
                             <div className="py-1">
                               <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 w-full text-left"
@@ -227,15 +270,15 @@ export default function AllDoc() {
                                 Chuyển đến thùng rác
                               </button>
 
-                              {/* <button
+                              <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-green-600 hover:bg-red-50 w-full text-left"
                                 onClick={() => {setCitationModal(true) 
-                                               setDocumentId(item.id) }
+                                setDocumentId(item.id) }
                                 }
                               >
                                 <FaFilePen className="h-4 w-4" />
                                 Đổi kiểu trích dẫn
-                              </button> */}
+                              </button>
                             </div>
                           </div>
                         )}

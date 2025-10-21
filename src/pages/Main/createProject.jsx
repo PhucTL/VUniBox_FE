@@ -13,7 +13,7 @@ export default function CreateProject() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null); 
   const [citationModal, setCitationModal] = useState(false);
-  const [selectedCitation, setSelectedCitation] = useState("APA");
+  const [selectedCitation, setSelectedCitation] = useState("");
   const [citationStyles, setCitationStyles] = useState([]);
   const [loadingCitations, setLoadingCitations] = useState(false);
   const [documentId, setDocumentId] = useState(null);
@@ -363,7 +363,7 @@ export default function CreateProject() {
                       if (newDocId) {
                         setDocumentId(newDocId);
                       }
-                      toast.success(res?.message || "Lưu thành công!");
+                      toast.success("Lưu thành công!" || res?.message );
                       setInfoModal(false);
                       setCitationModal(true);
                     } catch (err) {
