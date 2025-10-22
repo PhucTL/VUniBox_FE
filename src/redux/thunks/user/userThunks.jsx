@@ -56,7 +56,6 @@ export const uploadAvatarThunk = (userId, file) => async (dispatch) => {
     dispatch(uploadAvatarRequest());
     const result = await userService.uploadAvatar(userId, file);
     dispatch(uploadAvatarSuccess(result.avatarUrl));
-    toast.success('Upload avatar thành công!');
     return { success: true, data: result };
   } catch (error) {
     dispatch(uploadAvatarFailure(error));

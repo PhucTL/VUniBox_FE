@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { FaSearch, FaFileAlt, FaChevronDown, FaTrash, FaChevronLeft, FaChevronRight, FaClipboard } from "react-icons/fa";
+import { FaSearch, FaPen, FaChevronDown, FaTrash, FaChevronLeft, FaChevronRight, FaClipboard } from "react-icons/fa";
 import Sidebar from "../../components/sidebar";
-import Topbar from "../../components/topbar";
 import documentService from "../../redux/services/document/documentService";
 import { Link } from "react-router-dom";
 import citationService from "../../redux/services/citation/citationService";
@@ -31,6 +30,16 @@ export default function AllDoc() {
   const [citationResult, setCitationResult] = useState(null);
   const [documentId, setDocumentId] = useState(null);
   const [sortByAuthor, setSortByAuthor] = useState(false);
+  const [updateData, setUpdateData] = useState({
+    documentId: null,
+    userId: userId,
+    title: "",
+    year: "",
+    author: "",
+    publisher: "",
+    doi: ""
+  });
+  const [updateModal, setUpdateModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,6 +60,7 @@ export default function AllDoc() {
             formattedCitation: d.formattedCitation || "",
             publicationDate: d.publicationDate || "",
             author: d.author || "",
+            doi: d.doi || ""
           }))
         );
       } catch (error) {
@@ -194,7 +204,7 @@ export default function AllDoc() {
                       )}
                     </button>
                   </th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Năm</th>
+                  <th className="px-2 py-5 border-b border-blue-200 text-sm w-[150px]">Năm xuất bản</th>
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[140px]">Nguồn</th>
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Ngày tạo</th>
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Kiểu trích</th>
@@ -279,6 +289,25 @@ export default function AllDoc() {
                                 <FaFilePen className="h-4 w-4" />
                                 Đổi kiểu trích dẫn
                               </button>
+                              <button
+                                className="flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 w-full text-left"
+                                onClick={() => {
+                                  setUpdateData({
+                                    ...updateData,
+                                    documentId: item.id,
+                                    title: item.fileName || "",
+                                    year: item.publicationDate || "",
+                                    author: item.author || "",
+                                    publisher: item.source || "",
+                                    doi: item.doi || ""
+                                  });
+                                  setUpdateModal(true);
+                                  setActiveDropdown(null);
+                                }}
+                              >
+                                <FaPen className="h-4 w-4" />
+                                Cập nhật thông tin
+                              </button>
                             </div>
                           </div>
                         )}
@@ -290,7 +319,7 @@ export default function AllDoc() {
             </table>
           </div>
 
-                    {showModal && (
+            {showModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
               <div className="bg-white rounded-3xl shadow-2xl p-8 w-[600px] border border-blue-100 relative animate-fadeIn">
                 <button
@@ -470,6 +499,105 @@ export default function AllDoc() {
                         {citationResult?.inTextCitation}
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Update Modal */}
+          {updateModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
+              <div className="bg-white rounded-3xl shadow-2xl p-5 w-[500px] border border-blue-100 relative animate-fadeIn h-[450px]">
+                <button
+                  className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full border border-blue-200 flex items-center justify-center text-blue-600 hover:text-blue-800 hover:border-blue-400 transition-colors duration-200"
+                  onClick={() => setUpdateModal(false)}
+                  aria-label="Đóng"
+                >
+                  ×
+                </button>
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <h3 className="text-xl font-bold text-blue-600 mb-1">Cập nhật thông tin</h3>
+                    <p className="text-sm text-gray-500">Cập nhật thông tin cho tài liệu của bạn</p>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-0.5">Tiêu đề</label>
+                      <input
+                        type="text"
+                        value={updateData.title}
+                        onChange={(e) => setUpdateData({...updateData, title: e.target.value})}
+                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-0.5">Năm xuất bản</label>
+                      <input
+                        type="text"
+                        value={updateData.year}
+                        onChange={(e) => setUpdateData({...updateData, year: e.target.value})}
+                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-0.5">Tác giả</label>
+                      <input
+                        type="text"
+                        value={updateData.author}
+                        onChange={(e) => setUpdateData({...updateData, author: e.target.value})}
+                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-0.5">Nhà xuất bản</label>
+                      <input
+                        type="text"
+                        value={updateData.publisher}
+                        onChange={(e) => setUpdateData({...updateData, publisher: e.target.value})}
+                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      
+                      <input
+                        type="hidden"
+                        value={updateData.doi}
+                        onChange={(e) => setUpdateData({...updateData, doi: e.target.value})}
+                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+
+                  </div>
+                  <div className="flex gap-3 pt-3">
+                    <button
+                      onClick={async () => {
+                        try {
+                          console.log("Updating with data:", updateData);
+                          await documentService.updateDocument(updateData);
+                          toast.success("Cập nhật thông tin thành công!");
+                          setUpdateModal(false);
+                          const result = await documentService.getDocByUserIdAndType(
+                            userId,
+                            folderName,
+                            currentPage,
+                            itemsPerPage
+                          );
+                          const documents = result?.documents || [];
+                          setItems(documents);
+                        } catch (error) {
+                          toast.error(error?.message || "Cập nhật thông tin thất bại");
+                        }
+                      }}
+                      className="flex-1 px-4 py-2 text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
+                    >
+                      Cập nhật
+                    </button>
+                    <button
+                      onClick={() => setUpdateModal(false)}
+                      className="flex-1 px-4 py-2 text-sm border-2 border-gray-300 text-gray-600 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                    >
+                      Hủy
+                    </button>
                   </div>
                 </div>
               </div>

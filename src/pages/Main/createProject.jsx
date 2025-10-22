@@ -20,6 +20,20 @@ export default function CreateProject() {
   const [generatingCitation, setGeneratingCitation] = useState(false);
   const [citationResult, setCitationResult] = useState(null);
   const [citationResultModal, setCitationResultModal] = useState(false);
+  const [uploadInfo, setUploadInfo] = useState({});
+  const [fileInput, setFileInput] = useState(null);
+  const [urlInput, setUrlInput] = useState("");
+  const [loadingUpload, setLoadingUpload] = useState(false);
+  const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
+  const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
+  // const updateData = [
+  //   documentId = documentId,
+  //   userId = userId, 
+  //   title = "",
+  //   year = "", 
+  //   author="",
+  //   publisher = "",
+  //   doi = ""];
 
   useEffect(() => {
     const fetchStyles = async () => {
@@ -42,13 +56,6 @@ export default function CreateProject() {
     fetchStyles();
   }, [citationModal]);
 
-  const [uploadInfo, setUploadInfo] = useState({});
-  const [fileInput, setFileInput] = useState(null);
-  const [urlInput, setUrlInput] = useState("");
-  const [loadingUpload, setLoadingUpload] = useState(false);
-
-  const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
-  const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
 
   const items = [
     {

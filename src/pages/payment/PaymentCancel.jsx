@@ -16,7 +16,6 @@ export default function PaymentCancel() {
   useEffect(() => {
     // Clear any stored payment data
     localStorage.removeItem('pendingOrderCode');
-    localStorage.removeItem('pendingUserId');
     localStorage.removeItem('pendingPlanId');
     
     // Show notification

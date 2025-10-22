@@ -11,7 +11,10 @@ import {
 	deletePermanentRequest, deletePermanentSuccess, deletePermanentFailure,
 	uploadFileRequest, uploadFileSuccess, uploadFileFailure,
 	processUrlRequest, processUrlSuccess, processUrlFailure,
-	cleanupTempRequest, cleanupTempSuccess, cleanupTempFailure
+	cleanupTempRequest, cleanupTempSuccess, cleanupTempFailure,
+	updateDocumentRequest,
+	updateDocumentSuccess,
+	updateDocumentFailure
 } from '../../actions/document/documentActions';
 
 // Chuyển tài liệu vào thùng rác
@@ -178,4 +181,19 @@ export const cleanupTempThunk = (temp) => async (dispatch) => {
 		return { success: false, error: error.message || 'Dọn dẹp tạm thất bại!' };
 	}
 };
+
+// Update Document
+export const updateDocument = (payload) => async (dispatch) => {
+	try{
+		dispatch(updateDocumentRequest());
+		const result = await documentService.updateDocument(payload);
+		dispatch(updateDocumentSuccess(result));
+		toast.success(result.message || 'Cập nhật tài liệu thành công!');
+		return { success: true, data: result };
+	}catch(error){
+		dispatch(updateDocumentFailure(error));
+		toast.error(error.message || 'Cập nhật tài liệu thất bại!');
+		return { success: false, error: error.message || 'Cập nhật tài liệu thất bại!'};
+	}
+}
 

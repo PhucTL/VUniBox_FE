@@ -1,3 +1,4 @@
+import { updateDocument } from "../../thunks/document/docThunks";
 import axios from "../../utils/axiosCustomize";
 
 // Document API Service
@@ -123,6 +124,15 @@ const documentService = {
   extractAndSave: async (data) => {
     try {
       const response = await axios.post("/api/documentMetadata/extract-and-save",data);
+      return response;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  updateDocument: async (payload) => {
+    try {
+      const response = await axios.put("/api/document/update", payload);
       return response;
     } catch (error) {
       throw error.response?.data || error.message;

@@ -138,20 +138,17 @@ export default function Account() {
         
         if (result.success || result.payload?.success || result.type?.includes('fulfilled')) {
           // Successfully uploaded, reload profile to get new avatarUrl
-          console.log("Upload successful, reloading profile...");
           await dispatch(getUserProfileThunk(userId));
           toast.success("Thay đổi avatar thành công ");
-          
-          // Clear preview after successful upload
           setTimeout(() => {
-            setSelectedFile(null);
+          setSelectedFile(null);
           }, 1000); // Give time for new avatar to load
         } else {
-          toast.error("Thay đổi avatar thất bại");
+          toast.error("Thay đổi avatar thất bại. Phải dùng ảnh .jpg");
           setSelectedFile(null);
         }
       } catch (error) {
-        toast.error("Thay đổi avatar thất bại");
+        toast.error("Thay đổi avatar thất bại. Phải dùng ảnh .jpg");
         setSelectedFile(null);
       }
     }

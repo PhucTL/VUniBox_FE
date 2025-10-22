@@ -7,6 +7,7 @@ import {
   FaFileAlt,
   FaTrash,
   FaClipboard,
+  FaPen,
 } from "react-icons/fa";
 import Sidebar from "../../components/sidebar";
 import { useParams, Link } from "react-router-dom";
@@ -36,6 +37,7 @@ export default function LibItem() {
   const [reGeneratingCitation, setreGeneratingCitation] = useState(false);
   const [citationResult, setCitationResult] = useState(null);
   const [documentId, setDocumentId] = useState(null);
+
 
   
   useEffect(() => {
@@ -210,12 +212,14 @@ export default function LibItem() {
                               <button
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-green-600 hover:bg-red-50 w-full text-left"
                                 onClick={() => {setCitationModal(true) 
-                                setDocumentId(item.id) }
-                                }
+                                setDocumentId(item.id)
+                                setActiveDropdown(null);
+                              }}
                               >
                                 <FaFilePen className="h-4 w-4" />
                                 Đổi kiểu trích dẫn
                               </button>
+                              
                             </div>
                           </div>
                         )}
@@ -413,7 +417,7 @@ export default function LibItem() {
               </div>
             </div>
           )}
-
+          
 
           {/* Pagination */}
           <div className="flex justify-between items-center mt-6">

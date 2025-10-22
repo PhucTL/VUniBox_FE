@@ -168,3 +168,14 @@ export const getMetadataDocIdFailure = (error) => ({
   type: DOCUMENT_ACTION_TYPES.GET_METADATA_DOCID_FAILURE,
   payload: error,
 });
+export const updateDocumentRequest = () => ({
+  type: DOCUMENT_ACTION_TYPES.UPDATE_DOCUMENT_REQUEST,
+});
+export const updateDocumentSuccess = (payload) => ({
+  type: DOCUMENT_ACTION_TYPES.UPDATE_DOCUMENT_SUCCESS,
+  payload,
+});
+export const updateDocumentFailure = (error) => ({
+  type: DOCUMENT_ACTION_TYPES.UPDATE_DOCUMENT_FAILURE,
+  payload: error,
+});

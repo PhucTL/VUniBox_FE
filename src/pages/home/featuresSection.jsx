@@ -102,7 +102,7 @@ export default function FeaturesSection() {
             </button>
             <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-medium shadow-md hover:opacity-90">
             {isAuthenticated ? (
-              <Link to="demo">Bắt đầu ngay</Link>
+              <Link to="createproject">Bắt đầu ngay</Link>
             ) : (
               <Link to="login">Bắt đầu ngay</Link>
             )}

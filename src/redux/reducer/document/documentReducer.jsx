@@ -17,6 +17,7 @@ const initialState = {
   isExtractSaveLoading: false,
   isExtractMetadataLoading: false,
   isGetMetadataByDocIdLoading: false,
+  isUpdateDocumentLoading: false,
 
   // Error states
   error: null,
@@ -34,6 +35,7 @@ const initialState = {
   extractSaveError: null,
   extractMetadataError: null,
   getMetadataByDocIdError: null,
+  updateDocumentError: null,
 
   // Success states
   trashSuccess: false,
@@ -50,6 +52,7 @@ const initialState = {
   extractSaveSuccess: false,
   extractMetadataSuccess: false,
   getMetadataByDocIdSuccess: false,
+  updateDocumentSuccess: false,
 };
 
 const documentReducer = (state = initialState, action) => {
@@ -444,6 +447,34 @@ const documentReducer = (state = initialState, action) => {
         getMetadataByDocIdError: action.payload,
         getMetadataByDocIdSuccess: false,
         error: action.payload,
+      };
+
+      case DOCUMENT_ACTION_TYPES.UPDATE_DOCUMENT_REQUEST:
+      return {
+        ...state,
+        isUpdateDocumentLoading: true,
+        isLoading: true,
+        updateDocumentError: action.payload,
+        updateDocumentSuccess: false,
+        error: action.payload,
+      };
+      case DOCUMENT_ACTION_TYPES.UPDATE_DOCUMENT_SUCCESS:
+        return {
+          ...state,
+          isUpdateDocumentLoading: false,
+          isLoading: false,
+          updateDocumentError: null,
+          updateDocumentSuccess: true,
+          error: null,
+        };
+      case DOCUMENT_ACTION_TYPES.UPDATE_DOCUMENT_FAILURE:
+        return {
+          ...state,
+          isUpdateDocumentLoading: false,
+          isLoading: false,
+          updateDocumentError: action.payload,
+          updateDocumentSuccess: false,
+          error: action.payload,
       };
 
     default:

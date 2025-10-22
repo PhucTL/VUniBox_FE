@@ -19,7 +19,11 @@ export default function AboutUs() {
             Cách sử dụng
           </button>
           <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-semibold shadow hover:opacity-90 transition">
-            Bắt đầu ngay
+            {isAuthenticated ? (
+              <Link to="/createproject">Bắt đầu ngay</Link>
+            ) : (
+              <Link to="/login">Bắt đầu ngay</Link>
+            )}
           </button>
         </div>
       </section>
@@ -52,7 +56,7 @@ export default function AboutUs() {
             </button>
             <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-medium shadow-md hover:opacity-90">
             {isAuthenticated ? (
-              <Link to="/demo">Bắt đầu ngay</Link>
+              <Link to="/createproject">Bắt đầu ngay</Link>
             ) : (
               <Link to="/login">Bắt đầu ngay</Link>
             )}
@@ -116,7 +120,11 @@ export default function AboutUs() {
             Cách sử dụng
           </button>
           <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-semibold shadow hover:opacity-90 transition">
-            Bắt đầu ngay
+            {isAuthenticated ? (
+              <Link to="/createproject">Bắt đầu ngay</Link>
+            ) : (
+              <Link to="/login">Bắt đầu ngay</Link>
+            )}
           </button>
         </div>
       </section>
