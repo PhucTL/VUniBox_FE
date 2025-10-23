@@ -33,6 +33,8 @@ export default function TrashDoc() {
             citationStyle: d.citationStyle || "",
             filePath: d.filePath,
             sourceUrl: d.sourceUrl,
+            publicationDate: d.publicationDate || "",
+            author: d.author || "",
           }))
         );
       } catch (error) {

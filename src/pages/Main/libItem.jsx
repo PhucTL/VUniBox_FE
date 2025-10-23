@@ -63,6 +63,8 @@ export default function LibItem() {
             filePath: d.filePath,
             sourceUrl: d.sourceUrl,
             formattedCitation: d.formattedCitation || "",
+            publicationDate: d.publicationDate || "",
+            authors: d.authors || "",
           }))
         );
         setTotalPages(Math.max(1, Math.ceil(totalCount / itemsPerPage)));

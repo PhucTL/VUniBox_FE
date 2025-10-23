@@ -45,6 +45,8 @@ export default function SavedDoc() {
             filePath: d.filePath,
             sourceUrl: d.sourceUrl,
             formattedCitation: d.formattedCitation || "",
+            publicationDate: d.publicationDate || "",
+            author: d.author || "",
           }))
         );
       } catch (error) {

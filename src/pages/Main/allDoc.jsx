@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FaSearch, FaPen, FaChevronDown, FaTrash, FaChevronLeft, FaChevronRight, FaClipboard } from "react-icons/fa";
-import Sidebar from "../../components/sidebar";
+import CollapsibleSidebar from "../../components/CollapsibleSidebar";
 import documentService from "../../redux/services/document/documentService";
 import { Link } from "react-router-dom";
 import citationService from "../../redux/services/citation/citationService";
@@ -37,9 +37,13 @@ export default function AllDoc() {
     year: "",
     author: "",
     publisher: "",
-    doi: ""
+    doi: "",
+    volume: "",
+    issue: "",
+    pages: ""
   });
   const [updateModal, setUpdateModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,7 +55,7 @@ export default function AllDoc() {
           documents.map((d) => ({
             id: d.documentId,
             fileName: d.title || d.filePath || "Untitled",
-            source: d.source || "",
+            publisher: d.publisher || "",
             created: d.createdAt ? new Date(d.createdAt).toLocaleDateString('en-GB') : "",
             citationStyle: d.citationStyle || "",
             abstract: d.abstract || "",
@@ -60,7 +64,11 @@ export default function AllDoc() {
             formattedCitation: d.formattedCitation || "",
             publicationDate: d.publicationDate || "",
             author: d.author || "",
-            doi: d.doi || ""
+            doi: d.doi || "",
+            year: d.year || "",
+            volume:d.volume || "", 
+            issue: d.issue || "",
+            pages: d.pages || ""
           }))
         );
       } catch (error) {
@@ -134,11 +142,12 @@ export default function AllDoc() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col mt-25 w-full">
-      <div className="flex flex-1 w-full px-8 pb-8 gap-8">
-        <div className="flex-shrink-0">
-          <Sidebar />
-        </div>
-        <div className="flex-1 p-8">
+      <div className="flex flex-1 w-full px-8 pb-8">
+        {/* Collapsible Sidebar */}
+        <CollapsibleSidebar />
+
+        {/* Main Content */}
+        <div className="flex-1 p-8 transition-all duration-300">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-blue-600">Tất cả tài liệu</h1>
             <div className="flex items-center gap-4">
@@ -187,7 +196,7 @@ export default function AllDoc() {
             </div>
           </div>
           <div className="border border-blue-400 rounded-xl overflow-visible relative min-h-[400px]">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse z-30">
               <thead className="bg-blue-50">
                 <tr>
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[180px]">Tên File</th>
@@ -208,7 +217,8 @@ export default function AllDoc() {
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[140px]">Nguồn</th>
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Ngày tạo</th>
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Kiểu trích</th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[150px]">Lưu ý</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Chương</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[150px]">Trang</th>
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[80px]"></th>
                 </tr>
               </thead>
@@ -234,14 +244,15 @@ export default function AllDoc() {
                           {item.fileName}
                         </Link>
                       </td>
-                      <td className="px-2 py-5 text-xs w-[120px] truncate" title={item.author}>{item.author}</td>
-                      <td className="px-2 py-5 text-xs w-[100px]">{item.publicationDate}</td>
-                      <td className="px-2 py-5 text-xs w-[140px] truncate" title={item.source}>{item.source}</td>
+                      <td className="px-2 py-5 text-xs w-[120px] truncate">{item.author}</td>
+                      <td className="px-2 py-5 text-xs w-[100px]">{item.year}</td>
+                      <td className="px-2 py-5 text-xs w-[140px] truncate">{item.publisher}</td>
                       <td className="px-2 py-5 text-xs w-[100px] whitespace-nowrap">{item.created}</td>
                       <td className="px-2 py-5 text-xs font-semibold text-blue-600 w-[100px]">
                         {item.citationStyle}
                       </td>
-                      <td className="px-2 py-5 text-xs w-[150px] line-clamp-2" title={item.abstract}>{item.abstract}</td>
+                      <td className="px-5 py-5 text-xs w-[150px] line-clamp-2">{item.volume}</td>
+                      <td className="px-5 py-5 text-xs w-[150px]">{item.pages}</td>
                       <td className="px-2 py-5 text-right relative w-[80px]">
                         <button
                           className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-gray-300 hover:bg-gray-50"
@@ -296,10 +307,13 @@ export default function AllDoc() {
                                     ...updateData,
                                     documentId: item.id,
                                     title: item.fileName || "",
-                                    year: item.publicationDate || "",
+                                    year: item.year || "",
                                     author: item.author || "",
-                                    publisher: item.source || "",
-                                    doi: item.doi || ""
+                                    publisher: item.publisher || "",
+                                    doi: item.doi || "",
+                                    volume: item.volume || "",
+                                    issue: item.issue || "",
+                                    pages: item.pages || ""
                                   });
                                   setUpdateModal(true);
                                   setActiveDropdown(null);
@@ -507,7 +521,7 @@ export default function AllDoc() {
           {/* Update Modal */}
           {updateModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
-              <div className="bg-white rounded-3xl shadow-2xl p-5 w-[500px] border border-blue-100 relative animate-fadeIn h-[450px]">
+              <div className="bg-white rounded-3xl shadow-2xl p-4 w-[500px] border border-blue-100 relative animate-fadeIn">
                 <button
                   className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full border border-blue-200 flex items-center justify-center text-blue-600 hover:text-blue-800 hover:border-blue-400 transition-colors duration-200"
                   onClick={() => setUpdateModal(false)}
@@ -515,55 +529,73 @@ export default function AllDoc() {
                 >
                   ×
                 </button>
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <div className="text-center">
-                    <h3 className="text-xl font-bold text-blue-600 mb-1">Cập nhật thông tin</h3>
-                    <p className="text-sm text-gray-500">Cập nhật thông tin cho tài liệu của bạn</p>
+                    <h3 className="text-lg font-bold text-blue-600">Cập nhật thông tin</h3>
+                    <p className="text-xs text-gray-500">Cập nhật thông tin cho tài liệu của bạn</p>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-0.5">Tiêu đề</label>
+                      <label className="block text-xs font-medium text-gray-700">Tiêu đề</label>
                       <input
                         type="text"
                         value={updateData.title}
                         onChange={(e) => setUpdateData({...updateData, title: e.target.value})}
-                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full py-1 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-0.5">Năm xuất bản</label>
+                      <label className="block text-xs font-medium text-gray-700">Năm xuất bản</label>
                       <input
                         type="text"
                         value={updateData.year}
                         onChange={(e) => setUpdateData({...updateData, year: e.target.value})}
-                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full py-1 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-0.5">Tác giả</label>
+                      <label className="block text-xs font-medium text-gray-700">Tác giả</label>
                       <input
                         type="text"
                         value={updateData.author}
                         onChange={(e) => setUpdateData({...updateData, author: e.target.value})}
-                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full py-1 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-0.5">Nhà xuất bản</label>
+                      <label className="block text-xs font-medium text-gray-700">Nhà xuất bản</label>
                       <input
                         type="text"
                         value={updateData.publisher}
                         onChange={(e) => setUpdateData({...updateData, publisher: e.target.value})}
-                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full py-1 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </div>
                     <div>
-                      
+                      <label className="block text-xs font-medium text-gray-700">Chương</label>
+                      <input
+                        type="text"
+                        value={updateData.volume}
+                        onChange={(e) => setUpdateData({...updateData, volume: e.target.value})}
+                        className="w-full py-1 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700">Trang</label>
+                      <input
+                        type="text"
+                        value={updateData.pages}
+                        onChange={(e) => setUpdateData({...updateData, pages: e.target.value})}
+                        placeholder="VD: 123-145"
+                        className="w-full py-1 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
                       <input
                         type="hidden"
                         value={updateData.doi}
                         onChange={(e) => setUpdateData({...updateData, doi: e.target.value})}
-                        className="w-full py-1.5 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full py-1 px-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                     </div>
 
@@ -575,15 +607,34 @@ export default function AllDoc() {
                           console.log("Updating with data:", updateData);
                           await documentService.updateDocument(updateData);
                           toast.success("Cập nhật thông tin thành công!");
-                          setUpdateModal(false);
-                          const result = await documentService.getDocByUserIdAndType(
-                            userId,
-                            folderName,
-                            currentPage,
-                            itemsPerPage
+                          
+                          const result = await documentService.getDocAllByUserId(
+                            Number(userId),
+                            filterStatus,
+                            filterType
                           );
-                          const documents = result?.documents || [];
-                          setItems(documents);
+                          const documents = result?.allDocuments || result?.documents || result || [];
+                          setItems(
+                            documents.map((d) => ({
+                              id: d.documentId,
+                              fileName: d.title || d.filePath || "Untitled",
+                              publisher: d.publisher || "",
+                              created: d.createdAt ? new Date(d.createdAt).toLocaleDateString('en-GB') : "",
+                              citationStyle: d.citationStyle || "",
+                              abstract: d.abstract || "",
+                              filePath: d.filePath,
+                              sourceUrl: d.sourceUrl,
+                              formattedCitation: d.formattedCitation || "",
+                              publicationDate: d.publicationDate || "",
+                              author: d.author || "",
+                              doi: d.doi || "",
+                              year: d.year || "",
+                              volume: d.volume || "",
+                              issue: d.issue || "",
+                              pages: d.pages || ""
+                            }))
+                          );
+                          setUpdateModal(false);
                         } catch (error) {
                           toast.error(error?.message || "Cập nhật thông tin thất bại");
                         }
