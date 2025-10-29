@@ -199,8 +199,8 @@ export default function AllDoc() {
             <table className="w-full text-left border-collapse z-30">
               <thead className="bg-blue-50">
                 <tr>
-                  <th className="px-4 py-5 border-b border-blue-200 text-lg w-[180px]">Tên File</th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-lg w-[120px]">
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[180px]">Tên File</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[120px]">
                     <button
                       onClick={() => setSortByAuthor(!sortByAuthor)}
                       className="flex items-center gap-2 hover:text-blue-600 transition-colors"
@@ -213,13 +213,13 @@ export default function AllDoc() {
                       )}
                     </button>
                   </th>
-                  <th className="px-2 py-5 border-b border-blue-200 text-lg w-[150px]">Năm xuất bản</th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-lg w-[140px]">Nguồn</th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-lg w-[100px]">Ngày tạo</th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-lg w-[150px]">Kiểu trích</th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-lg w-[100px]">Chương</th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-lg w-[100px]">Trang</th>
-                  <th className="px-4 py-5 border-b border-blue-200 text-lg w-[80px]"></th>
+                  <th className="px-2 py-5 border-b border-blue-200 text-sm w-[150px]">Năm xuất bản</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[140px]">Nguồn</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Ngày tạo</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[150px]">Kiểu trích</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Chương</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[100px]">Trang</th>
+                  <th className="px-4 py-5 border-b border-blue-200 text-sm w-[80px]"></th>
                 </tr>
               </thead>
               <tbody>
@@ -239,20 +239,20 @@ export default function AllDoc() {
                           to={item.filePath || item.sourceUrl || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-lg text-blue-700 no-underline hover:text-blue-900 line-clamp-2"
+                          className="text-sm text-blue-700 no-underline hover:text-blue-900 line-clamp-2"
                         >
                           {item.fileName}
                         </Link>
                       </td>
-                      <td className="px-2 py-5 text-lg w-[120px] truncate">{item.author}</td>
-                      <td className="px-2 py-5 text-lg w-[100px]">{item.year}</td>
-                      <td className="px-2 py-5 text-lg w-[140px] truncate">{item.publisher}</td>
-                      <td className="px-2 py-5 text-lg w-[100px] whitespace-nowrap">{item.created}</td>
-                      <td className="px-2 py-5 text-lg font-semibold text-blue-600 w-[100px]">
+                      <td className="px-2 py-5 text-sm w-[120px] truncate">{item.author}</td>
+                      <td className="px-2 py-5 text-sm w-[100px]">{item.year}</td>
+                      <td className="px-2 py-5 text-sm w-[140px] truncate">{item.publisher}</td>
+                      <td className="px-2 py-5 text-sm w-[100px] whitespace-nowrap">{item.created}</td>
+                      <td className="px-2 py-5 text-sm font-semibold text-blue-600 w-[100px]">
                         {item.citationStyle}
                       </td>
-                      <td className="px-5 py-5 text-lg w-[150px] line-clamp-2">{item.volume}</td>
-                      <td className="px-5 py-5 text-lg w-[150px]">{item.pages}</td>
+                      <td className="px-5 py-5 text-sm w-[150px] line-clamp-2">{item.volume}</td>
+                      <td className="px-5 py-5 text-sm w-[150px]">{item.pages}</td>
                       <td className="px-2 py-5 text-right relative w-[80px]">
                         <button
                           className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-gray-300 hover:bg-gray-50"
