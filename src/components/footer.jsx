@@ -1,13 +1,18 @@
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const { user, isAuthenticated } = useSelector(state => state.auth);
   return (
     <footer className="w-screen bg-gradient-to-b from-teal-200 via-blue-400 to-blue-800 text-white border-t border-gray-300 z-50 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
       <div className="w-full px-8 py-8 flex flex-col md:flex-row justify-between items-center">
         <div className="flex space-x-10 mb-6 md:mb-0">
-          <a href="/account" className="hover:underline text-lg">
-            Account
-          </a>
+          {isAuthenticated ? (
+              <Link to="/account">Account</Link>
+            ) : (
+              <Link to="/login">Account</Link>
+            )}
           <a href="/help" className="hover:underline text-lg">
             Help Center
           </a>
