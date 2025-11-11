@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { FaSearch, FaUpload, FaLink, FaTrash, FaFilter, FaClipboard } from "react-icons/fa";
+import { FaSearch, FaUpload, FaLink, FaTrash, FaFilter, FaClipboard, FaSortUp, FaSortDown, FaSort, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import toast, { Toaster } from 'react-hot-toast';
 import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
@@ -24,16 +24,18 @@ export default function CreateProject() {
   const [fileInput, setFileInput] = useState(null);
   const [urlInput, setUrlInput] = useState("");
   const [loadingUpload, setLoadingUpload] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [loadingDocuments, setLoadingDocuments] = useState(false);
+  const [sortField, setSortField] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [originalDocuments, setOriginalDocuments] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredDocuments, setFilteredDocuments] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(6);
   const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
   const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
-  // const updateData = [
-  //   documentId = documentId,
-  //   userId = userId, 
-  //   title = "",
-  //   year = "", 
-  //   author="",
-  //   publisher = "",
-  //   doi = ""];
 
   useEffect(() => {
     const fetchStyles = async () => {
@@ -55,6 +57,87 @@ export default function CreateProject() {
     };
     fetchStyles();
   }, [citationModal]);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      if (!userId) return;
+      setLoadingDocuments(true);
+      try {
+        const result = await documentService.getDocAllByUserId(userId);
+        const docs = result?.allDocuments || result?.documents || result || [];
+        const sortedDocs = [...docs].sort((a, b) => {
+          const dateA = new Date(a.createdAt || 0);
+          const dateB = new Date(b.createdAt || 0);
+          return dateB - dateA;
+        });
+        setDocuments(sortedDocs);
+        setOriginalDocuments(sortedDocs);
+        setFilteredDocuments(sortedDocs);
+      } catch (e) {
+        console.error("Failed to load documents", e);
+        toast.error("Không thể tải danh sách tài liệu");
+      }
+      setLoadingDocuments(false);
+    };
+    fetchDocuments();
+  }, [userId]);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredDocuments(documents);
+    } else {
+      const filtered = documents.filter(doc => {
+        const title = (doc.title || doc.filePath || '').toLowerCase();
+        return title.includes(searchQuery.toLowerCase());
+      });
+      setFilteredDocuments(filtered);
+    }
+    setCurrentPage(1);
+  }, [searchQuery, documents]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredDocuments.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
+
+  const handleResetSort = () => {
+    setDocuments([...originalDocuments]);
+    setSortField(null);
+    setSortOrder('asc');
+    setDropdownOpen(false);
+  };
+
+  const handleSort = (field) => {
+    const newOrder = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortField(field);
+    setSortOrder(newOrder);
+
+    const sortedDocs = [...documents].sort((a, b) => {
+      let aValue = '';
+      let bValue = '';
+
+      if (field === 'title') {
+        aValue = (a.title || a.filePath || 'Untitled').toLowerCase();
+        bValue = (b.title || b.filePath || 'Untitled').toLowerCase();
+      } else if (field === 'author') {
+        aValue = (a.author || '').toLowerCase();
+        bValue = (b.author || '').toLowerCase();
+      }
+
+      if (aValue < bValue) return newOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return newOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    setDocuments(sortedDocs);
+  };
+
+  const getSortIcon = (field) => {
+    if (sortField !== field) return <FaSort className="inline ml-2 text-gray-400" />;
+    return sortOrder === 'asc' 
+      ? <FaSortUp className="inline ml-2 text-blue-600" />
+      : <FaSortDown className="inline ml-2 text-blue-600" />;
+  };
 
 
   const items = [
@@ -118,10 +201,12 @@ export default function CreateProject() {
                 type="text"
                 placeholder="Tìm dự án"
                 className="bg-transparent w-full outline-none"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
-            {/* Nút Xóa + Dự án mới */}
+            {/* Nút Xóa + Dự án mới
             <div className="flex items-center justify-end gap-3">
               <button className="p-3 bg-blue-100 rounded-full border border-blue-400 hover:bg-blue-200">
                 <FaTrash className="text-blue-600" />
@@ -129,7 +214,7 @@ export default function CreateProject() {
               <button className="px-6 py-3 rounded-full border border-blue-400 bg-gradient-to-r from-blue-100 to-cyan-100 hover:bg-blue-200">
                 Dự án mới
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Upload + URL */}
@@ -548,44 +633,194 @@ export default function CreateProject() {
           )}
 
           {/* Bộ lọc */}
-          <div className="flex items-center justify-between bg-blue-50 border border-blue-300 rounded-full px-4 py-3 mb-12">
-            <button className="flex items-center gap-2">
-              <FaFilter /> Bộ lọc
-            </button>
-            <span className="text-blue-600 cursor-pointer">
-              Phân loại theo ▼
-            </span>
+          <div className="flex items-center justify-between bg-blue-50 border border-blue-300 rounded-full px-6 py-3 mb-12">
+            <div className="flex items-center gap-2 text-gray-700">
+              <FaFilter className="text-blue-600" /> 
+              <span className="font-semibold">Bộ lọc</span>
+            </div>
+            <div className="flex items-center gap-3">
+              {sortField && (
+                <button
+                  onClick={handleResetSort}
+                  className="px-4 py-2 text-sm bg-white text-gray-600 rounded-full border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
+                >
+                  Trả lại nguyên bản
+                </button>
+              )}
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="bg-white text-blue-600 cursor-pointer outline-none pl-4 pr-10 py-2 rounded-full border border-blue-300 font-medium hover:bg-blue-50 transition-colors flex items-center gap-2"
+                >
+                  {sortField && sortOrder ? (
+                    sortField === 'title' && sortOrder === 'asc' ? 'Tên File (A-Z)' :
+                    sortField === 'title' && sortOrder === 'desc' ? 'Tên File (Z-A)' :
+                    sortField === 'author' && sortOrder === 'asc' ? 'Tác Giả (A-Z)' :
+                    'Tác Giả (Z-A)'
+                  ) : 'Phân loại theo'}
+                  <svg 
+                    className={`text-blue-600 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                    width="12" 
+                    height="8" 
+                    viewBox="0 0 12 8" 
+                    fill="none"
+                  >
+                    <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-lg border border-blue-200 overflow-hidden z-50">
+                  {[
+                    { value: 'title-asc', label: 'Tên File (A-Z)' },
+                    { value: 'title-desc', label: 'Tên File (Z-A)' },
+                    { value: 'author-asc', label: 'Tác Giả (A-Z)' },
+                    { value: 'author-desc', label: 'Tác Giả (Z-A)' }
+                  ].map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        const [field, order] = option.value.split('-');
+                        setSortField(field);
+                        setSortOrder(order);
+                        setDropdownOpen(false);
+                        
+                        const sortedDocs = [...documents].sort((a, b) => {
+                          let aValue = '';
+                          let bValue = '';
+
+                          if (field === 'title') {
+                            aValue = (a.title || a.filePath || 'Untitled').toLowerCase();
+                            bValue = (b.title || b.filePath || 'Untitled').toLowerCase();
+                          } else if (field === 'author') {
+                            aValue = (a.author || '').toLowerCase();
+                            bValue = (b.author || '').toLowerCase();
+                          }
+
+                          if (aValue < bValue) return order === 'asc' ? -1 : 1;
+                          if (aValue > bValue) return order === 'asc' ? 1 : -1;
+                          return 0;
+                        });
+
+                        setDocuments(sortedDocs);
+                      }}
+                      className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors ${
+                        sortField === option.value.split('-')[0] && sortOrder === option.value.split('-')[1]
+                          ? 'bg-blue-100 text-blue-700 font-semibold'
+                          : 'text-gray-700'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              </div>
+            </div>
           </div>
 
-          {/* Danh sách cập nhật dự án */}
+          {/* Danh sách tài liệu */}
           <div>
             <h2 className="text-2xl font-bold text-blue-600 mb-2">
               Cập Nhật Dự Án
             </h2>
-            <p className="text-gray-600 mb-4">
-              Dự án bạn đã làm việc/thao tác/tải lên/...
-            </p>
 
-            <div className="space-y-6">
-              {items.map((item) => (
-                <div key={item.id} className="border-t border-gray-300 pt-4">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <input type="checkbox" className="w-5 h-5" />
-                      <span className="text-blue-600 font-semibold">
-                        {item.id}. {item.name}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {item.date} • {item.type} • {item.status}
-                    </div>
-                  </div>
-                  <div
-                    className={`h-1 bg-blue-600 ${item.progress} mt-2`}
-                  ></div>
-                </div>
-              ))}
+            <div className="border border-blue-400 rounded-xl overflow-hidden relative min-h-[400px]">
+              <table className="w-full text-left border-collapse table-fixed">
+                <thead className="bg-blue-50">
+                  <tr>
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[35%]">
+                      Tên File {sortField === 'title' && getSortIcon('title')}
+                    </th>
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[20%]">
+                      Tác Giả {sortField === 'author' && getSortIcon('author')}
+                    </th>
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[12%]">Ngày tạo</th>
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[13%]">Kiểu trích</th>
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[20%]">Nguồn</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loadingDocuments ? (
+                    <tr>
+                      <td colSpan={5} className="text-center py-10 text-lg">
+                        Đang tải...
+                      </td>
+                    </tr>
+                  ) : currentItems.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="text-center py-10 text-lg">
+                        {searchQuery ? 'Không tìm thấy kết quả phù hợp' : 'Không có dữ liệu'}
+                      </td>
+                    </tr>
+                  ) : (
+                    currentItems.map((doc, idx) => (
+                      <tr key={doc.documentId} className="hover:bg-blue-50">
+                        <td className="px-4 py-3">
+                          <a
+                            href={doc.filePath || doc.sourceUrl || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-700 no-underline hover:text-blue-900 line-clamp-2 block"
+                          >
+                            {doc.title || doc.filePath || "Untitled"}
+                          </a>
+                        </td>
+                        <td className="px-4 py-3 text-sm truncate" title={doc.author}>
+                          {doc.author || "N/A"}
+                        </td>
+                        <td className="px-4 py-3 text-sm whitespace-nowrap">
+                          {doc.createdAt ? new Date(doc.createdAt).toLocaleDateString('en-GB') : "N/A"}
+                        </td>
+                        <td className="px-4 py-3 text-sm font-semibold text-blue-600">
+                          {doc.citationStyle || "Chưa trích dẫn"}
+                        </td>
+                        <td className="px-4 py-3 text-sm line-clamp-2">
+                          {doc.source || ""}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
+
+            {/* Pagination */}
+            {filteredDocuments.length > 0 && (
+              <div className="flex justify-between items-center mt-6">
+                <button
+                  className="flex items-center gap-2 px-4 py-2 border border-blue-400 rounded-full text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-50 transition-colors"
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  <FaChevronLeft /> Back
+                </button>
+
+                <div className="flex gap-2">
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`w-10 h-10 rounded-full border transition-colors ${
+                        currentPage === i + 1
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "border-blue-400 text-blue-600 hover:bg-blue-50"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  className="flex items-center gap-2 px-4 py-2 border border-blue-400 rounded-full text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-50 transition-colors"
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next <FaChevronRight />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

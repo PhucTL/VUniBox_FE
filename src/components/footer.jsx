@@ -5,9 +5,6 @@ export default function Footer() {
     <footer className="w-screen bg-gradient-to-b from-teal-200 via-blue-400 to-blue-800 text-white border-t border-gray-300 z-50 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
       <div className="w-full px-8 py-8 flex flex-col md:flex-row justify-between items-center">
         <div className="flex space-x-10 mb-6 md:mb-0">
-          <a href="#" className="hover:underline text-lg">
-            Setting
-          </a>
           <a href="/account" className="hover:underline text-lg">
             Account
           </a>

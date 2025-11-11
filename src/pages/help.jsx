@@ -20,19 +20,16 @@ export default function HelpCenter() {
           </div>
 
           <div className="bg-gradient-to-r from-blue-100 to-blue-50 rounded-2xl shadow p-6 text-center hover:shadow-lg transition">
+            <Link to="https://www.facebook.com/VUniBox">
             <h2 className="text-lg font-bold text-blue-800">Contact Us</h2>
             <p className="text-gray-600 text-sm">Reach out</p>
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Bottom Buttons */}
       <div className="flex w-full justify-center gap-6 mt-12 mb-10">
-        <button className="px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition">
-          <Link to="/account">
-          Account
-          </Link>
-        </button>
         <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-semibold shadow hover:opacity-90 transition">
           <Link to="https://docs.google.com/forms/d/e/1FAIpQLScN1zi3edgSS2rg5nSFGql-_TdCKa4dBk4jEBwPGqChCDf-7g/viewform?usp=sharing&ouid=112926310380479204670">
           Feedback

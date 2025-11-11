@@ -5,7 +5,7 @@ import { getUserProfileThunk, getUserStorageThunk, uploadAvatarThunk, updateProf
 import { getUserSubscriptionThunk } from "../../redux/thunks/plan/planThunks";
 import StatsCard from "../../components/StatsCard";
 import { FaHdd, FaFileAlt, FaQuoteLeft, FaRobot } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify";
+import toast from 'react-hot-toast';
 
 // Helper function to get avatar URL  
 const getAvatarUrl = (avatarUrl) => {
@@ -264,9 +264,6 @@ export default function Account() {
                 {userProfile?.email || "Chưa có email"}
               </p>
             </div>
-            <button className="px-6 py-2 rounded-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50">
-              Đổi Tài Khoản
-            </button>
           </div>
           <div className="flex flex-wrap gap-3">
             <span className="px-4 py-2 rounded-full bg-blue-50 text-blue-600 border border-blue-200 text-sm font-medium">
