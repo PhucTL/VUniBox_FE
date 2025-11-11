@@ -36,9 +36,12 @@ export default function Sidebar() {
           <Link to="/" className={getLinkClass('/')}>
             <IoHomeOutline size={30} />  Trang Chủ
           </Link>
+          <Link to="/createproject" className={getLinkClass('/createproject')}>
+            <IoLayersOutline size={30} /> Dự án mới
+          </Link>
           <div>
             <Link to="/library" className={getLinkClass('/library')}>
-              <CiStar size={30} /> Lưu Trữ
+              <CiStar size={30} /> Thư viện
             </Link>
             <div className="ml-8 mt-2 flex flex-col gap-2">
               <Link to="/libitem/Book" className={getLinkClass('/libitem/Book')}>
@@ -61,9 +64,6 @@ export default function Sidebar() {
               </Link>
             </div>
           </div>
-          <Link to="/createproject" className={getLinkClass('/createproject')}>
-            <IoLayersOutline size={30} /> Dự án mới
-          </Link>
           <Link to="/trashdoc" className={getLinkClass('/trashdoc')}>
             <IoTrashOutline  size={30} /> Thùng rác
           </Link>
@@ -71,7 +71,7 @@ export default function Sidebar() {
             <CiFolderOn  size={30} /> Tất cả
           </Link>
           <Link to="/saveddoc" className={getLinkClass('/saveddoc')}>
-            <TfiSave  size={25} /> Đã lưu
+            <TfiSave  size={25} /> Lưu trữ
           </Link>
         </nav>
       </div>

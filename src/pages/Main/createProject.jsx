@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FaSearch, FaUpload, FaLink, FaTrash, FaFilter, FaClipboard, FaSortUp, FaSortDown, FaSort, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { MdOutlineFileOpen } from "react-icons/md";
 import toast, { Toaster } from 'react-hot-toast';
 import Sidebar from "../../components/sidebar";
 import Topbar from "../../components/topbar";
@@ -36,6 +37,10 @@ export default function CreateProject() {
   const [itemsPerPage] = useState(6);
   const authUser = useSelector((state) => state.auth?.user) || JSON.parse(localStorage.getItem("currentUser") || "null");
   const userId = authUser?.userId || authUser?.id || localStorage.getItem("userId");
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+
 
   useEffect(() => {
     const fetchStyles = async () => {
@@ -73,6 +78,7 @@ export default function CreateProject() {
         setDocuments(sortedDocs);
         setOriginalDocuments(sortedDocs);
         setFilteredDocuments(sortedDocs);
+        setSelectedCitation(sortedDocs.formattedCitation)
       } catch (e) {
         console.error("Failed to load documents", e);
         toast.error("Không thể tải danh sách tài liệu");
@@ -235,7 +241,8 @@ export default function CreateProject() {
                 setModalOpen(true);
               }}
             >
-              <FaLink className="mr-2" /> URL
+              <FaLink className="mr-2" /> 
+              <p>URL (đang hoàn thiện)</p>
             </button>
           </div>
 
@@ -729,15 +736,16 @@ export default function CreateProject() {
               <table className="w-full text-left border-collapse table-fixed">
                 <thead className="bg-blue-50">
                   <tr>
-                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[35%]">
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[30%]">
                       Tên File {sortField === 'title' && getSortIcon('title')}
                     </th>
-                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[20%]">
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[18%]">
                       Tác Giả {sortField === 'author' && getSortIcon('author')}
                     </th>
                     <th className="px-4 py-5 border-b border-blue-200 text-lg w-[12%]">Ngày tạo</th>
                     <th className="px-4 py-5 border-b border-blue-200 text-lg w-[13%]">Kiểu trích</th>
-                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[20%]">Nguồn</th>
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[17%]">Nguồn</th>
+                    <th className="px-4 py-5 border-b border-blue-200 text-lg w-[10%] text-right"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -778,12 +786,72 @@ export default function CreateProject() {
                         <td className="px-4 py-3 text-sm line-clamp-2">
                           {doc.source || ""}
                         </td>
+                        <td className="px-4 py-3 text-right relative">
+                          <button
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
+                            onClick={() => setActiveDropdown(activeDropdown === doc.documentId ? null : doc.documentId)}
+                          >
+                            <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
+                            <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
+                            <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
+                          </button>
+                          {activeDropdown === doc.documentId && (
+                            <div className="absolute right-0 mt-2 w-56 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[9999]">
+                              <div className="py-1">
+                                <button
+                                  className="flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 w-full text-left transition-colors"
+                                  onClick={() => {
+                                    setSelectedCitation(doc.formattedCitation);
+                                    setShowModal(true);
+                                    setActiveDropdown(null);
+                                  }}
+                                >
+                                  <MdOutlineFileOpen className="text-lg" /> Thông tin đã trích dẫn
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </td>
                       </tr>
                     ))
                   )}
                 </tbody>
               </table>
             </div>
+
+            {/* Modal */}
+          {showModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+              <div className="bg-white rounded-3xl shadow-2xl p-8 w-[600px] border border-blue-100 relative animate-fadeIn">
+                <button
+                  className="absolute -top-4 -right-4 w-8 h-8 bg-white rounded-full border border-blue-200 flex items-center justify-center text-blue-600 hover:text-blue-800 hover:border-blue-400 transition-colors duration-200"
+                  onClick={() => setShowModal(false)}
+                  aria-label="Đóng"
+                >
+                  ×
+                </button>
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-blue-600 mb-2">Thông tin trích dẫn</h3>
+                    <p className="text-gray-500">Chi tiết trích dẫn của tài liệu</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-semibold text-gray-700">Trích dẫn:</span>
+                      </div>
+                      <div className="bg-white rounded-lg p-3 border border-gray-200 hover:border-blue-300 transition-colors">
+                        <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                          {selectedCitation || "Không có thông tin trích dẫn"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
 
             {/* Pagination */}
             {filteredDocuments.length > 0 && (
