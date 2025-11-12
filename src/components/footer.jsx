@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer className="w-screen bg-gradient-to-b from-teal-200 via-blue-400 to-blue-800 text-white border-t border-gray-300 z-50 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
       <div className="w-full px-8 py-8 flex flex-col md:flex-row justify-between items-center">
-        <div className="flex space-x-10 mb-6 md:mb-0">
+        <div className="flex text-lg space-x-10 mb-6 md:mb-0 hover:underline">
           {isAuthenticated ? (
               <Link to="/account">Account</Link>
             ) : (
@@ -19,13 +19,7 @@ export default function Footer() {
         </div>
         <div className="flex space-x-6">
           <a href="https://www.facebook.com/VUniBox" aria-label="Facebook">
-            <FaFacebookF className="w-6 h-6 hover:text-blue-300" />
-          </a>
-          <a href="#" aria-label="Instagram">
-            <FaInstagram className="w-6 h-6 hover:text-pink-300" />
-          </a>
-          <a href="#" aria-label="LinkedIn">
-            <FaLinkedinIn className="w-6 h-6 hover:text-blue-500" />
+            <FaFacebookF className="w-6 h-6 hover:text-cyan-300" />
           </a>
         </div>
       </div>

@@ -13,7 +13,7 @@ export default function IntroSection() {
   return (
     <div className="bg-white">
       {/* Section 1 */}
-      <div className="relative mx-auto px-4 py-32 mt-10 min-h-[600px] bg-[url('/images/image.jpg')] bg-center bg-no-repeat bg-cover flex items-center justify-center">
+      <div className="relative mx-auto px-4 py-32 mt-22 min-h-[500px] bg-[url('/images/image.jpg')] bg-center bg-no-repeat bg-cover flex items-center justify-center">
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
         

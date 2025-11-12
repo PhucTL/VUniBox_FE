@@ -4,12 +4,16 @@ export default function PrivacyPolicy() {
   return (
     <div className="bg-white min-h-screen w-full">
       {/* Banner */}
-      <div className="relative bg-cover  h-100 flex items-center px-10 bg-[url('/images/Policy.jpg')] ">
-        <div>
-          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 mt-10">
+      <div className="relative mx-auto px-4 py-32 mt-10 min-h-[500px] bg-[url('/images/Policy.jpg')] bg-center bg-no-repeat bg-cover flex items-center justify-center">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
+        
+        {/* Content */}
+        <div className="relative max-w-2xl text-center">
+          <h1 className="text-7xl text-white mb-4 font-semibold tracking-wide drop-shadow-lg">
             Privacy Policy
           </h1>
-          <p className="text-gray-700 mt-5">VUniBox privacy policy “ 2025</p>
+          <p className="text-2xl font-bold text-white mb-6 drop-shadow-2xl">VUniBox privacy policy 2025 </p>
         </div>
       </div>
 
