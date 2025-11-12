@@ -6,25 +6,31 @@ export default function AboutUs() {
   return (
     <div className="min-h-screen w-full bg-gray-50 flex flex-col">
       {/* Hero Section */}
-      <section className="relative w-full h-[500px] bg-[url('/images/AboutusPage2.png')] bg-cover bg-center flex flex-col justify-center items-center text-center px-6">
-        <h1 className="text-4xl md:text-5xl font-bold text-blue-500 leading-snug">
-          Tự động hóa trích dẫn và lưu trữ học thuật – <br />
-          chuẩn mực, chính xác, tối ưu cho nghiên cứu.
-        </h1>
-        <p className="text-blue-500 mt-4 ">
-          Auto cite - Auto store - Auto Succeed
-        </p>
-        <div className="flex gap-4 mt-6">
-          <button className="px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition">
-            Cách sử dụng
-          </button>
-          <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-semibold shadow hover:opacity-90 transition">
-            {isAuthenticated ? (
-              <Link to="/createproject">Bắt đầu ngay</Link>
-            ) : (
-              <Link to="/login">Bắt đầu ngay</Link>
-            )}
-          </button>
+      <section className="relative w-full min-h-[600px] bg-[url('/images/AboutusPage2.png')] bg-cover bg-center flex flex-col justify-center items-center text-center px-6">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/50"></div>
+        
+        {/* Content */}
+        <div className="relative  max-w-5xl">
+          <h1 className="text-5xl font-bold text-blue-400 leading-tight mb-6 drop-shadow-2xl">
+            Tự động hóa trích dẫn và lưu trữ học thuật – <br />
+            chuẩn mực, chính xác, tối ưu cho nghiên cứu.
+          </h1>
+          <p className="text-xl text-blue-400 font-semibold mb-10 drop-shadow-lg tracking-wide">
+            Auto cite - Auto store - Auto Succeed
+          </p>
+          <div className="flex gap-4 justify-center">
+            <button className="px-8 py-3 rounded-full border-2 border-white text-white font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg">
+              Cách sử dụng
+            </button>
+            <button className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              {isAuthenticated ? (
+                <Link to="/createproject">Bắt đầu ngay</Link>
+              ) : (
+                <Link to="/login">Bắt đầu ngay</Link>
+              )}
+            </button>
+          </div>
         </div>
       </section>
 

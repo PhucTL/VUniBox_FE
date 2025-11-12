@@ -13,20 +13,24 @@ export default function IntroSection() {
   return (
     <div className="bg-white">
       {/* Section 1 */}
-      <div className="flex flex-row  mx-auto px-4 py-16 mt-10 h-100 bg-[url('/images/image.jpg')] bg-local bg-no-repeat bg-cover">
-        <div className="text-start justify-items-start mt-40  ">
-          <p className="text-sm text-blue-600 mb-2">
+      <div className="relative mx-auto px-4 py-32 mt-10 min-h-[600px] bg-[url('/images/image.jpg')] bg-center bg-no-repeat bg-cover">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
+        
+        {/* Content */}
+        <div className="relative max-w-2xl text-left ml-8 mt-10 flex flex-col justify-center h-full">
+          <p className="text-lg text-blue-400 mb-4 font-semibold tracking-wide drop-shadow-lg">
             Tài liệu gọn gàng, trích dẫn sẵn sàng
           </p>
-          <h1 className="text-4xl font-bold text-blue-600 mb-2">VUniBox</h1>
-          <p className="text-blue-600">
+          <h1 className="text-7xl font-bold text-blue-400 mb-6 drop-shadow-2xl">VUniBox</h1>
+          <p className="text-xl text-blue-400 font-medium mb-10 leading-relaxed drop-shadow-lg max-w-xl">
             Nâng tầm nghiên cứu với nền tảng lưu trữ và trích dẫn toàn diện.
           </p>
-          <div className="flex justify-center gap-4 mt-8">
-            <button className="px-6 py-2 border border-blue-600 text-blue-600 rounded-full">
+          <div className="flex gap-4">
+            <button className="px-8 py-3 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg">
               <Link to="https://www.facebook.com/VUniBox">Về chúng tôi</Link>
             </button>
-            <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-medium shadow-md hover:opacity-90">
+            <button className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
             {isAuthenticated ? (
               <Link to="createproject">Bắt đầu ngay</Link>
             ) : (
@@ -35,7 +39,6 @@ export default function IntroSection() {
           </button>
           </div>
         </div>
- 
       </div>
 
       {/* Section 2 */}
