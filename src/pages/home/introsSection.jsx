@@ -1,4 +1,4 @@
-import { FiBookOpen, FiPlus, FiLayers, FiDatabase } from "react-icons/fi";
+import { FiBookOpen, FiPlus, FiLayers, FiDatabase, FiEye } from "react-icons/fi";
 import {
   AiOutlineClockCircle,
   AiOutlineFileText,
@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { IoPricetagOutline } from "react-icons/io5";
 
 export default function IntroSection() {
   const { user, isAuthenticated } = useSelector(state => state.auth);
@@ -18,7 +19,7 @@ export default function IntroSection() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
         
         {/* Content */}
-        <div className="relative z-10 max-w-2xl text-center">
+        <div className="relative max-w-2xl text-center">
           <p className="text-lg text-white mb-4 font-semibold tracking-wide drop-shadow-lg">
             Tài liệu gọn gàng, trích dẫn sẵn sàng
           </p>
@@ -49,58 +50,49 @@ export default function IntroSection() {
             <h2 className="text-3xl font-bold text-blue-600 mb-4">
               Mục Tiêu của chúng tôi
             </h2>
-            <p className="text-gray-600">
-              Tự động lưu và phân loại tài liệu theo nguồn, hỗ trợ trích dẫn
-              nhanh - chuẩn - chính xác.
-            </p>
           </div>
 
           {/* Các box */}
-          <div className="flex flex-wrap justify-center gap-6">
-            {/* Box 1 */}
-            <div className="flex items-center gap-3 bg-blue-200 rounded-2xl px-6 py-4 shadow-md">
+          <div className="flex justify-center gap-6 items-stretch">
+          {/* Box 1 - VISION */}
+          <div className="flex flex-col bg-blue-200 rounded-2xl px-6 py-6 shadow-md w-[340px] h-[190px]">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-gray-100 p-2 rounded-md">
+                <FiEye  className="h-6 w-6 text-gray-500" />
+              </div>
+              <p className="font-bold text-lg">TẦM NHÌN</p>
+            </div>
+            <p className="text-blue-900 text-sm flex-1">
+              Tầm nhìn của chúng tôi là xây dựng một nền tảng học thuật toàn diện hỗ trợ sinh viên ở mọi giai đoạn của hành trình học tập.
+            </p>
+          </div>
+
+          {/* Box 2 - MISSION */}
+          <div className="flex flex-col bg-blue-300 rounded-2xl px-6 py-6 shadow-md w-[340px] h-[190px]">
+            <div className="flex items-center gap-3 mb-3">
               <div className="bg-gray-100 p-2 rounded-md">
                 <FiBookOpen className="h-6 w-6 text-gray-500" />
               </div>
-              <div>
-                <p className="font-bold">+10</p>
-                <p className="text-blue-900">Cách trích dẫn</p>
-              </div>
+              <p className="font-bold text-lg">SỨ MỆNH</p>
             </div>
-
-            {/* Box 2 */}
-            <div className="flex items-center gap-3 bg-blue-300 rounded-2xl px-6 py-4 shadow-md">
-              <div className="bg-gray-100 p-2 rounded-md">
-                <FiPlus className="h-6 w-6 text-gray-500" />
-              </div>
-              <div>
-                <p className="font-bold">+10</p>
-                <p className="text-blue-900">Nguồn trích dẫn uy tín</p>
-              </div>
-            </div>
-
-            {/* Box 3 */}
-            <div className="flex items-center gap-3 bg-blue-200 rounded-2xl px-6 py-4 shadow-md">
-              <div className="bg-gray-100 p-2 rounded-md">
-                <FiLayers className="h-6 w-6 text-gray-500" />
-              </div>
-              <div>
-                <p className="font-bold">+2</p>
-                <p className="text-blue-900">Tự động phân loại tài liệu</p>
-              </div>
-            </div>
-
-            {/* Box 4 */}
-            <div className="flex items-center gap-3 bg-blue-400 rounded-2xl px-6 py-4 shadow-md">
-              <div className="bg-gray-100 p-2 rounded-md">
-                <FiDatabase className="h-6 w-6 text-gray-500" />
-              </div>
-              <div>
-                <p className="font-bold">+2GB</p>
-                <p className="text-blue-900">Bộ nhớ lưu trữ</p>
-              </div>
-            </div>
+            <p className="text-blue-900 text-sm flex-1">
+              Sứ mệnh của chúng tôi là giúp sinh viên đạt kết quả tốt hơn đồng thời giữ vững sự liêm chính học thuật.
+            </p>
           </div>
+
+          {/* Box 3 - VALUE */}
+          <div className="flex flex-col bg-blue-200 rounded-2xl px-6 py-6 shadow-md w-[340px] h-[190px]">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-gray-100 p-2 rounded-md">
+                <IoPricetagOutline  className="h-6 w-6 text-gray-500" />
+              </div>
+              <p className="font-bold text-lg">GIÁ TRỊ</p>
+            </div>
+            <p className="text-blue-900 text-sm flex-1">
+              Giá trị của chúng tôi là thúc đẩy sự liêm chính học thuật, bản địa hóa và phát triển sinh viên thông qua Tự động trích dẫn, Tự động lưu trữ và Tự động thành công.
+            </p>
+          </div>
+        </div>
         </div>
       </div>
 
