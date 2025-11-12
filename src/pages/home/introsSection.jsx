@@ -13,20 +13,20 @@ export default function IntroSection() {
   return (
     <div className="bg-white">
       {/* Section 1 */}
-      <div className="relative mx-auto px-4 py-32 mt-10 min-h-[600px] bg-[url('/images/image.jpg')] bg-center bg-no-repeat bg-cover">
+      <div className="relative mx-auto px-4 py-32 mt-10 min-h-[600px] bg-[url('/images/image.jpg')] bg-center bg-no-repeat bg-cover flex items-center justify-center">
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
         
         {/* Content */}
-        <div className="relative max-w-2xl text-left ml-8 mt-10 flex flex-col justify-center h-full">
-          <p className="text-lg text-blue-400 mb-4 font-semibold tracking-wide drop-shadow-lg">
+        <div className="relative z-10 max-w-2xl text-center">
+          <p className="text-lg text-white mb-4 font-semibold tracking-wide drop-shadow-lg">
             Tài liệu gọn gàng, trích dẫn sẵn sàng
           </p>
-          <h1 className="text-7xl font-bold text-blue-400 mb-6 drop-shadow-2xl">VUniBox</h1>
-          <p className="text-xl text-blue-400 font-medium mb-10 leading-relaxed drop-shadow-lg max-w-xl">
-            Nâng tầm nghiên cứu với nền tảng lưu trữ và trích dẫn toàn diện.
+          <h1 className="text-7xl font-bold text-white mb-6 drop-shadow-2xl">VUniBox</h1>
+          <p className="text-xl text-white font-medium mb-10 leading-relaxed drop-shadow-lg">
+            Nâng Tầm Nghiên Cứu Với Nền Tảng Lưu Trữ và Trích Dẫn Toàn Diện
           </p>
-          <div className="flex gap-4">
+          <div className="flex gap-4 justify-center">
             <button className="px-8 py-3 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg">
               <Link to="https://www.facebook.com/VUniBox">Về chúng tôi</Link>
             </button>

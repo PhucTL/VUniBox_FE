@@ -12,11 +12,11 @@ export default function AboutUs() {
         
         {/* Content */}
         <div className="relative  max-w-5xl">
-          <h1 className="text-5xl font-bold text-blue-400 leading-tight mb-6 drop-shadow-2xl">
+          <h1 className="text-5xl font-bold text-white leading-tight mb-6 drop-shadow-2xl">
             Tự động hóa trích dẫn và lưu trữ học thuật – <br />
             chuẩn mực, chính xác, tối ưu cho nghiên cứu.
           </h1>
-          <p className="text-xl text-blue-400 font-semibold mb-10 drop-shadow-lg tracking-wide">
+          <p className="text-xl text-white font-semibold mb-10 drop-shadow-lg tracking-wide">
             Auto cite - Auto store - Auto Succeed
           </p>
           <div className="flex gap-4 justify-center">
