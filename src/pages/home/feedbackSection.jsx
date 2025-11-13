@@ -10,12 +10,14 @@ export default function FeedbackSection() {
                 <span key={i}>⭐</span>
               ))}
             </div>
-            <p className="text-gray-600 mb-6">“Giao diện dễ sử dụng, trải nghiệm 3D mượt và nhiều thông tin bổ ích. Là sinh viên lịch sử, mình rất thích cách Vunibox kể lại các câu chuyện qua hình ảnh trực quan.”</p>
+            <p className="text-gray-600 mb-6">
+              “VUniBox giúp mình tiết kiệm rất nhiều thời gian khi làm luận văn. Tính năng AI tự động trích dẫn và phân loại tài liệu cực kỳ tiện lợi, mình không còn phải lo lắng về việc ghi chú nguồn hay thất lạc file nữa.”
+            </p>
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
               <div>
-                <p className="font-semibold">Ngọc Anh</p>
-                <p className="text-sm text-gray-500">Sinh viên – Trường Đại học Khoa học Xã hội & Nhân văn</p>
+                <p className="font-semibold">Minh Tuấn</p>
+                <p className="text-sm text-gray-500">Sinh viên – Đại học Bách Khoa Hà Nội</p>
               </div>
             </div>
           </div>
@@ -27,12 +29,14 @@ export default function FeedbackSection() {
                 <span key={i}>⭐</span>
               ))}
             </div>
-            <p className="text-gray-600 mb-6">“Dự án Vunibox là ví dụ tiêu biểu cho việc ứng dụng công nghệ vào bảo tồn di sản. Nội dung được chọn lọc kỹ, hình ảnh chất lượng cao, có thể sử dụng trong nghiên cứu.”</p>
+            <p className="text-gray-600 mb-6">
+              “Là giảng viên, tôi đánh giá cao khả năng kiểm tra liêm chính học thuật và lưu trữ tài liệu của VUniBox. Giao diện thân thiện, thao tác nhanh, phù hợp cho cả sinh viên và người hướng dẫn nghiên cứu.”
+            </p>
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
               <div>
-                <p className="font-semibold">ThS. Phạm Duy Minh</p>
-                <p className="text-sm text-gray-500">Giảng viên – Viện Nghiên cứu Văn hóa</p>
+                <p className="font-semibold">TS. Nguyễn Thị Lan</p>
+                <p className="text-sm text-gray-500">Giảng viên – Đại học Quốc gia Hà Nội</p>
               </div>
             </div>
           </div>
