@@ -16,9 +16,6 @@ export default function FeaturesSection() {
           <h1 className="text-5xl font-bold text-center mx-4 flex text-[#135ed0]">
             Blog - Banner - CPC
           </h1>
-          <h3 className=" text-xl text-gray-800 font-bold flex">
-            Space for other investor / platform
-          </h3>
         </div>
 
         <div className="flex flex-wrap gap-8 max-w-6xl mx-auto">
@@ -30,16 +27,13 @@ export default function FeaturesSection() {
               className="w-40 h-40 object-cover rounded-2xl"
             />
             <div className="flex-1">
-              <p className="text-sm text-gray-500 mb-1">Category</p>
-              <h4 className="font-bold text-lg mb-1">Name</h4>
+              <p className="text-sm text-gray-500 mb-1">Technology</p>
+              <h4 className="font-bold text-lg mb-1">Công nghệ & Bảo tồn</h4>
               <p className="text-gray-600 mb-4 text-sm">
-                Information/Summary/Content
+                “Vunibox đang mở ra hướng đi mới cho bảo tàng số tại Việt Nam — nơi lịch sử được chạm, cảm nhận và lưu giữ bằng công nghệ.”
               </p>
               <div className="flex items-center gap-2 text-sm text-gray-500">
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                  <span className="text-xs">Img</span>
-                </div>
-                <span className="font-medium">Author</span>
+                <span className="font-medium">Vunibox Team</span>
                 <span>•</span>
                 <span>Jul 01 2025</span>
               </div>
@@ -54,18 +48,14 @@ export default function FeaturesSection() {
               className="w-40 h-40 object-cover rounded-2xl"
             />
             <div className="flex-1">
-              <p className="text-sm text-gray-500 mb-1">Category</p>
-              <h4 className="font-bold text-lg mb-1">Name</h4>
+              <p className="text-sm text-gray-500 mb-1">Technology</p>
+              <h4 className="font-bold text-lg mb-1">Tương lai của công nghệ năm 2025</h4>
               <p className="text-gray-600 mb-4 text-sm">
-                Information/Summary/Content
-              </p>
+              “Khám phá những đổi mới tiên tiến định hình thập kỷ tiếp theo.”              </p>
               <div className="flex items-center gap-2 text-sm text-gray-500">
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                  <span className="text-xs">Img</span>
-                </div>
-                <span className="font-medium">Author</span>
+                <span className="font-medium">Vunibox Team</span>
                 <span>•</span>
-                <span>Jul 01 2025</span>
+                <span>Jul 05 2025</span>
               </div>
             </div>
           </div>
