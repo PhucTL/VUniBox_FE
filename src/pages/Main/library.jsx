@@ -60,38 +60,38 @@ export default function Library() {
   );
 
   return (
-    <div className="min-h-screen bg-white flex flex-col mt-20 w-full">
-      <div className="px-8 pt-6 pb-2">
+    <div className="min-h-screen bg-white flex flex-col mt-16 md:mt-20 w-full">
+      <div className="px-4 md:px-8 pt-4 md:pt-6 pb-2">
         <Topbar />
       </div>
-      <div className="flex flex-1 w-full px-8 pb-8 gap-8">
-        <div className="flex-shrink-0">
+      <div className="flex flex-col lg:flex-row flex-1 w-full px-4 md:px-8 pb-8 gap-4 lg:gap-8">
+        <div className="flex-shrink-0 hidden lg:block">
           <Sidebar />
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-4 md:p-8">
           {/* Title + Search */}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-blue-600">Thư Viện</h1>
-            <div className="relative">
-              <FaSearch className="absolute top-3 left-3 text-gray-400" />
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-3 md:gap-0">
+            <h1 className="text-2xl md:text-3xl font-bold text-blue-600">Thư Viện</h1>
+            <div className="relative w-full md:w-auto">
+              <FaSearch className="absolute top-2.5 md:top-3 left-3 text-gray-400" />
               <input
                 type="text"
                 placeholder="Tìm kiếm"
-                className="border border-blue-400 rounded-full pl-10 pr-4 py-2 w-64 focus:outline-none"
+                className="border border-blue-400 rounded-full pl-10 pr-4 py-2 w-full md:w-64 focus:outline-none text-sm md:text-base"
               />
             </div>
           </div>
 
           {/* Table */}
-          <div className="border border-blue-400 rounded-xl overflow-hidden">
+          <div className="border border-blue-400 rounded-xl overflow-hidden overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead className="bg-blue-50">
                 <tr>
-                  <th className="p-4 border-b border-blue-200">Folder</th>
-                  <th className="p-4 border-b border-blue-200">Count</th>
-                  <th className="p-4 border-b border-blue-200"></th>
+                  <th className="p-2 md:p-4 border-b border-blue-200 text-sm md:text-base">Folder</th>
+                  <th className="p-2 md:p-4 border-b border-blue-200 text-sm md:text-base">Count</th>
+                  <th className="p-2 md:p-4 border-b border-blue-200 text-sm md:text-base"></th>
                 </tr>
               </thead>
               <tbody>
@@ -101,11 +101,12 @@ export default function Library() {
                     className="hover:bg-blue-50 cursor-pointer"
                     onClick={() => navigate(`/libitem/${folder.name}`)}
                   >
-                    <td className="p-4 flex items-center gap-2">
-                      <FaRegFolderOpen size={45} /> {folder.name}
+                    <td className="p-2 md:p-4 flex items-center gap-2">
+                      <FaRegFolderOpen size={30} className="md:w-[45px] md:h-[45px]" /> 
+                      <span className="text-sm md:text-base">{folder.name}</span>
                     </td>
-                    <td className="p-4">{loading ? "..." : (folderCounts[folder.name] || 0)}</td>
-                    <td className="p-4 text-right">...</td>
+                    <td className="p-2 md:p-4 text-sm md:text-base">{loading ? "..." : (folderCounts[folder.name] || 0)}</td>
+                    <td className="p-2 md:p-4 text-right text-sm md:text-base">...</td>
                   </tr>
                 ))}
               </tbody>
@@ -113,9 +114,9 @@ export default function Library() {
           </div>
 
           {/* Pagination */}
-          <div className="flex justify-between items-center mt-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center mt-4 md:mt-6 gap-3 sm:gap-0">
             <button
-              className="flex items-center gap-2 px-4 py-2 border border-blue-400 rounded-full text-blue-600 disabled:opacity-50"
+              className="flex items-center gap-2 px-3 md:px-4 py-2 border border-blue-400 rounded-full text-blue-600 disabled:opacity-50 text-sm md:text-base w-full sm:w-auto justify-center"
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
             >
@@ -127,7 +128,7 @@ export default function Library() {
                 <button
                   key={i}
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`w-8 h-8 rounded-full border ${
+                  className={`w-7 h-7 md:w-8 md:h-8 rounded-full border text-sm md:text-base ${
                     currentPage === i + 1
                       ? "bg-blue-600 text-white"
                       : "border-blue-400 text-blue-600"

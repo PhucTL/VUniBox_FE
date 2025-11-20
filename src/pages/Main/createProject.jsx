@@ -182,19 +182,19 @@ export default function CreateProject() {
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col mt-20 w-full">
-      <div className="px-8 pt-6 pb-2">
+    <div className="min-h-screen bg-white flex flex-col mt-16 md:mt-20 w-full">
+      <div className="px-4 md:px-8 pt-4 md:pt-6 pb-2">
         <Topbar />
       </div>
-      <div className="flex flex-1 w-full px-8 pb-8 gap-8">
-        <div className="flex-shrink-0">
+      <div className="flex flex-col lg:flex-row flex-1 w-full px-4 md:px-8 pb-8 gap-4 lg:gap-8">
+        <div className="flex-shrink-0 hidden lg:block">
           <Sidebar />
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-4 md:p-8">
           {/* Title */}
-          <h1 className="text-3xl font-bold text-blue-600 mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-blue-600 mb-4 md:mb-6">
             Trích Dẫn Và Lưu Trữ
           </h1>
 

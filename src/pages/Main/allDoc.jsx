@@ -141,27 +141,29 @@ export default function AllDoc() {
   }, [search, filterStatus, filterType, sortByAuthor]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col mt-25 w-full">
-      <div className="flex flex-1 w-full px-8 pb-8">
+    <div className="min-h-screen bg-white flex flex-col mt-20 md:mt-25 w-full">
+      <div className="flex flex-col lg:flex-row flex-1 w-full px-4 md:px-8 pb-8">
         {/* Collapsible Sidebar */}
-        <CollapsibleSidebar />
+        <div className="hidden lg:block">
+          <CollapsibleSidebar />
+        </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8 transition-all duration-300">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-blue-600">Tất cả tài liệu</h1>
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <FaSearch className="absolute top-3 left-3 text-gray-400" />
+        <div className="flex-1 p-4 md:p-8 transition-all duration-300">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 md:mb-6 gap-4">
+            <h1 className="text-2xl md:text-3xl font-bold text-blue-600">Tất cả tài liệu</h1>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full lg:w-auto">
+              <div className="relative w-full sm:w-auto">
+                <FaSearch className="absolute top-2.5 md:top-3 left-3 text-gray-400" />
                 <input
                   type="text"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search file name"
-                  className="pl-10 pr-4 py-2 border border-blue-400 rounded-full w-64 focus:outline-none"
+                  className="pl-10 pr-4 py-2 border border-blue-400 rounded-full w-full sm:w-64 focus:outline-none text-sm md:text-base"
                 />
               </div>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
                 <div className="relative">
                   <div className="relative inline-block">
                     <select 
@@ -195,8 +197,8 @@ export default function AllDoc() {
               </div>
             </div>
           </div>
-          <div className="border border-blue-400 rounded-xl overflow-visible relative min-h-[400px]">
-            <table className="w-full text-left border-collapse z-30">
+          <div className="border border-blue-400 rounded-xl overflow-x-auto relative min-h-[400px]">
+            <table className="w-full text-left border-collapse z-30 min-w-[800px]">
               <thead className="bg-blue-50">
                 <tr>
                   <th className="px-4 py-5 border-b border-blue-200 text-sm w-[180px]">Tên File</th>

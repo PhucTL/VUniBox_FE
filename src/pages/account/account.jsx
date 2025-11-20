@@ -220,9 +220,9 @@ export default function Account() {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-8 mt-20">
+    <div className="w-full max-w-6xl mx-auto p-4 md:p-8 mt-16 md:mt-20">
       {/* Profile Section */}
-      <div className="flex items-start gap-8 mb-12">
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8 mb-8 md:mb-12">
         <div className="flex flex-col items-center">
           <div className="relative">
             <AvatarImage 

@@ -10,9 +10,11 @@ import {
 import { TfiSave } from "react-icons/tfi";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from 'react';
+import { FaBars, FaTimes } from "react-icons/fa";
 
 export default function MinimalSidebar() {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   
   const getLinkClass = (path) => {
@@ -25,13 +27,41 @@ export default function MinimalSidebar() {
   };
 
   return (
-    <div className=" w-56 min-h-screen bg-gradient-to-b from-blue-400 to-cyan-200 flex flex-col justify-between rounded-r-2xl">
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="lg:hidden fixed top-24 left-4 z-50 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+      >
+        {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+      </button>
+
+      {/* Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`
+        fixed lg:relative
+        top-0 left-0
+        w-56 min-h-screen
+        bg-gradient-to-b from-blue-400 to-cyan-200
+        flex flex-col justify-between
+        rounded-r-2xl
+        transform transition-transform duration-300 ease-in-out
+        z-40
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
       <div className="">
         <nav className="flex flex-col gap-1 px-2">
-          <Link to="/" className={getLinkClass('/')}>
+          <Link to="/" className={getLinkClass('/')} onClick={() => setIsMobileMenuOpen(false)}>
             <IoHomeOutline size={30} /> Trang Chủ
           </Link>
-          <Link to="/createproject" className={getLinkClass('/createproject')}>
+          <Link to="/createproject" className={getLinkClass('/createproject')} onClick={() => setIsMobileMenuOpen(false)}>
             <IoLayersOutline size={30} /> Dự án mới
           </Link>
           <div>
@@ -52,35 +82,35 @@ export default function MinimalSidebar() {
             </button>
             {isLibraryOpen && (
               <div className="ml-4 mt-1 flex flex-col gap-1">
-                <Link to="/libitem/Book" className={getLinkClass('/libitem/Book')}>
+                <Link to="/libitem/Book" className={getLinkClass('/libitem/Book')} onClick={() => setIsMobileMenuOpen(false)}>
                   <CiFolderOn size={30} /> Sách
                 </Link>
-                <Link to="/libitem/Word" className={getLinkClass('/libitem/Word')}>
+                <Link to="/libitem/Word" className={getLinkClass('/libitem/Word')} onClick={() => setIsMobileMenuOpen(false)}>
                   <CiFolderOn size={30} /> Word
                 </Link>
-                <Link to="/libitem/Newspaper" className={getLinkClass('/libitem/Newspaper')}>
+                <Link to="/libitem/Newspaper" className={getLinkClass('/libitem/Newspaper')} onClick={() => setIsMobileMenuOpen(false)}>
                   <CiFolderOn size={30} /> Báo chí
                 </Link>
-                <Link to="/libitem/PDF" className={getLinkClass('/libitem/PDF')}>
+                <Link to="/libitem/PDF" className={getLinkClass('/libitem/PDF')} onClick={() => setIsMobileMenuOpen(false)}>
                   <CiFolderOn size={30} /> PDF
                 </Link>
-                <Link to="/libitem/Research" className={getLinkClass('/libitem/Research')}>
+                <Link to="/libitem/Research" className={getLinkClass('/libitem/Research')} onClick={() => setIsMobileMenuOpen(false)}>
                   <CiFolderOn size={30} /> Nghiên cứu
                 </Link>
-                <Link to="/libitem/Others" className={getLinkClass('/libitem/Others')}>
+                <Link to="/libitem/Others" className={getLinkClass('/libitem/Others')} onClick={() => setIsMobileMenuOpen(false)}>
                   <CiFolderOn size={30} /> Khác
                 </Link>
               </div>
             )}
           </div>
           
-          <Link to="/trashdoc" className={getLinkClass('/trashdoc')}>
+          <Link to="/trashdoc" className={getLinkClass('/trashdoc')} onClick={() => setIsMobileMenuOpen(false)}>
             <IoTrashOutline size={30} /> Thùng rác
           </Link>
-          <Link to="/alldoc" className={getLinkClass('/alldoc')}>
+          <Link to="/alldoc" className={getLinkClass('/alldoc')} onClick={() => setIsMobileMenuOpen(false)}>
             <CiFolderOn size={30} /> Tất cả
           </Link>
-          <Link to="/saveddoc" className={getLinkClass('/saveddoc')}>
+          <Link to="/saveddoc" className={getLinkClass('/saveddoc')} onClick={() => setIsMobileMenuOpen(false)}>
             <TfiSave size={30} /> Lưu Trữ
           </Link>
         </nav>
@@ -88,13 +118,14 @@ export default function MinimalSidebar() {
 
       {/* Bottom */}
       <div className="border-t border-blue-300/50 pt-2 flex flex-col gap-1 px-2 mb-4">
-        <Link to="/help" className="flex items-center gap-2 px-3 py-1.5 hover:bg-blue-500/20 rounded-lg text-sm">
+        <Link to="/help" className="flex items-center gap-2 px-3 py-1.5 hover:bg-blue-500/20 rounded-lg text-sm" onClick={() => setIsMobileMenuOpen(false)}>
           <GoQuestion className="w-4 h-4" /> Hỗ Trợ
         </Link>
-        <Link to="/account" className="flex items-center gap-2 px-3 py-1.5 hover:bg-blue-500/20 rounded-lg text-sm">
+        <Link to="/account" className="flex items-center gap-2 px-3 py-1.5 hover:bg-blue-500/20 rounded-lg text-sm" onClick={() => setIsMobileMenuOpen(false)}>
           <HiOutlineCog6Tooth className="w-4 h-4" /> Cài Đặt
         </Link>
       </div>
     </div>
+    </>
   );
 }

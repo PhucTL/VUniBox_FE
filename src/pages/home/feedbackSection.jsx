@@ -1,10 +1,10 @@
 export default function FeedbackSection() {
   return (
-    <div className="bg-gray-50 py-16 bg-[url('/images/feedback.jpg')] bg-local bg-no-repeat bg-cover">
+    <div className="bg-gray-50 py-8 md:py-16 bg-[url('/images/feedback.jpg')] bg-local bg-no-repeat bg-cover">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          <div className="bg-white p-8 rounded-2xl shadow-sm">
-            <h3 className="text-gray-800 font-bold text-xl mb-2">Feedback</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 max-w-6xl mx-auto">
+          <div className="bg-white p-4 md:p-8 rounded-2xl shadow-sm">
+            <h3 className="text-gray-800 font-bold text-lg md:text-xl mb-2">Feedback</h3>
             <div className="flex text-yellow-400 mb-4">
               {[...Array(5)].map((_, i) => (
                 <span key={i}>⭐</span>
