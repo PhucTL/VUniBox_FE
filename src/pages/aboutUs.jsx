@@ -10,13 +10,13 @@ function VideoSection({ onClose, scrollTo }) {
     }
   }, [scrollTo]);
   return (
-    <section ref={sectionRef} className="w-full flex justify-center py-8 bg-white">
-      <div className="bg-white rounded-2xl shadow-lg p-4 mt-10 max-w-8xl w-full flex flex-row items-start gap-8">
+    <section ref={sectionRef} className="w-full flex justify-center py-4 md:py-8 bg-white px-4">
+      <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 mt-6 md:mt-10 max-w-8xl w-full flex flex-col lg:flex-row items-start gap-4 md:gap-8">
         {/* Left: Hướng dẫn sử dụng */}
-        <div className="flex-1 text-left rounded-2xl shadow-3xl bg-blue-50 ">
-          <div className="ml-5 mt-5">
-          <h2 className="text-lg font-bold mb-4 text-blue-600">Bảng hướng dẫn sử dụng VUniBox</h2>
-          <ol className="list-decimal pl-5 space-y-4">
+        <div className="flex-1 text-left rounded-2xl shadow-3xl bg-blue-50 w-full">
+          <div className="ml-3 md:ml-5 mt-3 md:mt-5 px-2 md:px-0">
+          <h2 className="text-base md:text-lg font-bold mb-3 md:mb-4 text-blue-600">Bảng hướng dẫn sử dụng VUniBox</h2>
+          <ol className="list-decimal pl-4 md:pl-5 space-y-2 md:space-y-4 text-sm md:text-base">
             <li>
               <span className="font-semibold">Bước 1: Upload tài liệu</span>
               <ul className="list-disc pl-5 text-gray-700 mt-1">
@@ -56,14 +56,14 @@ function VideoSection({ onClose, scrollTo }) {
           </div>
         </div>
         {/* Right: Video */}
-        <div className="flex-1 flex flex-col items-center mt-5">
-          <h2 className="text-lg font-bold mb-4 text-blue-600">Video hướng dẫn</h2>
+        <div className="flex-1 flex flex-col items-center mt-4 md:mt-5 w-full">
+          <h2 className="text-base md:text-lg font-bold mb-3 md:mb-4 text-blue-600">Video hướng dẫn</h2>
           <iframe
             src="https://drive.google.com/file/d/1ZSkCmH41NUfj-JTJo7UJwZvCs4EgKIrH/preview"
             width="100%"
-            height="400"
+            height="250"
             allow="autoplay"
-            className="rounded-xl border"
+            className="rounded-xl border md:h-[400px]"
             title="VUniBox Video Hướng dẫn"
           ></iframe>
         </div>
@@ -83,23 +83,23 @@ export default function AboutUs() {
   return (
     <div className="min-h-screen w-full bg-gray-50 flex flex-col">
       {/* Hero Section */}
-      <section className="relative w-full min-h-[600px] bg-[url('/images/AboutusPage2.png')] bg-cover bg-center flex flex-col justify-center items-center text-center px-6">
+      <section className="relative w-full min-h-[400px] md:min-h-[600px] bg-[url('/images/AboutusPage2.png')] bg-cover bg-center flex flex-col justify-center items-center text-center px-4 md:px-6">
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/50"></div>
         
         {/* Content */}
-        <div className="relative  max-w-5xl">
-          <h1 className="text-5xl font-bold text-white leading-tight mb-6 drop-shadow-2xl">
-            Tự động hóa trích dẫn và lưu trữ học thuật <br />
+        <div className="relative max-w-5xl px-4">
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4 md:mb-6 drop-shadow-2xl">
+            Tự động hóa trích dẫn và lưu trữ học thuật <br className="hidden md:block" />
             chuẩn mực, chính xác, tối ưu cho nghiên cứu.
           </h1>
-          <p className="text-xl text-white font-semibold mb-10 drop-shadow-lg tracking-wide">
+          <p className="text-base md:text-xl text-white font-semibold mb-6 md:mb-10 drop-shadow-lg tracking-wide">
             Auto cite - Auto store - Auto Succeed
           </p>
-          <div className="flex gap-4 justify-center flex-col items-center">
-            <div className="flex gap-4">
+          <div className="flex gap-3 md:gap-4 justify-center flex-col items-center">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full sm:w-auto">
               <button
-                className="px-8 py-3 rounded-full border-2 border-white text-white font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg"
+                className="px-6 md:px-8 py-2 md:py-3 rounded-full border-2 border-white text-white font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg text-sm md:text-base whitespace-nowrap"
                 onClick={() => {
                   setShowVideoHero(!showVideoHero);
                   setTimeout(() => setScrollToHero(!showVideoHero), 100);
@@ -107,7 +107,7 @@ export default function AboutUs() {
               >
                 Cách sử dụng
               </button>
-              <button className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              <button className="px-6 md:px-8 py-2 md:py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-sm md:text-base whitespace-nowrap">
                 {isAuthenticated ? (
                   <Link to="/createproject">Bắt đầu ngay</Link>
                 ) : (
@@ -121,31 +121,31 @@ export default function AboutUs() {
       {showVideoHero && <VideoSection onClose={() => setShowVideoHero(false)} scrollTo={scrollToHero} />}
 
       {/* About VUniBox */}
-      <section className="w-full bg-blue-50 py-16 px-6 md:px-20 flex flex-col md:flex-row items-center gap-10">
+      <section className="w-full bg-blue-50 py-8 md:py-16 px-4 md:px-6 lg:px-20 flex flex-col md:flex-row items-center gap-6 md:gap-10">
         {/* Text */}
         <div className="flex-1">
-          <h2 className="text-sm text-blue-600 font-semibold mb-2">
+          <h2 className="text-xs md:text-sm text-blue-600 font-semibold mb-2">
             Tài liệu gọn gàng, trích dẫn sẵn sàng
           </h2>
-          <h3 className="text-3xl font-bold text-blue-800 mb-6">Về VUniBox</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-2xl md:text-3xl font-bold text-blue-800 mb-4 md:mb-6">Về VUniBox</h3>
+          <p className="text-sm md:text-base text-gray-700 mb-3 md:mb-4">
             VUniBox là nền tảng học thuật tích hợp, hỗ trợ sinh viên và nhà
             nghiên cứu quản lý tài liệu khoa học một cách thông minh và chính
             xác.
           </p>
-          <p className="text-gray-700 mb-4">
+          <p className="text-sm md:text-base text-gray-700 mb-3 md:mb-4">
             Công cụ cho phép người dùng tự động lưu trữ và phân loại tài liệu
             theo định dạng (PDF, URL, Word...), đồng thời gợi ý trích dẫn theo
             chuẩn học thuật phổ biến như APA, MLA, Harvard...
           </p>
-          <p className="text-gray-700 mb-4">
+          <p className="text-sm md:text-base text-gray-700 mb-3 md:mb-4">
             Chúng tôi tin rằng, một hệ thống trích dẫn và lưu trữ thông minh là
             nền tảng vững chắc cho tri thức học thuật bền vững.
           </p>
-          <div className="flex gap-4 justify-start flex-col items-start">
-            <div className="flex gap-4">
+          <div className="flex gap-3 md:gap-4 justify-start flex-col items-start w-full">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full sm:w-auto">
               <button
-                className="px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-semibold hover:bg-blue-100 transition"
+                className="px-5 md:px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-semibold hover:bg-blue-100 transition text-sm md:text-base whitespace-nowrap"
                 onClick={() => {
                   setShowVideoAbout(!showVideoAbout);
                   setTimeout(() => setScrollToAbout(!showVideoAbout), 100);
@@ -153,7 +153,7 @@ export default function AboutUs() {
               >
                 Cách sử dụng
               </button>
-              <button className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              <button className="px-6 md:px-8 py-2 md:py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-sm md:text-base whitespace-nowrap">
                 {isAuthenticated ? (
                   <Link to="/createproject">Bắt đầu ngay</Link>
                 ) : (
@@ -164,51 +164,51 @@ export default function AboutUs() {
           </div>
         </div>
         {/* Image */}
-        <div className="flex-1">
+        <div className="flex-1 w-full">
           <img
             src="/images/AboutusPage.png"
             alt="VUniBox Screenshot"
-            className="rounded-2xl shadow-lg"
+            className="rounded-2xl shadow-lg w-full h-auto"
           />
         </div>
       </section>
       {showVideoAbout && <VideoSection onClose={() => setShowVideoAbout(false)} scrollTo={scrollToAbout} />}
 
       {/* Why Choose Us */}
-      <section className="w-full bg-blue-50 py-16 px-6 md:px-20">
-        <h2 className="text-blue-600 font-semibold">VUniBox</h2>
-        <h3 className="text-3xl font-bold text-blue-800 mb-10">
+      <section className="w-full bg-blue-50 py-8 md:py-16 px-4 md:px-6 lg:px-20">
+        <h2 className="text-sm md:text-base text-blue-600 font-semibold">VUniBox</h2>
+        <h3 className="text-2xl md:text-3xl font-bold text-blue-800 mb-6 md:mb-10">
           Tại sao lại chọn chúng tôi?
         </h3>
-        <div className="grid md:grid-cols-3 gap-10">
-          <div>
-            <div className="text-blue-600 text-3xl mb-4">📦</div>
-            <h4 className="text-xl font-bold text-blue-800 mb-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+          <div className="bg-white p-4 md:p-6 rounded-2xl shadow-md">
+            <div className="text-blue-600 text-2xl md:text-3xl mb-3 md:mb-4">📦</div>
+            <h4 className="text-lg md:text-xl font-bold text-blue-800 mb-2">
               Chuẩn học thuật từ gốc
             </h4>
-            <p className="text-gray-700">
+            <p className="text-sm md:text-base text-gray-700">
               Cam kết tuân thủ các tiêu chuẩn trích dẫn quốc tế (APA, MLA,
               Harvard...) và đảm bảo tính chính xác tuyệt đối trong quá trình
               lưu trữ – phân loại – trích dẫn tài liệu.
             </p>
           </div>
-          <div>
-            <div className="text-blue-600 text-3xl mb-4">📦</div>
-            <h4 className="text-xl font-bold text-blue-800 mb-2">
+          <div className="bg-white p-4 md:p-6 rounded-2xl shadow-md">
+            <div className="text-blue-600 text-2xl md:text-3xl mb-3 md:mb-4">📦</div>
+            <h4 className="text-lg md:text-xl font-bold text-blue-800 mb-2">
               Lưu trữ thông minh – truy xuất dễ dàng
             </h4>
-            <p className="text-gray-700">
+            <p className="text-sm md:text-base text-gray-700">
               Hệ thống phân loại tài liệu dựa trên cấu trúc folder mẹ – folder
               con, cho phép lọc tự động theo định dạng và loại nguồn khi tải
               lên.
             </p>
           </div>
-          <div>
-            <div className="text-blue-600 text-3xl mb-4">📦</div>
-            <h4 className="text-xl font-bold text-blue-800 mb-2">
+          <div className="bg-white p-4 md:p-6 rounded-2xl shadow-md">
+            <div className="text-blue-600 text-2xl md:text-3xl mb-3 md:mb-4">📦</div>
+            <h4 className="text-lg md:text-xl font-bold text-blue-800 mb-2">
               Tự động hóa quy trình nghiên cứu
             </h4>
-            <p className="text-gray-700">
+            <p className="text-sm md:text-base text-gray-700">
               VUniBox giúp tiết kiệm thời gian với hệ thống tự động lưu trữ và
               tổ chức tài liệu thông minh, hỗ trợ đa định dạng và loại nguồn học
               thuật.
@@ -216,10 +216,10 @@ export default function AboutUs() {
           </div>
         </div>
         {/* Bottom Buttons */}
-        <div className="flex gap-4 justify-center flex-col items-center mt-10">
-            <div className="flex gap-4">
+        <div className="flex gap-3 md:gap-4 justify-center flex-col items-center mt-6 md:mt-10">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full sm:w-auto px-4 sm:px-0">
               <button
-                className="px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-semibold hover:bg-blue-100 transition"
+                className="px-5 md:px-6 py-2 rounded-full border border-blue-600 text-blue-600 font-semibold hover:bg-blue-100 transition text-sm md:text-base whitespace-nowrap"
                 onClick={() => {
                   setShowVideoWhy(!showVideoWhy);
                   setTimeout(() => setScrollToWhy(!showVideoWhy), 100);
@@ -227,7 +227,7 @@ export default function AboutUs() {
               >
                 Cách sử dụng
               </button>
-              <button className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              <button className="px-6 md:px-8 py-2 md:py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-sm md:text-base whitespace-nowrap">
                 {isAuthenticated ? (
                   <Link to="/createproject">Bắt đầu ngay</Link>
                 ) : (

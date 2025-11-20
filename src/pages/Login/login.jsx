@@ -109,32 +109,32 @@ export default function Login() {
       </div>
 
       {/* Nội dung chính */}
-      <div className="flex items-center justify-center relative z-1 py-20">
-        <div className="w-full max-w-4xl mx-auto bg-gradient-to-b from-blue-400 to-blue-200 rounded-[48px] shadow-xl p-12 flex flex-col items-center relative mt-50">
+      <div className="flex items-center justify-center relative z-1 py-10 md:py-20 px-4">
+        <div className="w-full max-w-md md:max-w-4xl mx-auto bg-gradient-to-b from-blue-400 to-blue-200 rounded-3xl md:rounded-[48px] shadow-xl p-6 md:p-12 flex flex-col items-center relative mt-20 md:mt-50">
           
           {/* Header */}
-          <div className="flex justify-center mb-8 w-[400px]">
-            <h1 className="text-3xl font-bold text-blue-900">Đăng Nhập</h1>
+          <div className="flex justify-center mb-6 md:mb-8 w-full max-w-[400px]">
+            <h1 className="text-2xl md:text-3xl font-bold text-blue-900">Đăng Nhập</h1>
           </div>
 
           {/* Error Messages */}
           {(loginError || googleLoginError) && (
-            <div className="w-[400px] mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <div className="w-full max-w-[400px] mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm md:text-base">
               {loginError || googleLoginError}
             </div>
           )}
 
           {/* Success Messages */}
           {loginSuccess && (
-            <div className="w-[400px] mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+            <div className="w-full max-w-[400px] mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm md:text-base">
               Đăng nhập thành công! Đang chuyển hướng...
             </div>
           )}
 
           {/* Form */}
-          <form className="w-[400px] flex flex-col gap-6" onSubmit={handleSubmit}>
+          <form className="w-full max-w-[400px] flex flex-col gap-4 md:gap-6" onSubmit={handleSubmit}>
             <div className="justify-items-start">
-              <label className="block text-blue-900 font-semibold mb-2 text-lg">
+              <label className="block text-blue-900 font-semibold mb-2 text-base md:text-lg">
                 Email*
               </label>
               <input
@@ -142,13 +142,13 @@ export default function Login() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-6 py-3 rounded-full text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 md:px-6 py-2 md:py-3 rounded-full text-base md:text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Nhập email"
                 required
               />
             </div>
             <div className="justify-items-start">
-              <label className="block text-blue-900 font-semibold mb-2 text-lg">
+              <label className="block text-blue-900 font-semibold mb-2 text-base md:text-lg">
                 Mật Khẩu*
               </label>
               <input
@@ -156,7 +156,7 @@ export default function Login() {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full px-6 py-3 rounded-full text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 md:px-6 py-2 md:py-3 rounded-full text-base md:text-lg border border-blue-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Nhập mật khẩu"
                 required
               />
@@ -172,15 +172,15 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoginLoading}
-              className="w-full py-3 mt-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 text-white text-lg font-semibold shadow-lg hover:from-blue-700 hover:to-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2 md:py-3 mt-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 text-white text-base md:text-lg font-semibold shadow-lg hover:from-blue-700 hover:to-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoginLoading ? "Đang xử lý..." : "Đăng Nhập"}
             </button>
           </form>
 
           {/* Register Link */}
-          <div className="mt-6 text-center w-[400px]">
-            <p className="text-blue-700">
+          <div className="mt-4 md:mt-6 text-center w-full max-w-[400px]">
+            <p className="text-sm md:text-base text-blue-700">
               Chưa có tài khoản?{" "}
               <Link 
                 to="/register" 

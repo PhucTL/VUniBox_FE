@@ -6,12 +6,24 @@ html, body {
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 #root {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Prevent horizontal scroll on mobile */
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* Google Sign-In Button */
@@ -30,4 +42,24 @@ html, body {
 
 .google-signin-button iframe {
   width: 100% !important;
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Touch-friendly mobile elements */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  input, select, textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
 }
